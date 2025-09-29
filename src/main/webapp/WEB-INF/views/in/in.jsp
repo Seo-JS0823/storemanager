@@ -21,7 +21,12 @@
 		<%@ include file="../layout/header.jsp"%>
 		<!-- 개인 작업 영역 -->
 		<div>
-			
+			<c:forEach var="list" items="${list}">
+				<input type="text" value="${list.GI_CODE}"/><br>
+				<input type="text" value="${list.GI_NAME}"/><br>
+				<input type="text" value="${list.GCM_CODE}"/><br>
+				<input type="text" value="${list.GI_DEL_FLAG}"/>
+			</c:forEach>
 		</div>
 	</div>
 </div>
