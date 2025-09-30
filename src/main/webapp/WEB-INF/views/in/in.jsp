@@ -49,9 +49,7 @@
 
 </head>
 <body>
-<<<<<<< HEAD
 <form>
-=======
 <!-- 태크 보관소 -->
 <template id="company-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
 <div>
@@ -72,8 +70,6 @@
 <div id="company-select-modal"></div>
 <div id="item-select-modal"></div>
 <div id="modal-container"></div>
-
->>>>>>> in
 <div class="wrap">
     <!-- 모달 -->
     
