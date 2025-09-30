@@ -16,6 +16,8 @@
 </head>
 <body>
 <div class="wrap">
+    <!-- 모달 -->
+    
 	<%@ include file="../layout/left-menu.jsp"%>
 	<div class="right-wrap">
 		<%@ include file="../layout/header.jsp"%>

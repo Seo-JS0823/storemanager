@@ -3,28 +3,294 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&"/>
-	<link rel="stylesheet" href="/css/reset.css">
-	<link rel="stylesheet" href="/css/wrap.css">
-	<link rel="stylesheet" href="/css/items-modal.css">
-	<title></title>
-<style>
-	
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&"/>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/wrap.css">
+    <link rel="stylesheet" href="/css/m-header.css">
+    <title></title>
+	<style>
+	    .side-bar{
+			position:absolute;
+			height:100%;
+			width:40rem;
+			right:-40rem;
+			top:0;
+			transition: 0.5s;
+			z-index:10;
+		}
+        .back-ground{
+            display:none;
+            position:absolute;
+            top:0;
+            inset:0;
+            z-index:5;
+            background-color: #00000030;
+        }
+        .side-bar{  
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background-color: aquamarine;
+        }
+        .side-bar > div:nth-child(1){ height: 10%;}
+        .side-bar > div:nth-child(2){ height: 50%;}
+        .container-head{
+            width: 40rem;
+            height: 20%;
+            margin: 3rem 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        .container-head > div:nth-child(1){
+           width: 10rem;
+           height: 5rem;
+           margin: 0 6rem;
+           padding: 0 1rem;
+           font-size: 1.3rem;
+           font-weight: 550;
+           background-color: yellow;
+        }
+        .container-head > div:nth-child(2){
+            width: 100%;
+            height: 2rem;
+            border-bottom: 0.1rem solid black;
+        }
+        .container-item{
+            width: 40rem;
+            height: 100%;
+            margin: 0 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .container-item > div:nth-child(1){
+            width: 15rem;
+            height: 15rem;
+            background-color:white;
+        }
+        .container-item > div:nth-child(2){
+            width: calc(100% - 2rem);
+            height: 4rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+        }
+        .container-item > div:nth-child(3){
+            width: calc(100% - 2rem);
+            height: 4rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+        }
+        .container-item > div:nth-child(4){
+            width: calc(100% - 2rem);
+            height: 4rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+        }
+        .container-item > div:nth-child(5){
+            width: 20rem;
+            height: 10rem;
+            background-color:white;
+        }
+        .container-item > div:nth-child(6){
+            width: calc(100% - 2rem);
+            height: 3rem;
+            gap: 1rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+            background-color:white;
+        }
+	</style>
 </head>
 <body>
 <div class="wrap">
-	<%@ include file="../layout/left-menu.jsp"%>
-	<div class="right-wrap">
-		<%@ include file="../layout/header.jsp"%>
-		<!-- 개인 작업 영역 -->
-		<div>
-			
-		</div>
-	</div>
-</div>
-<script src="js/modal.js"></script>
+    <!-- start of side-bar -->
+    <div class="side-bar">
+        <div>
+            <div class="container-head">
+                <div>출고관리</div>
+                <div></div>
+            </div>
+        </div>
+        <div>
+            <div class="container-item">
+                <div>이미지</div>
+                <div>
+                    <div>출고번호</div>
+                    <div><input type="number" name="gih_idx"></div>
+                    <div>품목명</div>
+                    <div><input type="text" name="gi_name"></div>
+                </div>
+                <div>
+                    <div>거래처코드</div>
+                    <div><input type="number" name="gi_code"></div>
+                    <div>거래처명</div>
+                    <div><input type="text" name="gcm_name"></div>
+                </div>
+                <div>
+                    <div>출고단가</div>
+                    <div><input type="number" name="gih_price"></div>
+                    <div>수량</div>
+                    <div><input type="number" name="gih_qty"></div>
+                </div>
+                <div><textarea name="git_remark" maxlength="130"></textarea></div>
+                <div>
+                    <div><button>저장</button></div>
+                    <div><button>취소</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back-ground"></div>
+    <!-- end of side-bar -->
+    <%@ include file="../layout/left-menu.jsp"%>
+    <div class="right-wrap">
+        <%@ include file="../layout/header.jsp"%>
+        <!-- 개인 작업 영역 -->
+        <div>
+            <!-- 상단 텍스트, 상태 동그라미, 입고생성버튼 -->
+            <div class="m-box">
+                <div class="m-header">
+                    <span class="material-symbols-outlined">playlist_remove</span>
+                    <span>출고관리</span>
+                </div>
+                <div></div>
+                <div>
+                    <div>
+                        <div class="m-state orange"></div><span>상세보기</span>
+                        <div class="m-state green"></div><span>출고수정</span>
+                        <div class="m-state red"></div><span>출고</span>
+                    </div>
+                    <div class="green" id="각자따로">- 출고</div>
+                </div>
+            </div>
+            <!-- 검색 라인 -->
+            <div class="m-search">
+                <div>
+                    <div class="m-search-line">
+                        <div class="m-search-date"> <!-- 날짜 구간 -->
+                            <input type="date" name="startdate">
+                            <p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
+                            <input type="date" name="enddate">
+                        </div>
+                        <div class="m-search-option">
+                            <div><input type="radio" id="searchEvent1" name="searchoption"><p>상품명</p></div>
+                            <div><input type="radio" id="searchEvent2" name="searchoption"><p>거래처명</p></div>
+                            <div><input type="radio" id="searchEvent3" name="searchoption"><p>출고단가</p></div>
+                        </div>
+                        <div class="m-search-text"> <!-- TEXT 검색 구간 -->
+                            <input type="text" name="search" placeholder="검색어를 입력하세요."><div>검색</div>
+                        </div>
+                    </div>
+               </div>
+            </div>
+            <!-- 정렬 구간 -->
+            <div class="m-search-sort">
+                <div></div>
+                <div>상품명</div>
+                <div>거래처명</div>
+                <div>출고단가</div>
+                <div>수량</div>
+                <div>총합</div>
+                <div>출고일</div>
+                <div></div>
+            </div>
+            <div class="m-items">
+               <c:forEach var="out" items="${ outList }">
+		       <div>
+                    <div>1(순번)</div>
+                    <div>${ out.gi_name }</div>
+                    <div>${ out.gcm_name }</div>
+                    <div>${ out.gih_price }원</div>
+                    <div>${ out.gih_qty }EA</div>
+                    <div>${out.total}원</div>
+                    <div>${out.gih_regdate}</div>
+                    <div class="btns-box"> <!-- Ball -->
+                        <input id="idx" name="gih_idx" type="hidden" value="${ out.gih_idx }">
+                        <div class="items-btn orange"></div>
+                        <div class="items-btn green"></div>
+                        <div class="items-btn red"></div>
+                    </div>
+                </div>
+                <div></div>
+		     </c:forEach>
+            </div>
+        </div>
+    </div>
+   </div>
+<script>
+let bgEl = document.getElementsByClassName('back-ground')[0];
+let btnEl1 = document.getElementsByClassName('items-btn orange')[0];
+let btnEl2 = document.getElementsByClassName('items-btn green')[0];
+let btnEl3 = document.getElementsByClassName('items-btn red')[0];
+
+btnEl1.onclick = e => {
+	const idx = document.querySelector('#idx').value;
+	//alert(idx);
+	
+	fetch('/out/list/'+idx)
+    .catch(error => console.dir(error))
+    .then(response => response.json())
+    .then(data => {
+        // 데이터를 가져오고 모달창의 항목에 값을 넣어준다.
+        //console.log(data);
+        document.getElementsByName('gih_idx')[0].value = data.gih_idx;
+        document.getElementsByName('gi_name')[0].value = data.gi_name;
+        document.getElementsByName('gi_code')[0].value = data.gi_code;
+        document.getElementsByName('gcm_name')[0].value = data.gcm_name;
+        document.getElementsByName('gih_price')[0].value = data.gih_price;
+        document.getElementsByName('gih_qty')[0].value = data.gih_qty;
+        document.getElementsByName('gih_remark')[0].value = data.gih_remark;
+    })
+
+	// 모달창을 띄운다
+	showSidebar(true);
+} 
+
+btnEl2.onclick = e => showSidebar(true);
+btnEl3.onclick = e => showSidebar(true);
+bgEl.onclick = e => showSidebar(false);
+
+let showSidebar = x => {
+	let el = document.getElementsByClassName("side-bar")[0];
+	let bg = document.getElementsByClassName("back-ground")[0];
+	
+	if(x){
+		 el.style.right = "0";
+         bg.style.display = "block";
+		
+	} else {
+		el.style.right = "";
+		bg.style.display = "";
+	}
+}
+</script>
+<script>
+   let dateStart = document.getElementById("startdate");
+   let dateEnd = document.getElementById("enddate");
+   
+   let today = new Date();
+   let endDateValue =today.toISOString().substring(0,10);
+   let startDateValue = new Date(today.setDate(today.getDate()-7)).toISOString().substring(0,10);
+   
+   dateStart.value = startDateValue;
+   dateEnd.value = endDateValue;
+</script>
 </body>
 </html>
