@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.storemanager.member.MemberMapper">
+	<!-- 로그인 -->
+	<select id="login" resultType="String">
+		SELECT
+			GM_PWD
+		FROM
+			GE_MEMBER
+		WHERE
+			GM_ID = #{gm_id}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="join">
+		INSERT INTO GE_MEMBER
+			(GM_ID, GM_PWD, GM_NAME, GM_EMAIL, GM_TEL)
+		VALUES
+			(#{gm_id}, #{gm_pwd}, #{gm_name}, #{gm_email}, #{gm_tel})
+	</insert>
+	
+	<!-- 회원가입시 존재하는 아이디인지 검증 -->
+	<select id="joinIdValidation" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			GE_MEMBER
+		WHERE
+			GM_ID = #{gm_id}
+	</select>
+	
+</mapper>
