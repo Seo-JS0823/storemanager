@@ -14,9 +14,9 @@ public class CustomerController {
 	private CustomerMapper customerMapper;
 	
 	@RequestMapping("customer/customer")
-	public ModelAndView customerList(ModelAndView mv, CustomerDTO customerDto) {
+	public ModelAndView customerList(ModelAndView mv) {
 		
-		List<CustomerDTO> customerList	=	customerMapper.getCustomerListIN();
+		List<CustomerDTO> customerList	=	customerMapper.findAll();
 		 mv.addObject("customerList", customerList);
 	        mv.setViewName("customer/customer");
 		
