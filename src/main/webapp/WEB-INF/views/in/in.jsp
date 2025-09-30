@@ -58,7 +58,7 @@
                </div>
 			</div>
 			<!-- 정렬 구간 -->
-			<div class="m-search-sort"> <!-- 정렬 기능 부분 -->
+			<div class="m-search-sort">
                 <div></div>
                 <div>상품명</div>
                 <div>매입처명</div>
@@ -78,9 +78,9 @@
 	           	    <div>총 76,900원</div>
 	           	    <div>2025-09-10</div>
 	           	    <div class="btns-box"> <!-- Ball -->
-	           	        <div class="items-btn-orange" data-idx="orange1"></div>
-	           	        <div class="items-btn-green" data-idx="green1"></div>
-	           	        <div class="items-btn-red" data-idx="red1"></div>
+	           	        <div class="items-btn orange"></div>
+	           	        <div class="items-btn green"></div>
+	           	        <div class="items-btn red"></div>
 	           	    </div>
 	          	</div>
 	          	<div></div>
