@@ -15,6 +15,7 @@
 </style>
 </head>
 <body>
+<form>
 <div class="wrap">
     <!-- 모달 -->
     
@@ -92,5 +93,6 @@
 		<!-- 아이템 리스트 뿌려주기 -->
 	</div>
 </div>
+</form>
 </body>
 </html>
