@@ -82,6 +82,7 @@ a {
 .join-box > div:nth-of-type(2) div span:nth-of-type(2) {
 	display: inline-block;
 	width: calc(100% - 10rem);
+	font-size: 1.2rem;
 }
 .join-box > div:nth-of-type(2) input[type=text],
 .join-box > div:nth-of-type(2) input[type=password],
@@ -116,7 +117,7 @@ a {
 			<div>회 원 가 입(직원)</div>
 			<div>
 			<form id="join-form">
-				<div>이 름</div>
+				<div><span>이 름</span></div>
 				<input type="text" id="member-name">
 				<div><span>아이디</span><span id="id-reg"></span></div>
 				<input type="text" id="member-id">
@@ -133,8 +134,80 @@ a {
 	</div>
 <script>
 	const joinB = document.getElementById('join-btn');
-	const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-	const telReg = /^0\d{1,2}-\d{3,4}-\d{4}$/;
+	
+	let idValidate = false;
+	let pwdValidate = false;
+	let nameValidate = false;
+	let telValidate = false;
+	let emailValidate = false;
+	
+	joinB.addEventListener('click', (event) => {
+		if(idValidate || pwdValidate || nameValidate || telValidate || emailValidate) {
+			const formEl = document.getElementById('join-form');
+			formEl.action = '/join';
+			formEl.method = 'post';
+			formEl.submit();
+		} else {
+			event.preventDefault();
+			alert('입력한 값이 올바르지 않습니다.');
+			return;
+		}
+	});
+	
+	const membername = document.getElementById('member-name');
+	membername.addEventListener('change', () => {
+		if(membername.value.length > 1) {
+			nameValidate = true;
+			membername.name = 'gm_name';
+		}
+	});
+	
+	const memberemail = document.getElementById('member-email');
+	memberemail.addEventListener('change', () => {
+		const email = document.getElementById('email-reg');		
+		const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		
+		if(!emailReg.test(memberemail.value)) {
+			email.style.color = '#DC3545';
+			email.textContent = '올바른 이메일 형식으로 입력하세요.';
+		} else {
+			email.style.color = '#00AA00';
+			email.textContent = '✔';
+			emailValidate = true;
+			memberemail.name = 'gm_email';
+		}
+	});
+	
+	const membertel = document.getElementById('member-tel');
+	membertel.addEventListener('change', () => {
+		const tel = document.getElementById('tel-reg');
+		const telReg = /^0\d{1,2}-\d{3,4}-\d{4}$/;
+		
+		if(!telReg.test(membertel.value)) {
+			tel.style.color = '#DC3545';
+			tel.textContent = '올바른 전화번호 형식이 아닙니다.';
+		} else {
+			tel.style.color = '#00AA00';
+			tel.textContent = '✔';
+			telValidate = true;
+			membertel.name = 'gm_tel';
+		}
+	});
+	
+	const memberpwd = document.getElementById('member-pwd');
+	memberpwd.addEventListener('change', () => {
+		const pwd = document.getElementById('pwd-reg');
+		const pwdReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+		if(!pwdReg.test(memberpwd.value)) {
+			pwd.style.color = '#DC3545';
+			pwd.textContent = '영문 소문자, 숫자, 특수기호를 하나씩 포함해야 합니다.';
+		} else {
+			pwd.style.color = '#00AA00';
+			pwd.textContent = '사용가능한 비밀번호 입니다.';
+			pwdValidate = true;
+			memberpwd.name = 'gm_pwd';
+		}
+	});
 	
 	const memberid = document.getElementById('member-id');
 	memberid.addEventListener('change', () => {
@@ -156,10 +229,11 @@ a {
 				const idReg = document.getElementById('id-reg');
 				idReg.style.color = '#00AA00';
 				idReg.textContent = '사용가능한 아이디입니다.';
+				idValidate = true;
+				memberid.name = 'gm_id';
 			}
 		});
-	})
-		
+	});
 </script>
 </body>
 </html>
