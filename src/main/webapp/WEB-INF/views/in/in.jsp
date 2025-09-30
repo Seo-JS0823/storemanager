@@ -15,6 +15,7 @@
 </style>
 </head>
 <body>
+<form>
 <div class="wrap">
 	<%@ include file="../layout/left-menu.jsp"%>
 	<div class="right-wrap">
@@ -90,5 +91,6 @@
 		<!-- 아이템 리스트 뿌려주기 -->
 	</div>
 </div>
+</form>
 </body>
 </html>
