@@ -3,25 +3,25 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&"/>
-	<link rel="stylesheet" href="/css/reset.css">
-	<link rel="stylesheet" href="/css/wrap.css">
-	<link rel="stylesheet" href="/css/items-modal.css">
-	<title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&"/>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/wrap.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <title></title>
 <style>
-	
+    
 </style>
 </head>
 <body>
 <div class="wrap">
-	<%@ include file="../layout/left-menu.jsp"%>
-	<div class="right-wrap">
-		<%@ include file="../layout/header.jsp"%>
-		<!-- 개인 작업 영역 -->
-		<div>
-			<div class="main-menu">
+    <%@ include file="../layout/left-menu.jsp"%>
+    <div class="right-wrap">
+        <%@ include file="../layout/header.jsp"%>
+        <!-- 개인 작업 영역 -->
+        <div>
+            <div class="main-menu">
                     <div>
                         <span class="material-symbols-outlined">apps</span>
                         <span>입고관리</span>
@@ -66,26 +66,8 @@
                         <div></div>
                     </div>
                 </div>
-                <!-- 아이템 리스트 부분 / c:forEach -->
                 <div class="main-items">
-                    <!-- <c:forEach var="list" items="${items}"> c:forEach가 아니라 JS for문으로. -->
-                    <div>
-                        <!--<input type="hidden" class="items-idx" value="${item.idx}">-->
-                        <div>1</div>
-                        <div>예가체프-콜롬비아</div>
-                        <div>동서식품</div>
-                        <div>38,450원</div>
-                        <div>2EA</div>
-                        <div>총 76,900원</div>
-                        <div>2025-09-10</div>
-                        <div class="btns-box"> <!-- Ball -->
-                            <div class="items-btn-orange" data-idx="orange1"></div>
-                            <div class="items-btn-green" data-idx="green1"></div>
-                            <div class="items-btn-red" data-idx="red1"></div>
-                        </div>
-                    </div>
-                    <!-- </c:forEach> -->
-                    
+                    <!-- 아이템 리스트 부분 / 제이슨데이터 가져오기 -->
                     <!-- 마지막은 페이징 -->
                     <div class="paging">
                         <div>◀◀</div>
@@ -102,14 +84,9 @@
                     </div>
                 </div>
             </div>
-		</div>
-	</div>
-</div>
+        </div>
+    </div>
 <script src="js/modal.js"></script>
-<script>
-const listEl = document.getElementsByClassName('main-items');
-
-
-</script>
+<script src="/out/out.js"></script>
 </body>
 </html>

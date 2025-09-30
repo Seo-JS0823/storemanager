@@ -8,7 +8,10 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface OutMapper {
 	
-	@Select("SELECT gih_idx, gcm_code, gi_code, gi_name, gih_qty, gih_price FROM GE_ITEMS_HIST WHERE gih_inout='OUT'") 
+	@Select("SELECT gih_idx, gcm_name, gi_code, gi_name, gih_qty, gih_price, sum(gih_qty * gih_price) as total"
+			+ " FROM GE_ITEMS_HIST AS HIST"
+			+ " INNER JOIN GE_COM_MEMBER AS MEM ON  HIST.gcm_code = MEM.gcm_code"
+			+ " WHERE gih_inout='OUT'") 
 	public ArrayList<HashMap<String,Object>> getOutList();
 	
 }
