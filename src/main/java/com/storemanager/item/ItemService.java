@@ -1,22 +1,17 @@
 package com.storemanager.item;
 
 import java.util.List;
-
 import org.springframework.stereotype.Service;
-
-import com.storemanager.item.ItemDTO;
-import com.storemanager.item.ItemMapper;
-
 import lombok.RequiredArgsConstructor;
 
-@Service
-@RequiredArgsConstructor
+@Service 
+@RequiredArgsConstructor 
 public class ItemService {
 
-    private final ItemMapper itemMapper;
+    private final ItemMapper itemMapper; 
 
     public List<ItemDTO> findAllItems() {
-    	
+      
         return itemMapper.findAllItems();
     }
 }
