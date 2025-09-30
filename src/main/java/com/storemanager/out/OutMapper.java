@@ -19,4 +19,7 @@ public interface OutMapper {
 			+ " INNER JOIN GE_COM_MEMBER AS MEM ON  HIST.gcm_code = MEM.gcm_code"
 			+ " WHERE gih_idx = #{idx} " )
 	public HashMap<String,Object> getItem(Integer idx);
+
+	//쿼리 짜야함
+	public int updateOutItem(Integer idx);
 }
