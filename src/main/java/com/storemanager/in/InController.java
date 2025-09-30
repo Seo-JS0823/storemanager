@@ -15,7 +15,8 @@ public class InController {
 		this.inMapper = inMapper;
 	}
 	
-	@GetMapping("/")
+	
+	@GetMapping("/In/List")
 	public ModelAndView InList() {
 		
 		ArrayList<HashMap<String,Object>> list = inMapper.getInList();

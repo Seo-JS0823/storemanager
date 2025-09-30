@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MemberController {
 
-//	@GetMapping("/")
-//	public String loginForm() {
-//		return "in/in";
-//	}
+	@GetMapping("/")
+	public String loginForm() {
+		return "in/in";
+	}
 }
