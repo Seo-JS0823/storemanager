@@ -1,5 +1,6 @@
 package com.storemanager.bill;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,11 @@ public class BillController {
 	@RequestMapping("bill/bill")
 	public ModelAndView billList(ModelAndView mv, BillDTO billDto) {
 		
+		LocalDate endDay = LocalDate.now();
+		LocalDate startDay = endDay.minusDays(7);
+
 		// List
-		List<BillDTO> billList = billMapper.getBillListIN();
+		List<BillDTO> billList = billMapper.getBillListIN(startDay.toString(), endDay.toString());
 		
 		mv.addObject("billList",billList);
 		mv.setViewName("bill/bill");

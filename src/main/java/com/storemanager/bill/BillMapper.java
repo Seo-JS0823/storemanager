@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface BillMapper {
 
-	List<BillDTO> getBillListIN();
+	List<BillDTO> getBillListIN(String startDay, String endDay);
 
 }
