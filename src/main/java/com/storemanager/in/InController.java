@@ -1,6 +1,7 @@
 package com.storemanager.in;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +18,15 @@ public class InController {
 	@GetMapping("/")
 	public ModelAndView InList() {
 		
-		ArrayList<InDTO> list = inMapper.getInList();
+		ArrayList<HashMap<String,Object>> list = inMapper.getInList();
+
 		ModelAndView mv = new ModelAndView();
-		System.out.println(list);
 		mv.addObject("list", list);
 		mv.setViewName("in/in");
 		return mv;
 	}
 }
+
+
+
+
