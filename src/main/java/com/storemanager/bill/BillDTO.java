@@ -17,13 +17,14 @@ public class BillDTO {
 	private String gbc_gis_list;
 	private String gbc_regdate;
 	
-	private String gmc_name;
+	private String gcm_name;
 	
-	public String getGmc_name() {
-		return gmc_name;
+	
+	public String getGcm_name() {
+		return gcm_name;
 	}
-	public void setGmc_name(String gmc_name) {
-		this.gmc_name = gmc_name;
+	public void setGcm_name(String gcm_name) {
+		this.gcm_name = gcm_name;
 	}
 	public int getGih_idx() {
 		return gih_idx;
@@ -114,7 +115,7 @@ public class BillDTO {
 	
 	public BillDTO(int gih_idx, String gcm_code, int gi_code, String gi_name, String gih_inout, int gih_qty,
 			int gih_price, String gih_remark, String gih_regdate, String gih_confirm, int gbc_idx, String gbc_number,
-			String gbc_gis_list, String gbc_regdate, String gmc_name) {
+			String gbc_gis_list, String gbc_regdate, String gcm_name) {
 		super();
 		this.gih_idx = gih_idx;
 		this.gcm_code = gcm_code;
@@ -130,7 +131,7 @@ public class BillDTO {
 		this.gbc_number = gbc_number;
 		this.gbc_gis_list = gbc_gis_list;
 		this.gbc_regdate = gbc_regdate;
-		this.gmc_name = gmc_name;
+		this.gcm_name = gcm_name;
 	}
 	@Override
 	public String toString() {
@@ -138,7 +139,7 @@ public class BillDTO {
 				+ gi_name + ", gih_inout=" + gih_inout + ", gih_qty=" + gih_qty + ", gih_price=" + gih_price
 				+ ", gih_remark=" + gih_remark + ", gih_regdate=" + gih_regdate + ", gih_confirm=" + gih_confirm
 				+ ", gbc_idx=" + gbc_idx + ", gbc_number=" + gbc_number + ", gbc_gis_list=" + gbc_gis_list
-				+ ", gbc_regdate=" + gbc_regdate + ", gmc_name=" + gmc_name + "]";
+				+ ", gbc_regdate=" + gbc_regdate + ", gcm_name=" + gcm_name + "]";
 	}
 
 	
