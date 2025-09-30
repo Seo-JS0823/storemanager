@@ -21,7 +21,9 @@
 		<%@ include file="../layout/header.jsp"%>
 		<!-- 개인 작업 영역 -->
 		<div>
-			
+			<c:forEach var="billList" items="${billList}">
+				${ billList.gi_name }|||${ billList.gcm_name }|||${ billList.gih_price }|||${ billList.gih_regdate }|||${ billList.gih_inout }|||
+			</c:forEach>
 		</div>
 	</div>
 </div>
