@@ -36,14 +36,13 @@ a {
 }
 .join-box {
 	width: 50rem;
-	height: 60rem;
+	height: auto;
 	border-radius: 2rem;
 	box-shadow: 0 0 10px rgba(33, 33, 33, 0.25);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	padding-top: 2rem;
-	padding-bottom: 2rem;
 	gap: 2rem;
 	user-select: none;
 }
@@ -129,6 +128,7 @@ a {
 				<input type="text" id="member-email">
 			</form>
 				<button id="join-btn">회 원 가 입</button>
+				<button id="back-btn">뒤 로 가 기</button>
 			</div>
 		</div>
 	</div>
@@ -142,7 +142,7 @@ a {
 	let emailValidate = false;
 	
 	joinB.addEventListener('click', (event) => {
-		if(idValidate || pwdValidate || nameValidate || telValidate || emailValidate) {
+		if(idValidate && pwdValidate && nameValidate && telValidate && emailValidate) {
 			const formEl = document.getElementById('join-form');
 			formEl.action = '/join';
 			formEl.method = 'post';
@@ -156,6 +156,11 @@ a {
 	
 	const membername = document.getElementById('member-name');
 	membername.addEventListener('change', () => {
+		if(membername.value === '') {
+			nameValidate = false;
+			return;
+		}
+		
 		if(membername.value.length > 1) {
 			nameValidate = true;
 			membername.name = 'gm_name';
@@ -166,6 +171,12 @@ a {
 	memberemail.addEventListener('change', () => {
 		const email = document.getElementById('email-reg');		
 		const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		
+		if(memberemail.value === '') {
+			email.textContent = '';
+			emailValidate = false;
+			return;
+		}
 		
 		if(!emailReg.test(memberemail.value)) {
 			email.style.color = '#DC3545';
@@ -183,6 +194,12 @@ a {
 		const tel = document.getElementById('tel-reg');
 		const telReg = /^0\d{1,2}-\d{3,4}-\d{4}$/;
 		
+		if(membertel.value === '') {
+			tel.textContent = '';
+			telValidate = false;
+			return;
+		}
+		
 		if(!telReg.test(membertel.value)) {
 			tel.style.color = '#DC3545';
 			tel.textContent = '올바른 전화번호 형식이 아닙니다.';
@@ -198,6 +215,13 @@ a {
 	memberpwd.addEventListener('change', () => {
 		const pwd = document.getElementById('pwd-reg');
 		const pwdReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+		
+		if(memberpwd.value === '') {
+			pwd.textContent = '';
+			pwdValidate = false;
+			return;
+		}
+		
 		if(!pwdReg.test(memberpwd.value)) {
 			pwd.style.color = '#DC3545';
 			pwd.textContent = '영문 소문자, 숫자, 특수기호를 하나씩 포함해야 합니다.';
@@ -211,28 +235,51 @@ a {
 	
 	const memberid = document.getElementById('member-id');
 	memberid.addEventListener('change', () => {
-		fetch('/api/member', {
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: memberid.value
-		})
-		.catch(error => console.log(error))
-		.then(response => response.text())
-		.then(data => {
-			if(data === 'false') {
-				const idReg = document.getElementById('id-reg');
-				idReg.style.color = '#DC3545';
-				idReg.textContent = '이미 존재하는 아이디입니다.';
-			} else if(data === 'true') {
-				const idReg = document.getElementById('id-reg');
-				idReg.style.color = '#00AA00';
-				idReg.textContent = '사용가능한 아이디입니다.';
-				idValidate = true;
-				memberid.name = 'gm_id';
-			}
-		});
+		const idReg = /^[a-z0-9]{8,}$/;
+		if(idReg.test(memberid.value)) {
+			fetch('/api/member', {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: memberid.value
+			})
+			.catch(error => console.log(error))
+			.then(response => response.text())
+			.then(data => {
+				if(data === 'false') {
+					const idReg = document.getElementById('id-reg');
+					idReg.style.color = '#DC3545';
+					idReg.textContent = '이미 존재하는 아이디입니다.';
+				} else if(data === 'true') {
+					const idReg = document.getElementById('id-reg');
+					idReg.style.color = '#00AA00';
+					idReg.textContent = '사용가능한 아이디입니다.';
+					idValidate = true;
+					memberid.name = 'gm_id';
+				}
+			});
+		} else if(memberid.value === '') {
+			const idReg = document.getElementById('id-reg');
+			idReg.textContent = '';
+			idValidate = false;
+		} else if(memberid.value.length < 8) {
+			const idReg = document.getElementById('id-reg');
+			idReg.style.color = '#DC3545';
+			idReg.textContent = '아이디는 8글자 이상이어야 합니다.';
+		} else {
+			const idReg = document.getElementById('id-reg');
+			idReg.style.color = '#DC3545';
+			idReg.textContent = '아이디에 한글과 특수문자를 사용할 수 없습니다.';
+		}
+	});
+	
+	const backB = document.getElementById('back-btn');
+	backB.addEventListener('click', () => {
+		const formEl = document.getElementById('join-form');
+		formEl.action = '/';
+		formEl.method = 'get';
+		formEl.submit();
 	});
 </script>
 </body>
