@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MemberController {
@@ -32,6 +34,16 @@ public class MemberController {
 	@PostMapping("/join")
 	public String join(MemberDTO member) {
 		return memberService.join(member);
+	}
+	
+	/* 회원가입 ID Validation true: 사용 가능한 아이디 , false: 사용 불가능한 아이디 */
+	@PostMapping("/api/member")
+	@ResponseBody
+	public String joinIdValidation(@RequestBody String gm_id) {
+		if(memberService.joinIdValidation(gm_id)) {
+			return "true";
+		}
+		return "false";
 	}
 	
 }

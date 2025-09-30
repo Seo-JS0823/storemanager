@@ -33,6 +33,13 @@ public class MemberService {
 		return "redirect:/";
 	}
 	
+	// join Id Validation 로직
+	public boolean joinIdValidation(String gm_id) {
+		int target = memberMapper.joinIdValidation(gm_id);
+		if(target == 0) return true;
+		else return false;
+	}
+	
 	public String encode(MemberDTO member) {
 		if(member == null) throw new IllegalArgumentException();
 		

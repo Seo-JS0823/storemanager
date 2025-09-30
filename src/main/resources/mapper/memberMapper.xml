@@ -19,4 +19,14 @@
 			(#{gm_id}, #{gm_pwd}, #{gm_name}, #{gm_email}, #{gm_tel})
 	</insert>
 	
+	<!-- 회원가입시 존재하는 아이디인지 검증 -->
+	<select id="joinIdValidation" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			GE_MEMBER
+		WHERE
+			GM_ID = #{gm_id}
+	</select>
+	
 </mapper>

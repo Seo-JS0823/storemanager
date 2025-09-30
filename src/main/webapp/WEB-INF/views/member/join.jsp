@@ -113,7 +113,7 @@ a {
 <body>
 	<div class="join-container">
 		<div class="join-box">
-			<div>회 원 가 입</div>
+			<div>회 원 가 입(직원)</div>
 			<div>
 			<form id="join-form">
 				<div>이 름</div>
@@ -133,68 +133,33 @@ a {
 	</div>
 <script>
 	const joinB = document.getElementById('join-btn');
-	joinB.addEventListener('click', (event) => {
-		const name = document.getElementById('member-name');
-		const id = document.getElementById('member-id');
-		const pwd = document.getElementById('member-pwd');
-		const tel = document.getElementById('member-tel');
-		const email = document.getElementById('member-email');
-		
-		name.name = 'gm_name';
-		id.name = 'gm_id';
-		pwd.name = 'gm_pwd';
-		tel.name = 'gm_tel';
-		email.name = 'gm_email';
-		
-		const validata = {
-			name:name.value,
-			id:id.value,
-			pwd:pwd.value,
-			tel:tel.value,
-			email:email.value
-		}
-		/* 빈 값 + 정규식 검증 */
-		if(joinValidation(validata)) {
-			const formEl = document.getElementById('join-form');
-			formEl.action = '/join';
-			formEl.method = 'post';
-			formEl.submit();
-		}
-	});
+	const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+	const telReg = /^0\d{1,2}-\d{3,4}-\d{4}$/;
 	
-	function joinValidation(data) {
-		const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		const telReg = /^0\d{1,2}-\d{3,4}-\d{4}$/;
-		if(data.name === '') {
-			alert('이름을 입력하세요.')
-			return false;
-		}
-		if(data.id === '') {
-			alert('아이디를 입력하세요.');
-			return false;
-		}
-		if(data.pwd === '') {
-			alert('비밀번호를 입력하세요.');
-			return false;
-		}
-		if(data.tel === '') {
-			alert('전화번호를 입력하세요.')
-			return false;
-		}
-		if(!telReg.test(data.tel)) {
-			alert('올바른 형식의 전화번호를 입력하세요.');
-			return false;
-		}
-		if(data.email === '') {
-			alert('이메일을 입력하세요.')
-			return false;
-		}
-		if(!emailReg.test(data.email)) {
-			alert('올바른 형식의 이메일로 입력하세요.');
-			return false;
-		}
-		return true;
-	}
+	const memberid = document.getElementById('member-id');
+	memberid.addEventListener('change', () => {
+		fetch('/api/member', {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: memberid.value
+		})
+		.catch(error => console.log(error))
+		.then(response => response.text())
+		.then(data => {
+			if(data === 'false') {
+				const idReg = document.getElementById('id-reg');
+				idReg.style.color = '#DC3545';
+				idReg.textContent = '이미 존재하는 아이디입니다.';
+			} else if(data === 'true') {
+				const idReg = document.getElementById('id-reg');
+				idReg.style.color = '#00AA00';
+				idReg.textContent = '사용가능한 아이디입니다.';
+			}
+		});
+	})
+		
 </script>
 </body>
 </html>
