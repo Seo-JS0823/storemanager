@@ -49,9 +49,7 @@
 
 </head>
 <body>
-<<<<<<< HEAD
 <form>
-=======
 <!-- 태크 보관소 -->
 <template id="company-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
 <div>
@@ -72,8 +70,6 @@
 <div id="company-select-modal"></div>
 <div id="item-select-modal"></div>
 <div id="modal-container"></div>
-
->>>>>>> in
 <div class="wrap">
     <!-- 모달 -->
     
@@ -165,15 +161,25 @@
 				</c:forEach> 
 					<div></div>
 				</div>
-				
+				<div class="paging">
+	                <div>◀◀</div>
+	                <div>◀</div>
+	                <!-- c:forEach start -->
+	                <div>1</div>
+	                <div>2</div>
+	                <div>3</div>
+	                <div>4</div>
+	                <div>5</div>
+	                <!-- c:forEach End -->
+	                <div>▶</div>
+	                <div>▶▶</div>
+	            </div>
 			</div> <!-- 개인 작업 영역 끝 -->
 			
 			<!-- 아이템 리스트 뿌려주기 -->
 	</div>
 </div>
-<<<<<<< HEAD
 </form>
-=======
 <script>
 const inCreateEl = document.querySelector('#in-create');
 
@@ -198,6 +204,5 @@ inCreateEl.addEventListener('click', (e) => {
 const modalContainerEl = document.querySelector('#modal-container');
  // modalContainerEl.style.transform = 'translateX(0%)';
 </script>
->>>>>>> in
 </body>
 </html>
