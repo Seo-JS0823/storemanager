@@ -9,7 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+<<<<<<< Updated upstream
 import org.springframework.web.bind.annotation.PostMapping;
+=======
+>>>>>>> Stashed changes
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,6 +49,7 @@ public class OutController {
 		json = new JSONObject(target);
 		return json.toString();
 	}
+<<<<<<< Updated upstream
 
 	@PostMapping("/list/{idx:\\d+}")
 	@ResponseBody
@@ -68,4 +72,18 @@ public class OutController {
 
 
 
+=======
+	
+	@PatchMapping("/list/{idx}")
+	@ResponseBody
+	public String updateOut(@PathVariable Integer idx, @RequestBody OutDTO outdto) {
+		log.info("{}", outdto);
+		
+		JSONObject json = null;
+		HashMap<String, Object> target = outsvc.updateOutItem(idx, outdto);
+		
+		json = new JSONObject(target);
+		return json.toString();
+	}
+>>>>>>> Stashed changes
 }

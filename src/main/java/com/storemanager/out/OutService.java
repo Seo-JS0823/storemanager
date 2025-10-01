@@ -45,4 +45,7 @@ public class OutService {
     return result;
    }
 	
+	public HashMap<String, Object> updateOutItem(Integer idx, OutDTO outdto) {
+		return outmapper.updateOutItem(idx, outdto);
+	}
 }
