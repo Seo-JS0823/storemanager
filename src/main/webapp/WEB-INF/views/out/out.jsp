@@ -275,22 +275,16 @@ btnEl2.onclick = e => {
     let gih_remark = document.getElementsByName('gih_remark')[0].value;
     
     params = {
-<<<<<<< Updated upstream
         method: "post",
-=======
         method: "PATCH",
->>>>>>> Stashed changes
         headers: {
             "Accept"       : "application/json",
             "Content-Type" : "application/json",                                                                                                
             "Access-Control-Origin": "*"     // CORS 정책을 피한다
         },
         body:JSON.stringify({
-<<<<<<< Updated upstream
             gih_idx : idx,
-=======
             gih_idx : idx
->>>>>>> Stashed changes
             gcm_name : gcm_name,
             gih_price : gih_price,
             gih_qty : gih_qty,
