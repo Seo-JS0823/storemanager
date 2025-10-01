@@ -12,18 +12,28 @@ public class OutService {
 		
 	  @Autowired private OutMapper outmapper;
 	
+	  // 검색 - 거래처 리스트 조회
+	  public ArrayList<HashMap<String, Object>> getCustomerList() {
+		    return outmapper.getCustomerList();
+	  }
+	  
+	  // 검색 - 품목 리스트 조회
+	  public ArrayList<HashMap<String, Object>> getItemList() {
+		    return outmapper.getItemList();
+	  }
+	  
 	  public ArrayList<HashMap<String, Object>> getOutList() {
-	    return outmapper.getOutList();
+		    return outmapper.getOutList();
 	  }
 
-	public HashMap<String, Object> getItem(Integer idx) {
-		return outmapper.getItem(idx);
-	}
+	  public HashMap<String, Object> getItem(Integer idx) {
+		  return outmapper.getItem(idx);
+	  }
 
-	public boolean updateOutItem(int idx, JSONObject json) {
+	  public boolean updateOutItem(int idx, JSONObject json) {
 		boolean result = false;
 		int x = 0;
-
+		
 		/* =========================================
 		 각 테이블에 값을 기록하는 코드 추가할 것
 		 {"gih_idx":"2","gcm_name":"","gih_price":"","gih_qty":"","gih_remark":""}
@@ -33,17 +43,17 @@ public class OutService {
 		 gih_qty:""
 		 gih_remark:""
 		 ========================================= */
-
+		
 		json.get("gih_idx");
 		json.get("gcm_name");
 		json.get("gih_price");
 		json.get("gih_qty");
 		json.get("gih_remark");
-
+		
 		//x = outmapper.updateOutItem();
-
-    return result;
-   }
+		
+		return result;
+	}
 	
 	public HashMap<String, Object> updateOutItem(Integer idx, OutDTO outdto) {
 		return outmapper.updateOutItem(idx, outdto);
