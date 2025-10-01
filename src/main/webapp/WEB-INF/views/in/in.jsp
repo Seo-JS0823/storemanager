@@ -23,7 +23,7 @@
 		justify-content: center;
 	}
 	
-	.company-modal {
+	.select-modal {
 		background-color : white;
 		height : 40%;
 		width : 50%;
@@ -50,17 +50,26 @@
 </head>
 <body>
 <form>
-<!-- 태크 보관소 -->
-<template id="company-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
+<!-- 태그 보관소 -->
+<template id="items-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
 <div>
+<label for="items"></label>
+		<select id="item-name" name="gi_name">
+			<c:forEach var="itemsName" items="${itemsName}">
+			<option value="${itemsName.gi_name}">${itemsName.gi_name}</option>
+			<%-- <input type="hidden" id="hiddenItems" value="${list.gcm_code}"/> --%>			
+			</c:forEach>
+		</select>
+</div>
+</template>
 
-<label for="company">거래처 선택: </label>
-			
+<template id="companys-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
+<div>
+<label for="companys"></label>
 		<select>
-			<c:forEach var="list" items="${list}">
-			<option value="gcm_name">${list.gi_name}</option>
-			<option value="gcm_name">ㅇㅇㅇ</option>
-			<input type="hidden" id="hiddenCompany" value="${list.gcm_code}"/>
+			<c:forEach var="companysName" items="${companysName}">
+			<option value="gcm_name">${companysName.gcm_name}</option>
+			<%-- <input type="hidden" id="hiddenCompanys" value="${list.gcm_code}"/> --%>			
 			</c:forEach>
 		</select>
 </div>
@@ -91,10 +100,10 @@
 							<span>상세보기</span>
 							<div class="m-state green"></div>
 							<span>입고수정</span>
-							<div class="m-state red"></div>
-							<span>출고생성</span>
+					<!-- 		<div class="m-state red"></div>
+							<span>출고생성</span> -->
 						</div>
-						<div class="green" id="in-create">입고생성</div>
+						<div class="green" id="in-create">입고</div>
 					</div>
 				</div>
 				<!-- 검색 라인 -->
@@ -142,9 +151,9 @@
 				</div>
 				
 				<div class="m-items"> <!-- 입고 리스트 -->
-				<c:forEach var="list" items="${list}">
+				<c:forEach var="list" items="${list}" varStatus="status">
 					<div>
-						<div>${list.gih_idx}</div>
+						<div>${status.index + 1}</div>
 						<div>${list.gi_name}</div>
 						<div>동서식품</div>
 						<div>${list.gih_price}원</div>
@@ -155,7 +164,7 @@
 							<!-- Ball -->
 							<div class="items-btn orange"></div>
 							<div class="items-btn green"></div>
-							<div class="items-btn red"></div>
+							<!-- <div class="items-btn red"></div> -->
 						</div>
 				  </div>
 				</c:forEach> 
@@ -167,33 +176,61 @@
 			<!-- 아이템 리스트 뿌려주기 -->
 	</div>
 </div>
-<<<<<<< HEAD
 </form>
-=======
 <script>
+
 const inCreateEl = document.querySelector('#in-create');
 
 inCreateEl.addEventListener('click', (e) => {
-	const overlay = document.createElement('div');
-	const companySelectModalEl = document.createElement('div');
-	const message = document.createElement('p');
-	const companySelect = document.querySelector('#company-select').content.cloneNode(true);
+	
+/* 	fetch('/in/items')
+		.then( response => response.json() )
+		.then( data => {
+			console.log(data[0].gcm_name)
+		} ) */
+	
+	
+	const overlay         = document.createElement('div');
+	const SelectModalEl   = document.createElement('div');
+	
+	const itemsMessage    = document.createElement('h2');
+	const itemsSelect 	  = document.querySelector('#items-select').content.cloneNode(true);
+	
+	const companysMessage = document.createElement('h2');
+	const companysSelect  = document.querySelector('#companys-select').content.cloneNode(true);
+	
 	
 	overlay.className = "overlay"; 
-	companySelectModalEl.className = "company-modal";
-	message.className = "message";
-	message.innerHTML = "입고할 거래처 선택";
+	SelectModalEl.className = "select-modal";
+	
+	itemsMessage.className = "items-message";
+	itemsMessage.innerHTML = "입고할 물품 선택 : ";
+	
+	companysMessage.className = "companys-message";
+	companysMessage.innerHTML = "거래처 선택 : ";
 	
 	document.body.appendChild(overlay);
-	overlay.appendChild(companySelectModalEl);
-	companySelectModalEl.appendChild(message);
-	companySelectModalEl.appendChild(companySelect);
+	overlay.appendChild(SelectModalEl);
+	SelectModalEl.appendChild(itemsMessage);
+	SelectModalEl.appendChild(itemsSelect);
+	SelectModalEl.appendChild(companysMessage);
+	SelectModalEl.appendChild(companysSelect);
+	
+	const itemsNameEl     = document.querySelector('#item-name')
+	
+	itemsNameEl.addEventListener('change', () => {
+		let itemsName = itemsNameEl.value
+		fetch('/in/items/' + itemsName)
+			.then( response => response.json() )
+			.then( data => (e) {
+				
+			} )
+	})
 	
 })
 
 const modalContainerEl = document.querySelector('#modal-container');
  // modalContainerEl.style.transform = 'translateX(0%)';
 </script>
->>>>>>> in
 </body>
 </html>

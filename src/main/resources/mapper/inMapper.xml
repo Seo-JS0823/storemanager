@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.storemanager.in.InMapper">
+	<!-- WHERE 에  gi_code 필요 -->
+	<select id="getInList" resultType="com.storemanager.in.InDTO">
+		SELECT 
+			gih_idx, 
+			gcm_code, 
+			gi_code, 
+			gi_name, 
+			gih_inout, 
+			gih_qty, 
+			gih_price, 
+			gih_remark,
+			TO_CHAR(gih_regdate,'YYYY-MM-DD') gih_regdate,
+			gih_confirm, 
+			(gih_qty * gih_price) tot_price
+	  FROM GE_ITEMS_HIST
+		WHERE gih_inout = 'IN' 
+	</select>
+	
+	<select id="getItemsName" resultType="com.storemanager.in.InDTO">
+		SELECT
+			DISTINCT(gi_name) gi_name
+		FROM
+			GE_ITEMS
+	</select>
+	
+	<select id="getCompanysName" resultType="com.storemanager.in.InDTO">
+		SELECT
+			gcm_name
+		FROM GE_COM_MEMBER a JOIN GE_ITEMS b
+		ON a.gcm_code = b.gcm_code
+		WHERE gi_name = '김치' 			
+	</select>
+	
+		
+	
+</mapper>  

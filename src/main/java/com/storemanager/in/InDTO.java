@@ -38,6 +38,9 @@ public class InDTO {
 	// 아이템 히스토리 단가
 	private Integer gih_price;
 	
+	// 아이템 히스토리 총가
+	private Integer tot_price;
+	
 	// 아이템 히스토리 비고
 	private String  gih_remark;
 	
