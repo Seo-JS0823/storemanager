@@ -349,7 +349,11 @@ btnEl2.onclick = e => {
         },
         body:JSON.stringify({
             gih_idx : idx,
+<<<<<<< HEAD
             gih_idx : idx,
+=======
+            gih_idx : idx
+>>>>>>> 5d6b2d95fd5419206cb03ab7e102a239d2740037
             gcm_name : gcm_name,
             gih_price : gih_price,
             gih_qty : gih_qty,

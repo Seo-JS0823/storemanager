@@ -16,7 +16,7 @@ public class MemberController {
 	/* 기본 루트 페이지 (로그인) */
 	@GetMapping("/")
 	public String loginForm() {
-		return "member/login";
+		return "member/test-out";
 	}
 	
 	@PostMapping("/login")
