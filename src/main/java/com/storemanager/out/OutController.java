@@ -53,7 +53,7 @@ public class OutController {
 
 		try{
 			json = new JSONObject(rBody);
-		}catch(Exception e){
+		} catch(Exception e){
 			response.setStatus(401);
 			return result.toString();
 		}
@@ -63,16 +63,6 @@ public class OutController {
 		else response.setStatus(401);
 		return result.toString();
 	}
+
 	
-	@PatchMapping("/list/{idx}")
-	@ResponseBody
-	public String updateOut(@PathVariable Integer idx, @RequestBody OutDTO outdto) {
-		log.info("{}", outdto);
-		
-		JSONObject json = null;
-		HashMap<String, Object> target = outsvc.updateOutItem(idx, outdto);
-		
-		json = new JSONObject(target);
-		return json.toString();
-	}
 }
