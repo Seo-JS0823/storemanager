@@ -207,7 +207,6 @@
 	           	    </div>
 	          	</div>
 			</c:forEach>
-			<div></div>
 			</div>
 			<div class="paging">
                 <div>◀◀</div>
@@ -312,25 +311,52 @@
 				
 				data.forEach(item => {
 					const list = document.createElement("div");
+					list.innerHTML =  `
+						<input type="hidden" id="gih_input" value=\${item.gih_inout} />
+						<div id="gih_idx"><input type="checkbox" id="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>
+						<div id='gi_name'>\${item.gi_name}</div>
+						<div id="gcm_name">\${ item.gcm_name }</div>
+						<div id="gih_price">\${ item.gih_price }</div>
+						<div id="gih_qty">\${ item.gih_qty } EA</div>
+						<div id="all_amount">총 \${ item.amount } 원</div>
+						<div id="gih_regdate">\${ item.gih_regdate }</div>
+					`;
+						
+					const itemsDetailsDiv = document.createElement('div');
+					itemsDetailsDiv.className = 'items-btn orange';
+					itemsDetailsDiv.id = 'itemsDetail';
+					itemsDetailsDiv.name = 'itemsDetail';
+					itemsDetailsDiv.setAttribute('value', `\${item.gih_idx}`);
+						
+					itemsDetailsDiv.addEventListener('click', (e) => {
+						e.stopPropagation();
+						let modalContainerEl = document.getElementById('modal-container');
+						modalContainerEl.style.transform='translateX(0%)';
+							
+						let giCodeEl = document.getElementById('giCode');
+						let giNameEl = document.getElementById('giName');
+						let gcmCodeEl = document.getElementById('gcmCode');
+						let gcmNameEl = document.getElementById('gcmName');
+						let gihPriceEl = document.getElementById('gihPrice');
+						let gihQtyEl = document.getElementById('gihQty');
+						let aMountEl = document.getElementById('aMount');
+							
+						giCodeEl.value = `\${item.gih_idx}`;
+						giNameEl.value = `\${item.gi_name}`;
+						gcmCodeEl.value = `\${item.gcm_code}`;
+						gcmNameEl.value = `\${item.gcm_name}`;
+						gihPriceEl.value = `\${item.gih_price}`;
+						gihQtyEl.value = `\${item.gih_qty}`;
+						aMountEl.textContent = `\${item.amount}`;
+					})
+					const btnsBox = document.createElement('div');
+					btnsBox.className = 'btns-box';
 					
-					list.innerHTML =  `<input type="hidden" id="gih_input" value=\${item.gih_inout}>`
-					list.innerHTML += `<div id="gih_idx"><input type="checkbox" id="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>`
-					list.innerHTML += `<div id='gi_name'>\${item.gi_name}</div>`
-					list.innerHTML += `<div id="gcm_name">\${ item.gcm_name }</div>`
-					list.innerHTML += `<div id="gih_price">\${ item.gih_price }</div>`
-					list.innerHTML += `<div id="gih_qty">\${ item.gih_qty } EA</div>`
-					list.innerHTML += `<div id="all_amount">총 \${ item.amount } 원</div>`
-					list.innerHTML += `<div id="gih_regdate">\${ item.gih_regdate }</div>`
-					list.innerHTML += `<div class="btns-box">`
-					list.innerHTML += `<div class="items-btn orange" id="itemsDetail" name="itemsDetail" value="\${ item.gih_idx }"></div>`
-					list.innerHTML += `</div>`;
+					btnsBox.appendChild(itemsDetailsDiv);
+					
+					list.appendChild(btnsBox);
 	           	    m_itemsEl.appendChild(list);
 				})
-				//const list = document.createElement("div");
-				//list.innerHTML = `<div></div>`;
-				//m_itemsEl.appendChild(list);
-				//resultEl.innerHTML = makeTable( list )
-				
 			})
 			.then(error => console.log(error) )
 	});
