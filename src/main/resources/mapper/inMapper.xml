@@ -31,7 +31,7 @@
 			gcm_name
 		FROM GE_COM_MEMBER a JOIN GE_ITEMS b
 		ON a.gcm_code = b.gcm_code
-		WHERE gi_name = '김치' 			
+		WHERE gi_name = #{gi_name}			
 	</select>
 	
 		

@@ -32,12 +32,9 @@ public class InController {
 		// 물품 선택  
 		List<InDTO> itemsName = inMapper.getItemsName();
 		
-		// 거래처 선택 
-		List<InDTO> companysName = inMapper.getCompanysName(); 
 		
 		mv.addObject("list", list);
 		mv.addObject("itemsName", itemsName);
-		mv.addObject("companysName", companysName);
 		mv.setViewName("in/in");
 		return mv;
 	}

@@ -15,11 +15,13 @@ public class InRestController {
 	}
 	
 	@GetMapping("/in/items/{itemsName}")
-	public String sendItemName(
-			@PathVariable String gi_name
+	public List<InDTO> sendItemName(
+			@PathVariable("itemsName") String gi_name
 			) {
 		
+		List<InDTO> companysName = inMapper.getCompanysName(gi_name);
+		
 		System.out.println("ㄴㄴㄴㄴㄴㄴ : " + gi_name );
-		return gi_name;
+		return companysName;
 	}
 }

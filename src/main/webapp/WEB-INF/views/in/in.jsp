@@ -52,28 +52,27 @@
 <form>
 <!-- 태그 보관소 -->
 <template id="items-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
-<div>
-<label for="items"></label>
-		<select id="item-name" name="gi_name">
+	<div>
+	<label for="items"></label>
+		<input list="items-list" id="item-name" style="width:15%"/>
+		<datalist id="items-list">
 			<c:forEach var="itemsName" items="${itemsName}">
-			<option value="${itemsName.gi_name}">${itemsName.gi_name}</option>
+			<option value="${itemsName.gi_name}">
 			<%-- <input type="hidden" id="hiddenItems" value="${list.gcm_code}"/> --%>			
 			</c:forEach>
-		</select>
-</div>
+		</datalist>
+	</div>
 </template>
 
-<template id="companys-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
-<div>
-<label for="companys"></label>
-		<select>
-			<c:forEach var="companysName" items="${companysName}">
-			<option value="gcm_name">${companysName.gcm_name}</option>
-			<%-- <input type="hidden" id="hiddenCompanys" value="${list.gcm_code}"/> --%>			
-			</c:forEach>
-		</select>
-</div>
-</template>
+ <template id="companys-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
+	<div>
+	<label for="companys"></label>
+		<input list="companys-list" id="company-name" style="width:15%"/>
+		<datalist id="companys-list">
+		
+		</datalist>
+	</div>
+</template> 
 
 <!-- 모달 창 -->
 <div id="company-select-modal"></div>
@@ -195,18 +194,11 @@ const inCreateEl = document.querySelector('#in-create');
 
 inCreateEl.addEventListener('click', (e) => {
 	
-/* 	fetch('/in/items')
-		.then( response => response.json() )
-		.then( data => {
-			console.log(data[0].gcm_name)
-		} ) */
+	const overlay         = document.createElement('div');   // 클릭할떄 나온는 회색배경
+	const SelectModalEl   = document.createElement('div');   // 입고생성 처음 뜨는 모달창
 	
-	
-	const overlay         = document.createElement('div');
-	const SelectModalEl   = document.createElement('div');
-	
-	const itemsMessage    = document.createElement('h2');
-	const itemsSelect 	  = document.querySelector('#items-select').content.cloneNode(true);
+	const itemsMessage    = document.createElement('h2');   
+	const itemsSelect 	  = document.querySelector('#items-select').content.cloneNode(true); // 위에 template 갖고올때 쓰는문법
 	
 	const companysMessage = document.createElement('h2');
 	const companysSelect  = document.querySelector('#companys-select').content.cloneNode(true);
@@ -228,13 +220,24 @@ inCreateEl.addEventListener('click', (e) => {
 	SelectModalEl.appendChild(companysMessage);
 	SelectModalEl.appendChild(companysSelect);
 	
-	const itemsNameEl     = document.querySelector('#item-name')
+	const itemsNameEl     = document.querySelector('#item-name') // 선택칸에 최종 입력된 상품
+
 	
 	itemsNameEl.addEventListener('change', () => {
+		const companyListEl = document.querySelector('#companys-list')
+				
 		let itemsName = itemsNameEl.value
 		fetch('/in/items/' + itemsName)
 			.then( response => response.json() )
-			.then( data => (e) {
+			.then( data => {
+				companyListEl.innerHTML = '';
+				
+				data.forEach( companys => {
+				    const option = document.createElement("option");
+				    option.value = companys.gcm_name;
+				    option.textContent = companys.gcm_name;
+				    companyListEl.appendChild(option);
+				} )
 				
 			} )
 	})
