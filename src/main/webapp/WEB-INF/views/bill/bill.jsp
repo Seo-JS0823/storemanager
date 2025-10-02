@@ -209,6 +209,19 @@
 			</c:forEach>
 			<div></div>
 			</div>
+			<div class="paging">
+                <div>◀◀</div>
+                <div>◀</div>
+                <!-- c:forEach start -->
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <!-- c:forEach End -->
+                <div>▶</div>
+                <div>▶▶</div>
+            </div>
 		</div>
 		
 		<!-- 아이템 리스트 뿌려주기 -->
@@ -232,7 +245,7 @@
 	let itemsDetailEl = document.querySelectorAll('[id=itemsDetail]');
 	for(let i = 0; i< itemsDetailEl.length; i++){
 		itemsDetailEl[i].addEventListener('click',(e) => {
-			//alert(i);
+			alert(i);
 			e.stopPropagation();
 			let modalContainerEl = document.getElementById('modal-container');
 			modalContainerEl.style.transform='translateX(0%)';
@@ -293,45 +306,36 @@
 		fetch('/bill/billout')
 			.then( response => response.json() )
 			.then( data     => {
-				console.log(data)
+				//console.log(data)
 				let m_itemsEl = document.getElementById("m-items");
 				m_itemsEl.innerHTML='';
 				
 				data.forEach(item => {
-					/*
-					gih_inputEl.value = item.gih_inout;
-					gih_idxEl.innerHTML = '<input type="checkbox" id="chkBillId" value="'+item.gih_idx+'" />&nbsp;&nbsp;'+item.num+'</div>';
-					gi_nameEl.textContent = item.gi_name;
-					gcm_nameEl.textContent = item.gcm_name;
-					gih_priceEl.textContent = item.gih_price;
-					gih_qtyEl.textContent = item.gih_qty;
-					all_amountEl.textContent = item.amount;
-					gih_regdateEl.textContent = item.gih_regdate;
-					*/
 					const list = document.createElement("div");
-					console.log(item.gi_name);
-					list.innerHTML +=  `<input type="hidden" id="gih_input" value=\${item.gih_inout}>`
+					
+					list.innerHTML =  `<input type="hidden" id="gih_input" value=\${item.gih_inout}>`
 					list.innerHTML += `<div id="gih_idx"><input type="checkbox" id="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>`
 					list.innerHTML += `<div id='gi_name'>\${item.gi_name}</div>`
-					list.innerHTML += `  	<div id="gcm_name">\${ item.gcm_name }</div>`
-					list.innerHTML += `	<div id="gih_price">\${ item.gih_price }</div>`
-					list.innerHTML += `	<div id="gih_qty">\${ item.gih_qty } EA</div>`
-					list.innerHTML += `   <div id="all_amount">총 \${ item.amount } 원</div>`
-					list.innerHTML += `   <div id="gih_regdate">\${ item.gih_regdate }</div>`
-					list.innerHTML += `   <div class="btns-box">`
-					list.innerHTML += `       <div class="items-btn orange" id="itemsDetail" name="itemsDetail" value="\${ item.gih_idx }"></div>`
-					list.innerHTML += `   </div>`;
+					list.innerHTML += `<div id="gcm_name">\${ item.gcm_name }</div>`
+					list.innerHTML += `<div id="gih_price">\${ item.gih_price }</div>`
+					list.innerHTML += `<div id="gih_qty">\${ item.gih_qty } EA</div>`
+					list.innerHTML += `<div id="all_amount">총 \${ item.amount } 원</div>`
+					list.innerHTML += `<div id="gih_regdate">\${ item.gih_regdate }</div>`
+					list.innerHTML += `<div class="btns-box">`
+					list.innerHTML += `<div class="items-btn orange" id="itemsDetail" name="itemsDetail" value="\${ item.gih_idx }"></div>`
+					list.innerHTML += `</div>`;
 	           	    m_itemsEl.appendChild(list);
 				})
-				m_itemsEl.appendChild('<div></div>');
+				//const list = document.createElement("div");
+				//list.innerHTML = `<div></div>`;
+				//m_itemsEl.appendChild(list);
 				//resultEl.innerHTML = makeTable( list )
 				
 			})
 			.then(error => console.log(error) )
-		
-		
 	});
-	
+	// 출고확인서 리스트 끝.
+	// ============================================
 </script>
 </body>
 </html>
