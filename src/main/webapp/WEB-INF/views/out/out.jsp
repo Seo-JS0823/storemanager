@@ -149,7 +149,7 @@
                     <div>수량</div>
                     <div><input type="number" name="gih_qty"></div>
                 </div>
-                <div><textarea name="git_remark" maxlength="130"></textarea></div>
+                <div><textarea name="gih_remark" maxlength="130"></textarea></div>
                 <div>
                     <div><button>저장</button></div>
                     <div><button>취소</div>
@@ -263,7 +263,44 @@ btnEl1.onclick = e => {
 	showSidebar(true);
 } 
 
-btnEl2.onclick = e => showSidebar(true);
+btnEl2.onclick = e => {
+    // 모달창을 띄운다
+    showSidebar(true);
+    
+    // 수정 데이터를 입력하고 데이터를 넘긴다(거래처명, 출고단가, 수량, 비고만 수정가능)
+    let idx = document.querySelector('#idx').value;
+    let gcm_name = document.getElementsByName('gcm_name')[0].value;
+    let gih_price = document.getElementsByName('gih_price')[0].value;
+    let gih_qty = document.getElementsByName('gih_qty')[0].value;
+    let gih_remark = document.getElementsByName('gih_remark')[0].value;
+    
+    params = {
+        method: "post",
+        method: "PATCH",
+        headers: {
+            "Accept"       : "application/json",
+            "Content-Type" : "application/json",                                                                                                
+            "Access-Control-Origin": "*"     // CORS 정책을 피한다
+        },
+        body:JSON.stringify({
+            gih_idx : idx,
+            gih_idx : idx
+            gcm_name : gcm_name,
+            gih_price : gih_price,
+            gih_qty : gih_qty,
+            gih_remark : gih_remark
+        }),
+    }
+    fetch('/out/list/'+idx, params)
+        .catch( error => console.dir(error))
+        .then(response => response.json())
+        .then(data => {
+            // 저장된 데이터를 가져오고 처리해줘야함
+            console.log(data)
+        })
+        
+}
+
 btnEl3.onclick = e => showSidebar(true);
 bgEl.onclick = e => showSidebar(false);
 
