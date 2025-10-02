@@ -17,7 +17,7 @@
             width:48rem;
             right:-48rem;
             top:0;
-            transition: 0.5s;
+            transition: 1s;
             z-index:10;
 		}
         .back-ground{
@@ -200,10 +200,10 @@
             <div><span class="material-symbols-outlined">hide_image</span></div>
         </div>
         <div>
-            <div><p>출고번호</p><input type="text" name="gih_idx"></div>
-            <div><p>품목명</p><input type="text" name="gi_name"></div>
-            <div><p>거래처코드</p><input type="text" name="gi_code"></div>
-            <div><p>거래처명</p><input type="text" name="gcm_name"></div>
+            <div><p>출고번호</p><input type="text" name="gih_idx" readonly></div>
+            <div><p>품목명</p><input type="text" name="gi_name" readonly></div>
+            <div><p>거래처코드</p><input type="text" name="gi_code" readonly></div>
+            <div><p>거래처명</p><input type="text" name="gcm_name" readonly></div>
             <div><p>출고단가</p><input type="text" name="gih_price"></div>
             <div><p>수량</p><input type="text" name="gih_qty"></div>
         </div>
@@ -211,8 +211,8 @@
             <div><textarea name="gih_remark" rows="5" cols="40" maxlength="130"></textarea></div>
         </div>
         <div>
-            <button>수정</button>
-            <button>취소</button>
+            <button id="btnUpdate">수정</button>
+            <button id="btnCancle">취소</button>
         </div>
     </div>
     <div class="back-ground"></div>
@@ -243,8 +243,6 @@
                 <div>
                     <div>
                         <div class="m-state orange"></div><span>상세보기</span>
-                        <!--<div class="m-state green"></div><span>출고수정</span>-->
-                        <div class="m-state red"></div><span>출고수정</span>
                     </div>
                     <div class="green" id="btnOut">- 출고</div>
                 </div>
@@ -294,8 +292,6 @@
                     <div class="btns-box"> <!-- Ball -->
                         <input id="idx" name="gih_idx" type="hidden" value="${ out.gih_idx }">
                         <div class="items-btn orange"></div>
-                        <!--  <div class="items-btn green"></div> -->
-                        <div class="items-btn red"></div>
                     </div>
                 </div>
                 </c:forEach>
@@ -321,11 +317,15 @@
     </div>
 </div>
 <script>
-let btnOut = document.getElementById('btnOut');                         // 출고버튼
-let bgEl = document.getElementsByClassName('back-ground')[0];           // side-bar 나올때 백그라운드
-let modalEl = document.getElementsByClassName("md-bg")[0];              // 팝업 modal
-let btnEl1 = document.getElementsByClassName('items-btn orange')[0];    // 버튼-상세보기
-let btnEl2 = document.getElementsByClassName('items-btn red')[0];       // 버튼-출고수정
+let btnOut = document.getElementById('btnOut');                             // 출고버튼
+let bgEl = document.getElementsByClassName('back-ground')[0];               // side-bar 나올때 백그라운드
+let modalEl = document.getElementsByClassName("md-bg")[0];                  // 팝업 modal
+let btnUpdate = document.getElementById('btnUpdate');                       // 버튼-수정(내역보기)
+//let btnItems = document.getElementsByClassName('items-btn orange')[0];      // 버튼-상세보기
+
+for(let i=0; i < 10; i++){
+	btnItems = document.getElementsByClassName('items-btn orange')[i]       // 버튼-상세보기
+}
 
 bgEl.onclick = e => showSidebar(false);
 btnOut.onclick = e => showModal(true);
@@ -357,7 +357,7 @@ let showModal = x => {
 }
 
 // 버튼-상세보기 누를 시 처리
-btnEl1.onclick = e => {
+btnItems.onclick = e => {
 	const idx = document.querySelector('#idx').value;
 	//alert(idx);
 	
@@ -380,10 +380,8 @@ btnEl1.onclick = e => {
 	showSidebar(true);
 } 
 
-//버튼-출고수정 누를시 처리
-btnEl2.onclick = e => {
-    // 모달창을 띄운다
-    showSidebar(true);
+//버튼-수정 누를시 처리
+/* btnUpdate.onclick = e => {
     
     // 수정 데이터를 입력하고 데이터를 넘긴다(출고단가, 수량, 비고만 수정가능)
     let idx = document.querySelector('#idx').value;
@@ -396,7 +394,7 @@ btnEl2.onclick = e => {
         method: "PATCH",
         headers: {
             "Accept"       : "application/json",
-            "Content-Type" : "application/json",                                                                                                
+            "Content-Type" : "application/json",                                                                                               
             "Access-Control-Origin": "*"     // CORS 정책을 피한다
         },
         body:JSON.stringify({
@@ -413,7 +411,7 @@ btnEl2.onclick = e => {
             // 저장된 데이터를 가져오고 처리해줘야함
             console.log(data)
         })
-}
+} */
 </script>
 <script>
    let dateStart = document.getElementById("startdate");
