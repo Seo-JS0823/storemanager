@@ -4,7 +4,7 @@
 	<div class="header">
 		<div>(주)싱싱유통</div>
 		<div>
-			<div>주부성 (대리)</div>
+			<div>${gm_name} (대리)</div>
 				<button class="btnAuth material-symbols-outlined">logout</button>
 		</div>
 	</div>

@@ -2,14 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.storemanager.bill.BillMapper">  
  
-	<!-- 
- 	<select id="getBoardList" resultType="com.board.domain.BoardDTO"> 
-		SELECT B.IDX, B.MENU_ID, M.MENU_NAME, B.TITLE, B.CONTENT, B.WRITER, B.REGDATE, B.HIT 
-		FROM BOARD B, MENUS M, TUSER U
-		WHERE B.MENU_ID = M.MENU_ID AND B.WRITER = U.USERID
-		ORDER BY B.REGDATE DESC
-	</select>
-	-->
 	<select id="getBillListIN" resultType="com.storemanager.bill.BillDTO">
 		SELECT
 			ROW_NUMBER() OVER ( ORDER BY GIH.GIH_REGDATE DESC) NUM,
@@ -26,17 +18,52 @@
 		WHERE 
 			GIH.GCM_CODE = GCM.GCM_CODE 
 			AND GIH.GIH_INOUT = 'IN' 
-			AND GIH.GIH_CONFIRM='Y'
+		<!-- 	AND GIH.GIH_CONFIRM='Y' -->
 			AND DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
+		ORDER BY GIH.GIH_REGDATE DESC
 	</select>
+
+	<select id="getOneBill" resultType="com.storemanager.bill.BillDTO">
+		SELECT
+			GIH.GIH_IDX,
+			GIH.GI_CODE, 
+			GIH.GI_NAME, 
+			GCM.GCM_CODE, 
+			GCM.GCM_NAME, 
+			FORMAT(GIH.GIH_QTY,0) GIH_QTY, 
+			FORMAT(GIH.GIH_PRICE,0) GIH_PRICE, 
+			FORMAT((GIH.GIH_QTY*GIH.GIH_PRICE),0) AMOUNT, 
+			DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE, 
+			GIH.GIH_INOUT
+		FROM 
+			GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
+		WHERE 
+			GIH.GCM_CODE = GCM.GCM_CODE 
+			AND GIH.GIH_IDX = #{param1}
+	</select>
+
+	<select id="getBillListOUT" resultType="com.storemanager.bill.BillDTO">
+		SELECT
+			ROW_NUMBER() OVER ( ORDER BY GIH.GIH_REGDATE DESC) NUM,
+			GIH.GIH_IDX,
+			GIH.GI_NAME, 
+			GCM.GCM_NAME, 
+			FORMAT(GIH.GIH_QTY*-1,0) GIH_QTY, 
+			FORMAT(GIH.GIH_PRICE,0) GIH_PRICE, 
+			FORMAT(((GIH.GIH_QTY*-1)*GIH.GIH_PRICE),0) AMOUNT, 
+			DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE, 
+			GIH.GIH_INOUT
+		FROM 
+			GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
+		WHERE 
+			GIH.GCM_CODE = GCM.GCM_CODE 
+			AND GIH.GIH_INOUT = 'OUT' 
+		<!-- 	AND GIH.GIH_CONFIRM='Y' -->
+			AND DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
+		ORDER BY GIH.GIH_REGDATE DESC
+	</select>
+
 	<!--
-	<select id="getBoardList1" resultType="com.board.domain.BoardDTO">
-		SELECT IDX, MENU_ID, TITLE, CONTENT, WRITER, TO_CHAR(REGDATE,'YYYY-MM-DD') REGDATE, HIT
-		FROM BOARD
-		${where_str}
-		ORDER BY IDX DESC
-	</select>
-	
 	<insert id="insertBoard" parameterType="map">
  		INSERT INTO BOARD
  				( IDX, MENU_ID, TITLE, CONTENT, WRITER, REGDATE, HIT )

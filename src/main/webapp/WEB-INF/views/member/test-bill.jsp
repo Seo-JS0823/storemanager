@@ -80,6 +80,32 @@
         font-weight: 600;
         text-align: center;
     }
+    .modal-middle input {
+    	width: 45%;
+        height: 45%;
+        margin: 0 auto;
+        background-color: white;
+        border: 1px solid rgba(33, 33, 33, 0.3);
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        outline: none;
+        padding-left: 0.5rem;
+    }
+    .modal-bottom {
+    	width: 90%;
+        height: 13rem;
+        margin: 0 auto;
+        display: flex;
+        /*flex-direction: column;*/
+        padding-left: 2.5rem;
+        font-size: 3.0rem;
+        font-weight: 600;
+        margin-top : 20px;
+        justify-content:flex-end;
+    }
 </style>
 </head>
 <body>
@@ -88,17 +114,20 @@
 		<div>
             <div id="state"></div><div id="state-text">상세보기</div>
         </div>
-		<div class="modal-header">헤더</div>
-		<div class="modal-middle">
-			<div><p>품목코드</p>    <input type="text" id="giCode"></input></div>
-			<div><p>품목명</p>      <input type="text" id="giName"></input></div>
-			<div><p>매입처코드</p>  <input type="text" id="gcmCode"></input></div>
-			<div><p>매입처명</p>    <input type="text" id="gcmName"></input></div>
+		<div class="modal-header"></div><!-- header -->
+		<div class="modal-middle"><!-- middle -->
+			<div><p>품목코드</p>    <input type="text" id="giCode" readonly></input></div>
+			<div><p>품목명</p>      <input type="text" id="giName" readonly></input></div>
+			<div><p>거래처코드</p>  <input type="text" id="gcmCode" readonly></input></div>
+			<div><p>거래처명</p>    <input type="text" id="gcmName" readonly></input></div>
 
-			<div><p>매입단가</p>    <input type="text" id="gihPrice" name="gihPrice"></div>
-			<div><p>수량</p>        <input type="text" id="gihQry" name="gihQry"></div>
+			<div><p>거래단가</p>    <input type="text" id="gihPrice" name="gihPrice" readonly></div>
+			<div><p>수량</p>        <input type="text" id="gihQty" name="gihQty" readonly></div>
 		</div>
-		<div class="modal-bottom">바텀</div>
+		<div class="modal-bottom"><!-- bottom -->
+			총계 :&nbsp;&nbsp;
+			<div id="aMount"></div>
+		</div>
 	</div>
 	
 	<!-- 모달창 영역 -->
@@ -136,7 +165,7 @@
 						<div class="m-search-option">
 							<!-- <div><input type="radio" id="searchEvent3" name="searchoption"><p>전체</p></div> -->
 							<div><input type="radio" id="searchEvent1" name="searchoption" checked><label for="searchEvent1"><p>상품명</p></label></div>
-							<div><input type="radio" id="searchEvent2" name="searchoption"><label for="searchEvent2"><p>매입처명</p></label></div>
+							<div><input type="radio" id="searchEvent2" name="searchoption"><label for="searchEvent2"><p>거래처명</p></label></div>
 						</div>
 						<div class="m-search-text"> <!-- TEXT 검색 구간 -->
 							<input type="text" name="search" placeholder="검색어를 입력하세요."><div>검색</div>
@@ -145,9 +174,9 @@
 				</div>
 			</div>
 			<div class="m-search-option" style="font-size: 1.5rem;font-weight:bold">
-				<div><input type="radio" id="searchInBill" name="searchBill" checked><label for="searchInBill"><p>입고확인서</p></label></div>
-				<div><input type="radio" id="searchOutBill" name="searchBill"><label for="searchOutBill"><p>출고확인서</p></label></div>
-				<div><input type="radio" id="searchAllBill" name="searchBill"><label for="searchAllBill"><p>명세서</p></label></div>
+				<div><input type="radio" id="searchInBill" name="searchBill" value="in" checked><label for="searchInBill"><p>입고확인서</p></label></div>
+				<div><input type="radio" id="searchOutBill" name="searchBill" value="out"><label for="searchOutBill"><p>출고확인서</p></label></div>
+				<div><input type="radio" id="searchAllBill" name="searchBill" value="all"><label for="searchAllBill"><p>명세서</p></label></div>
 			</div>
 			<!-- 정렬 구간 -->
 			<div class="m-search-sort">
@@ -160,25 +189,25 @@
                 <div>거래일자</div>
                 <div></div>
             </div>
-			<div class="m-items">
+			<div class="m-items" id="m-items">
 			<c:forEach var="billList" items="${billList}">
 				<div>
 					<input type="hidden" id="gih_input" value="${ billList.gih_inout }" />
-	               	<div><input type="checkbox" id="chkBillId" value="${ billList.gih_idx }" />&nbsp;&nbsp;${ billList.num }</div>
-	               	<div>${ billList.gi_name }</div>
-	               	<div>${ billList.gcm_name }</div>
-	             	<div>${ billList.gih_price }</div>
-	            	<div>${ billList.gih_qty } EA</div>
-	           	    <div>총 ${ billList.amount } 원</div>
-	           	    <div>${ billList.gih_regdate }</div>
+	               	<div id="gih_idx"><input type="checkbox" id="chkBillId" value="${ billList.gih_idx }" />&nbsp;&nbsp;${ billList.num }</div>
+	               	<div id="gi_name">${ billList.gi_name }</div>
+	               	<div id="gcm_name">${ billList.gcm_name }</div>
+	             	<div id="gih_price">${ billList.gih_price }</div>
+	            	<div id="gih_qty">${ billList.gih_qty } EA</div>
+	           	    <div id="all_amount">총 ${ billList.amount } 원</div>
+	           	    <div id="gih_regdate">${ billList.gih_regdate }</div>
 	           	    <div class="btns-box"> <!-- Ball -->
-	           	        <div class="items-btn orange" id="itemsDetail"></div>
+	           	        <div class="items-btn orange" id="itemsDetail" name="itemsDetail" value="${ billList.gih_idx }"></div>
 	           	        <!-- <div class="items-btn green"></div> -->
 	           	        <!-- <div class="items-btn red"></div> -->
 	           	    </div>
 	          	</div>
 			</c:forEach>
-	          	<div></div>
+			<div></div>
 			</div>
 			<div class="paging">
                 <div>◀◀</div>
@@ -211,23 +240,131 @@
 	dateStart.value = startDateValue;
 	dateEnd.value = endDateValue;
 	// 검색바 달력 현재 날짜-7 ~ 현재날짜 끝.
-	
-	// 모달창 생성 및 닫기	
-	let itemsDetailEl = document.getElementById('itemsDetail');
+	// ============================================
+	// bill/bill 에서 접속 -> 모달창 생성	
+	let itemsDetailEl = document.querySelectorAll('[id=itemsDetail]');
+	for(let i = 0; i< itemsDetailEl.length; i++){
+		itemsDetailEl[i].addEventListener('click',(e) => {
+			alert(i);
+			e.stopPropagation();
+			let modalContainerEl = document.getElementById('modal-container');
+			modalContainerEl.style.transform='translateX(0%)';
+			
+			let itemsIdx = itemsDetailEl[i].getAttribute('value');
+			let giCodeEl = document.getElementById('giCode');
+			let giNameEl = document.getElementById('giName');
+			let gcmCodeEl = document.getElementById('gcmCode');
+			let gcmNameEl = document.getElementById('gcmName');
+			let gihPriceEl = document.getElementById('gihPrice');
+			let gihQtyEl = document.getElementById('gihQty');
+			let aMountEl = document.getElementById('aMount');
+			
+			//alert(itemsIdx);
+			fetch('/bill/onebill/'+itemsIdx)
+			.then( response => response.json() )
+			.then( data     => {
+				console.log(data)
+				data.forEach(item => {
+					giCodeEl.value = item.gi_code;
+					giNameEl.value = item.gi_name;
+					gcmCodeEl.value = item.gcm_code;
+					gcmNameEl.value = item.gcm_name;
+					gihPriceEl.value = item.gih_price;
+					gihQty.value = item.gih_qty;
+					aMountEl.textContent = item.amount;
+					
+				})
+				//resultEl.innerHTML = makeTable( list )
+			})
+			.then(error => console.log(error) )
+		})
+	}
+	// 모달창 생성 끝.	
+	// ============================================
+	// 모달창 닫기
 	let wrapEl = document.querySelector('.right-wrap');
-	let modalContainerEl = document.getElementById('modal-container');
-	modalContainerEl.style.transform='translateX(0%)';
-	itemsDetailEl.addEventListener('click',(e)=>{
-		e.stopPropagation();
-		let modalContainerEl = document.getElementById('modal-container');
-		modalContainerEl.style.transform='translateX(0%)';
-	});
-
 	wrapEl.addEventListener('click',(e)=>{
 		let modalContainerEl = document.getElementById('modal-container');
 		modalContainerEl.style.transform='translateX(100%)';
 	});
 	// 모달창 생성 및 닫기 끝.
+	// ============================================
+	// 출고확인서 리스트
+	let searchOutBillEl = document.getElementById('searchOutBill');
+	searchOutBillEl.addEventListener('click',(e)=>{
+		//alert(searchOutBill.value);
+		
+		let gih_inputEl = document.getElementById('gih_input');
+		let gih_idxEl = document.getElementById('gih_idx');
+		let gi_nameEl = document.getElementById('gi_name');
+		let gcm_nameEl = document.getElementById('gcm_name');
+		let gih_priceEl = document.getElementById('gih_price');
+		let gih_qtyEl = document.getElementById('gih_qty');
+		let all_amountEl = document.getElementById('all_amount');
+		let gih_regdateEl = document.getElementById('gih_regdate');
+		
+		fetch('/bill/billout')
+			.then( response => response.json() )
+			.then( data     => {
+				//console.log(data)
+				let m_itemsEl = document.getElementById("m-items");
+				m_itemsEl.innerHTML='';
+				
+				data.forEach(item => {
+					const list = document.createElement("div");
+					
+					list.innerHTML = `
+					<input type="hidden" id="gih_input" value=\${item.gih_inout}>
+					<div id="gih_idx"><input type="checkbox" id="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>
+					<div id='gi_name'>\${item.gi_name}</div>
+					<div id="gcm_name">\${ item.gcm_name }</div>
+					<div id="gih_price">\${ item.gih_price }</div>
+					<div id="gih_qty">\${ item.gih_qty } EA</div>
+					<div id="all_amount">총 \${ item.amount } 원</div>
+					<div id="gih_regdate">\${ item.gih_regdate }</div>`;
+					
+					const itemsDetailsDiv = document.createElement('div');
+					itemsDetailsDiv.className = 'items-btn orange';
+					itemsDetailsDiv.id = 'itemsDetail';
+					itemsDetailsDiv.name = 'itemsDetail';
+					itemsDetailsDiv.setAttribute('value', `\${item.gih_idx}`);
+					
+					itemsDetailsDiv.addEventListener('click', (e) => {
+						e.stopPropagation();
+						let modalContainerEl = document.getElementById('modal-container');
+						modalContainerEl.style.transform='translateX(0%)';
+						
+						let giCodeEl = document.getElementById('giCode');
+						let giNameEl = document.getElementById('giName');
+						let gcmCodeEl = document.getElementById('gcmCode');
+						let gcmNameEl = document.getElementById('gcmName');
+						let gihPriceEl = document.getElementById('gihPrice');
+						let gihQtyEl = document.getElementById('gihQty');
+						let aMountEl = document.getElementById('aMount');
+						
+						giCodeEl.value = `\${item.num}`;
+						giNameEl.value = `\${item.gi_name}`;
+						gcmCodeEl.value = `\${item.gcm_code}`;
+						gcmNameEl.value = `\${item.gcm_name}`;
+						gihPriceEl.value = `\${item.gih_price}`;
+						gihQtyEl.value = `\${item.gih_qty}`;
+						aMountEl.textContent = `\${item.amount}`;
+					})
+					
+					const btnsBox = document.createElement('div');
+					btnsBox.className = 'btns-box';
+					
+					btnsBox.appendChild(itemsDetailsDiv);
+					
+					list.appendChild(btnsBox);
+					
+					m_itemsEl.appendChild(list);
+				});
+			})
+			.then(error => console.log(error) )
+	});
+	// 출고확인서 리스트 끝.
+	// ============================================
 </script>
 </body>
 </html>
