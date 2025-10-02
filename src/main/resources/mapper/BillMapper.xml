@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.storemanager.bill.BillMapper">  
  
-	<select id="getBillListIN" resultType="com.storemanager.bill.BillDTO">
+	<select id="getBillList" resultType="com.storemanager.bill.BillDTO">
 		SELECT
 			ROW_NUMBER() OVER ( ORDER BY GIH.GIH_REGDATE DESC) NUM,
 			GIH.GIH_IDX,
@@ -62,9 +62,33 @@
 			AND GIH.GIH_INOUT = 'OUT' 
 		<!-- 	AND GIH.GIH_CONFIRM='Y' -->
 			AND DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
+			${param3}
 		ORDER BY GIH.GIH_REGDATE DESC
 	</select>
 
+	<select id="getBillListIn" resultType="com.storemanager.bill.BillDTO">
+		SELECT
+			ROW_NUMBER() OVER ( ORDER BY GIH.GIH_REGDATE DESC) NUM,
+			GIH.GIH_IDX,
+			GIH.GI_CODE, 
+			GIH.GI_NAME, 
+			GCM.GCM_CODE, 
+			GCM.GCM_NAME,  
+			FORMAT(GIH.GIH_QTY,0) GIH_QTY, 
+			FORMAT(GIH.GIH_PRICE,0) GIH_PRICE, 
+			FORMAT((GIH.GIH_QTY*GIH.GIH_PRICE),0) AMOUNT, 
+			DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE, 
+			GIH.GIH_INOUT
+		FROM 
+			GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
+		WHERE 
+			GIH.GCM_CODE = GCM.GCM_CODE 
+			AND GIH.GIH_INOUT = 'IN' 
+		<!-- 	AND GIH.GIH_CONFIRM='Y' -->
+			AND DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
+			${param3}
+		ORDER BY GIH.GIH_REGDATE DESC
+	</select>
 	<!--
 	<insert id="insertBoard" parameterType="map">
  		INSERT INTO BOARD

@@ -168,7 +168,7 @@
 							<div><input type="radio" id="searchEvent2" name="searchoption"><label for="searchEvent2"><p>거래처명</p></label></div>
 						</div>
 						<div class="m-search-text"> <!-- TEXT 검색 구간 -->
-							<input type="text" name="search" placeholder="검색어를 입력하세요."><div>검색</div>
+							<input type="text" id="search" name="search" placeholder="검색어를 입력하세요."><div>검색</div>
 						</div>
 					</div>
 				</div>
@@ -227,6 +227,7 @@
 	</div>
 </div>
 <!-- <script src="js/modal.js"></script> -->
+<script src="/js/render.js"></script>
 <script>
 	// 검색바 달력 현재 날짜-7 ~ 현재날짜
 	let dateStart = document.getElementById("startdate");
@@ -244,7 +245,7 @@
 	let itemsDetailEl = document.querySelectorAll('[id=itemsDetail]');
 	for(let i = 0; i< itemsDetailEl.length; i++){
 		itemsDetailEl[i].addEventListener('click',(e) => {
-			alert(i);
+			//alert(i);
 			e.stopPropagation();
 			let modalContainerEl = document.getElementById('modal-container');
 			modalContainerEl.style.transform='translateX(0%)';
@@ -302,7 +303,21 @@
 		let all_amountEl = document.getElementById('all_amount');
 		let gih_regdateEl = document.getElementById('gih_regdate');
 		
-		fetch('/bill/billout')
+		let startDateEl = document.getElementById('startdate');
+		let endDateEl = document.getElementById('enddate');
+		
+		let radiosEl = document.getElementsByName('searchoption');
+		let searchStrEl = document.getElementById('search');
+		let fetchUrl = '';
+		//let searchStr = '';
+		if(searchStrEl.value != ''){
+			//searchStr = searchStrEl.value;
+			fetchUrl = '/bill/billout/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/'+searchStrEl.value;
+		}else{
+			fetchUrl = '/bill/billout/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/null';
+		}
+		
+		fetch(fetchUrl)
 			.then( response => response.json() )
 			.then( data     => {
 				//console.log(data)
@@ -362,6 +377,92 @@
 	});
 	// 출고확인서 리스트 끝.
 	// ============================================
+	// 입고확인서 리스트
+	let searchInBillEl = document.getElementById('searchInBill');
+	searchInBillEl.addEventListener('click',(e)=>{
+		//alert(searchOutBill.value);
+		
+		let gih_inputEl = document.getElementById('gih_input');
+		let gih_idxEl = document.getElementById('gih_idx');
+		let gi_nameEl = document.getElementById('gi_name');
+		let gcm_nameEl = document.getElementById('gcm_name');
+		let gih_priceEl = document.getElementById('gih_price');
+		let gih_qtyEl = document.getElementById('gih_qty');
+		let all_amountEl = document.getElementById('all_amount');
+		let gih_regdateEl = document.getElementById('gih_regdate');
+		
+		let startDateEl = document.getElementById('startdate');
+		let endDateEl = document.getElementById('enddate');
+		
+		let radiosEl = document.getElementsByName('searchoption');
+		let searchStrEl = document.getElementById('search');
+		let fetchUrl = '';
+		//let searchStr = '';
+		if(searchStrEl.value != ''){
+			//searchStr = searchStrEl.value;
+			fetchUrl = '/bill/billin/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/'+searchStrEl.value;
+		}else{
+			fetchUrl = '/bill/billin/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/null';
+		}
+		
+		fetch(fetchUrl)
+			.then( response => response.json() )
+			.then( data     => {
+				//console.log(data)
+				let m_itemsEl = document.getElementById("m-items");
+				m_itemsEl.innerHTML='';
+				
+				data.forEach(item => {
+					const list = document.createElement("div");
+					list.innerHTML =  `
+						<input type="hidden" id="gih_input" value=\${item.gih_inout} />
+						<div id="gih_idx"><input type="checkbox" id="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>
+						<div id='gi_name'>\${item.gi_name}</div>
+						<div id="gcm_name">\${ item.gcm_name }</div>
+						<div id="gih_price">\${ item.gih_price }</div>
+						<div id="gih_qty">\${ item.gih_qty } EA</div>
+						<div id="all_amount">총 \${ item.amount } 원</div>
+						<div id="gih_regdate">\${ item.gih_regdate }</div>
+					`;
+						
+					const itemsDetailsDiv = document.createElement('div');
+					itemsDetailsDiv.className = 'items-btn orange';
+					itemsDetailsDiv.id = 'itemsDetail';
+					itemsDetailsDiv.name = 'itemsDetail';
+					itemsDetailsDiv.setAttribute('value', `\${item.gih_idx}`);
+						
+					itemsDetailsDiv.addEventListener('click', (e) => {
+						e.stopPropagation();
+						let modalContainerEl = document.getElementById('modal-container');
+						modalContainerEl.style.transform='translateX(0%)';
+							
+						let giCodeEl = document.getElementById('giCode');
+						let giNameEl = document.getElementById('giName');
+						let gcmCodeEl = document.getElementById('gcmCode');
+						let gcmNameEl = document.getElementById('gcmName');
+						let gihPriceEl = document.getElementById('gihPrice');
+						let gihQtyEl = document.getElementById('gihQty');
+						let aMountEl = document.getElementById('aMount');
+							
+						giCodeEl.value = `\${item.gih_idx}`;
+						giNameEl.value = `\${item.gi_name}`;
+						gcmCodeEl.value = `\${item.gcm_code}`;
+						gcmNameEl.value = `\${item.gcm_name}`;
+						gihPriceEl.value = `\${item.gih_price}`;
+						gihQtyEl.value = `\${item.gih_qty}`;
+						aMountEl.textContent = `\${item.amount}`;
+					})
+					const btnsBox = document.createElement('div');
+					btnsBox.className = 'btns-box';
+					
+					btnsBox.appendChild(itemsDetailsDiv);
+					
+					list.appendChild(btnsBox);
+	           	    m_itemsEl.appendChild(list);
+				})
+			})
+			.then(error => console.log(error) )
+	});
 </script>
 </body>
 </html>
