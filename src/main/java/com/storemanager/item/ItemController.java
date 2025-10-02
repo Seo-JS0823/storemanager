@@ -13,7 +13,8 @@ import lombok.RequiredArgsConstructor;
 public class ItemController {
 
     private final ItemService itemService;
-
+    
+    //품목 관리 화면
     @GetMapping("") 
     public String itemList(Model model) {
         
@@ -22,5 +23,16 @@ public class ItemController {
         model.addAttribute("items", items);
 
         return "item/item"; 
+    }
+    
+    //품목 등록 화면
+    @GetMapping("/new")
+    public String showItemForm() {
+        return "item/itemForm";
+    }
+    
+    @GetMapping("/new-form")
+    public String showItemFormFragment() {
+        return "item/itemForm";
     }
 }
