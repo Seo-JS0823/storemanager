@@ -42,6 +42,7 @@
 			<!-- 검색 라인 -->
 			<div class="m-search">
 				<div>
+				<form action=:/items method="get" class="m-search line">	
                 	<div class="m-search-line">
                     	<div class="m-search-date"> <!-- 날짜 구간 -->
                             <input type="date" name="startdate">
@@ -57,6 +58,7 @@
                             <input type="text" name="search" placeholder="검색어를 입력하세요."><div>검색</div>
                         </div>
                     </div>
+                  </form>
                </div>
 			</div>
 			<!-- 정렬 구간 -->
