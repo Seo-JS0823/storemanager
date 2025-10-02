@@ -12,14 +12,14 @@ public class MemberService {
 	private MemberMapper memberMapper;
 	
 	// Login 로직
-	public String login(MemberDTO member) {
+	public MemberDTO login(MemberDTO member) {
 		MemberDTO target = memberMapper.login(member);
 		boolean validate = has(member.getGm_pwd(), target.getGm_pwd());
 		if(!validate) {
-			return "redirect:/";
+			return null;
 		}
 		
-		return target.getGm_name();
+		return target;
 	}
 	
 	// Join 로직

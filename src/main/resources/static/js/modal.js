@@ -16,7 +16,7 @@ inCreateEl.addEventListener('click', (e) => {
 							<c:forEach var="lis" items="${list}">
 							<option>${lis.gi_name}</option>
 							</c:forEach>
-						</select>`
+						</select>`;
 	
 	document.body.appendChild(overlay);
 	overlay.appendChild(companySelectModalEl);

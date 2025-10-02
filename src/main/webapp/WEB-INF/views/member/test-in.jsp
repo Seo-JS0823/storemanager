@@ -181,28 +181,21 @@
 </div>
 </form>
 <script>
-const inCreateEl = document.querySelector('#in-create');
-
-inCreateEl.addEventListener('click', (e) => {
-	const overlay = document.createElement('div');
-	const companySelectModalEl = document.createElement('div');
-	const message = document.createElement('p');
-	const companySelect = document.querySelector('#company-select').content.cloneNode(true);
+	const infomation = document.getElementById('infomation');
+	infomation.addEventListener('click', (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		const infoModal = document.getElementById('gm_infomation');
+		infoModal.style.transform = 'translateX(0%)';
+	});
 	
-	overlay.className = "overlay"; 
-	companySelectModalEl.className = "company-modal";
-	message.className = "message";
-	message.innerHTML = "입고할 거래처 선택";
-	
-	document.body.appendChild(overlay);
-	overlay.appendChild(companySelectModalEl);
-	companySelectModalEl.appendChild(message);
-	companySelectModalEl.appendChild(companySelect);
-	
-})
-
-const modalContainerEl = document.querySelector('#modal-container');
- // modalContainerEl.style.transform = 'translateX(0%)';
+	const infomationClose = document.getElementById('infomation-close');
+	infomationClose.addEventListener('click', (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		const infoModal = document.getElementById('gm_infomation');
+		infoModal.style.transform = 'translateX(100%)';
+	})
 </script>
 </body>
 </html>

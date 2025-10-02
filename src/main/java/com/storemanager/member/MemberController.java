@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class MemberController {
 
@@ -17,14 +19,18 @@ public class MemberController {
 	/* 기본 루트 페이지 (로그인) */
 	@GetMapping("/")
 	public String loginForm() {
-		return "member/test-bill";
+		return "member/login";
 	}
 	
 	@PostMapping("/login")
-	public String login(MemberDTO member, Model model) {
-		String redirect = memberService.login(member);
-		model.addAttribute("gm_name", redirect);
-		return redirect;
+	public String login(HttpSession session, MemberDTO member) {
+		MemberDTO target = memberService.login(member);
+		if(target == null) return "redirect:/";
+		
+		session.setAttribute("name", target.getGm_name());
+		session.setAttribute("level", target.getGm_level());
+		
+		return "in/in";
 	}
 	
 	/* 회원가입 페이지 */
@@ -48,5 +54,7 @@ public class MemberController {
 		}
 		return "false";
 	}
+	
+	/* 로그아웃 */
 	
 }

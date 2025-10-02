@@ -4,7 +4,7 @@
 	<!-- 로그인 -->
 	<select id="login" resultType="com.storemanager.member.MemberDTO">
 		SELECT
-			GM_PWD, GM_NAME
+			*
 		FROM
 			GE_MEMBER
 		WHERE
@@ -14,9 +14,9 @@
 	<!-- 회원가입 -->
 	<insert id="join">
 		INSERT INTO GE_MEMBER
-			(GM_ID, GM_PWD, GM_NAME, GM_EMAIL, GM_TEL)
+			(GM_ID, GM_LEVEL,GM_PWD, GM_NAME, GM_EMAIL, GM_TEL)
 		VALUES
-			(#{gm_id}, #{gm_pwd}, #{gm_name}, #{gm_email}, #{gm_tel})
+			(#{gm_id}, #{gm_level}, #{gm_pwd}, #{gm_name}, #{gm_email}, #{gm_tel})
 	</insert>
 	
 	<!-- 회원가입시 존재하는 아이디인지 검증 -->

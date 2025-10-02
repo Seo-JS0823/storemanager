@@ -352,7 +352,6 @@
 		return list; // HTMLElement
 	})
 	
-	
 	let searchOutBillEl = document.getElementById('searchOutBill');
 	searchOutBillEl.addEventListener('click', () => {
 		Render.callJSON(
