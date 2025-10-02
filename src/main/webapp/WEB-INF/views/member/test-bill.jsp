@@ -228,6 +228,7 @@
 	</div>
 </div>
 <!-- <script src="js/modal.js"></script> -->
+<script src="/js/render.js"></script>
 <script>
 	// 검색바 달력 현재 날짜-7 ~ 현재날짜
 	let dateStart = document.getElementById("startdate");
@@ -290,81 +291,76 @@
 	// 모달창 생성 및 닫기 끝.
 	// ============================================
 	// 출고확인서 리스트
-	let searchOutBillEl = document.getElementById('searchOutBill');
-	searchOutBillEl.addEventListener('click',(e)=>{
-		//alert(searchOutBill.value);
+	
+	Render.setComponent('HYY-bill-billin', (item) => {
+		const list = document.createElement('div');
+		list.innerHTML = `
 		
-		let gih_inputEl = document.getElementById('gih_input');
-		let gih_idxEl = document.getElementById('gih_idx');
-		let gi_nameEl = document.getElementById('gi_name');
-		let gcm_nameEl = document.getElementById('gcm_name');
-		let gih_priceEl = document.getElementById('gih_price');
-		let gih_qtyEl = document.getElementById('gih_qty');
-		let all_amountEl = document.getElementById('all_amount');
-		let gih_regdateEl = document.getElementById('gih_regdate');
-		
-		fetch('/bill/billout')
-			.then( response => response.json() )
-			.then( data     => {
-				//console.log(data)
-				let m_itemsEl = document.getElementById("m-items");
-				m_itemsEl.innerHTML='';
-				
-				data.forEach(item => {
-					const list = document.createElement("div");
-					
-					list.innerHTML = `
-					<input type="hidden" id="gih_input" value=\${item.gih_inout}>
-					<div id="gih_idx"><input type="checkbox" id="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>
-					<div id='gi_name'>\${item.gi_name}</div>
-					<div id="gcm_name">\${ item.gcm_name }</div>
-					<div id="gih_price">\${ item.gih_price }</div>
-					<div id="gih_qty">\${ item.gih_qty } EA</div>
-					<div id="all_amount">총 \${ item.amount } 원</div>
-					<div id="gih_regdate">\${ item.gih_regdate }</div>`;
-					
-					const itemsDetailsDiv = document.createElement('div');
-					itemsDetailsDiv.className = 'items-btn orange';
-					itemsDetailsDiv.id = 'itemsDetail';
-					itemsDetailsDiv.name = 'itemsDetail';
-					itemsDetailsDiv.setAttribute('value', `\${item.gih_idx}`);
-					
-					itemsDetailsDiv.addEventListener('click', (e) => {
-						e.stopPropagation();
-						let modalContainerEl = document.getElementById('modal-container');
-						modalContainerEl.style.transform='translateX(0%)';
-						
-						let giCodeEl = document.getElementById('giCode');
-						let giNameEl = document.getElementById('giName');
-						let gcmCodeEl = document.getElementById('gcmCode');
-						let gcmNameEl = document.getElementById('gcmName');
-						let gihPriceEl = document.getElementById('gihPrice');
-						let gihQtyEl = document.getElementById('gihQty');
-						let aMountEl = document.getElementById('aMount');
-						
-						giCodeEl.value = `\${item.num}`;
-						giNameEl.value = `\${item.gi_name}`;
-						gcmCodeEl.value = `\${item.gcm_code}`;
-						gcmNameEl.value = `\${item.gcm_name}`;
-						gihPriceEl.value = `\${item.gih_price}`;
-						gihQtyEl.value = `\${item.gih_qty}`;
-						aMountEl.textContent = `\${item.amount}`;
-					})
-					
-					const btnsBox = document.createElement('div');
-					btnsBox.className = 'btns-box';
-					
-					btnsBox.appendChild(itemsDetailsDiv);
-					
-					list.appendChild(btnsBox);
-					
-					m_itemsEl.appendChild(list);
-				});
-			})
-			.then(error => console.log(error) )
-	});
+		`;
+	})
+	
 	// 출고확인서 리스트 끝.
 	// ============================================
+	Render.setComponent('HYY-bill-billout', (item) => {
+		const list = document.createElement('div');
+		list.innerHTML = `
+		<input type="hidden" id="gih_input" value='\${item.gih_inout}'>
+		<div id="gih_idx"><input type="checkbox" id="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>
+		<div id='gi_name'>\${item.gi_name}</div>
+		<div id="gcm_name">\${ item.gcm_name }</div>
+		<div id="gih_price">\${ item.gih_price }</div>
+		<div id="gih_qty">\${ item.gih_qty } EA</div>
+		<div id="all_amount">총 \${ item.amount } 원</div>
+		<div id="gih_regdate">\${ item.gih_regdate }</div>
+		`;
+		
+		const itemsDetailsDiv = document.createElement('div');
+		itemsDetailsDiv.className = 'items-btn orange';
+		itemsDetailsDiv.id = 'itemsDetail';
+		itemsDetailsDiv.name = 'itemsDetail';
+		itemsDetailsDiv.setAttribute('value', `\${item.gih_idx}`);
+		
+		itemsDetailsDiv.addEventListener('click', (e) => {
+			e.stopPropagation();
+			let modalContainerEl = document.getElementById('modal-container');
+			modalContainerEl.style.transform='translateX(0%)';
+			
+			let giCodeEl = document.getElementById('giCode');
+			let giNameEl = document.getElementById('giName');
+			let gcmCodeEl = document.getElementById('gcmCode');
+			let gcmNameEl = document.getElementById('gcmName');
+			let gihPriceEl = document.getElementById('gihPrice');
+			let gihQtyEl = document.getElementById('gihQty');
+			let aMountEl = document.getElementById('aMount');
+			
+			giCodeEl.value = `\${item.num}`;
+			giNameEl.value = `\${item.gi_name}`;
+			gcmCodeEl.value = `\${item.gcm_code}`;
+			gcmNameEl.value = `\${item.gcm_name}`;
+			gihPriceEl.value = `\${item.gih_price}`;
+			gihQtyEl.value = `\${item.gih_qty}`;
+			aMountEl.textContent = `\${item.amount}`;
+		})
+		
+		const btnsBox = document.createElement('div');
+		btnsBox.className = 'btns-box';
+		
+		btnsBox.appendChild(itemsDetailsDiv);
+		
+		list.appendChild(btnsBox);
+		
+		return list; // HTMLElement
+	})
+	
+	
+	let searchOutBillEl = document.getElementById('searchOutBill');
+	searchOutBillEl.addEventListener('click', () => {
+		Render.callJSON(
+		'/bill/billout',
+		{},
+		'm-items',
+		(item) => Render.getComponent('HYY-bill-billout', item));
+	})
 </script>
 </body>
 </html>
