@@ -2,10 +2,13 @@ package com.storemanager.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MemberController {
@@ -16,12 +19,22 @@ public class MemberController {
 	/* 기본 루트 페이지 (로그인) */
 	@GetMapping("/")
 	public String loginForm() {
+<<<<<<< HEAD
 		return "member/test-bill";
+=======
+		return "member/login";
+>>>>>>> 1ba07648326007dfaf7b523b1b4c76a7e62fadd7
 	}
 	
 	@PostMapping("/login")
-	public String login(MemberDTO member) {
-		return memberService.login(member);
+	public String login(HttpSession session, MemberDTO member) {
+		MemberDTO target = memberService.login(member);
+		if(target == null) return "redirect:/";
+		
+		session.setAttribute("name", target.getGm_name());
+		session.setAttribute("level", target.getGm_level());
+		
+		return "in/in";
 	}
 	
 	/* 회원가입 페이지 */
@@ -45,5 +58,7 @@ public class MemberController {
 		}
 		return "false";
 	}
+	
+	/* 로그아웃 */
 	
 }

@@ -118,6 +118,8 @@ a {
 			<form id="join-form">
 				<div><span>이 름</span></div>
 				<input type="text" id="member-name">
+				<div><span>직급</span></div>
+				<input type="text" id="member-level">
 				<div><span>아이디</span><span id="id-reg"></span></div>
 				<input type="text" id="member-id">
 				<div><span>비밀번호</span><span id="pwd-reg"></span></div>
@@ -136,6 +138,7 @@ a {
 	const joinB = document.getElementById('join-btn');
 	
 	let idValidate = false;
+	let levelValidate = false;
 	let pwdValidate = false;
 	let nameValidate = false;
 	let telValidate = false;
@@ -166,6 +169,19 @@ a {
 			membername.name = 'gm_name';
 		}
 	});
+	
+	const memberlevel = document.getElementById('member-level');
+	memberlevel.addEventListener('click', () => {
+		if(memberlevel.value === '') {
+			levelValidate = false;
+			return;
+		}
+		
+		if(memberlevel.value.length > 1) {
+			levelValidate = true;
+			memberlevel.name = 'gm_level';
+		}
+	})
 	
 	const memberemail = document.getElementById('member-email');
 	memberemail.addEventListener('change', () => {

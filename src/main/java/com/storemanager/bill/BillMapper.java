@@ -9,4 +9,8 @@ public interface BillMapper {
 
 	List<BillDTO> getBillListIN(String startDay, String endDay);
 
+	List<BillDTO> getOneBill(Long id);
+
+	List<BillDTO> getBillListOUT(String startDay, String endDay);
+
 }
