@@ -2,6 +2,7 @@ package com.storemanager.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,12 +17,14 @@ public class MemberController {
 	/* 기본 루트 페이지 (로그인) */
 	@GetMapping("/")
 	public String loginForm() {
-		return "member/test-out";
+		return "member/login";
 	}
 	
 	@PostMapping("/login")
-	public String login(MemberDTO member) {
-		return memberService.login(member);
+	public String login(MemberDTO member, Model model) {
+		String redirect = memberService.login(member);
+		model.addAttribute("gm_name", redirect);
+		return redirect;
 	}
 	
 	/* 회원가입 페이지 */
