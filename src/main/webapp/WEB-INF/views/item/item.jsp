@@ -59,36 +59,37 @@
                </div>
 			</div>
 			<!-- 정렬 구간 -->
-			<div class="m-search-sort">
-                <div>품목번호</div>
-                <div>상품명</div>
-                <div>매입처명</div>
-                <div>매입단가</div>
-                <div>수량</div>
-                <div>금액</div>
-                <div>입고일</div>
-                <div></div>
-            </div>
-			<div class="m-items">
-			<c:forEach var="item" items="${items}">
-				<div>
-	               	<div>1</div>
-	               	<div>예가체프-콜롬비아</div>
-	               	<div>동서식품</div>
-	             	<div>38,450원</div>
-	            	<div>2EA</div>
-	           	    <div>총 76,900원</div>
-	           	    <div>2025-09-10</div>
-	           	    <div class="btns-box"> <!-- Ball -->
-	           	        <div class="items-btn orange"></div>
-	           	        <div class="items-btn green"></div>
-	           	        <div class="items-btn red"></div>
-	           	    </div>
-	          	</div>
-	          	</c:forEach>
-	          	<div></div>
+				<div class="m-search-sort">
+					<div>번호</div>
+					<div>품목코드</div>
+					<div>상품명</div>
+					<div>매입처명</div>
+					<div>현재고</div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+				<div class="m-items">
+
+					<c:forEach var="item" items="${items}" varStatus="loop">
+						<div>
+							<div>${loop.count}</div>
+							<div>${item.giCode}</div>
+							<div>${item.giName}</div>
+							<div>${item.gcmName}</div>
+							<div>${item.gisTotQty}개</div>
+							<div></div>
+							<div></div>
+							<div class="btns-box">
+								<div class="items-btn orange"></div>
+								<div class="items-btn green"></div>
+								<div class="items-btn red"></div>
+							</div>
+						</div>
+					</c:forEach>
+					<div></div>
+				</div>
 			</div>
-		</div>
 		
 		<!-- 아이템 리스트 뿌려주기 -->
 	</div>
