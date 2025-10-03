@@ -2,7 +2,6 @@ package com.storemanager.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +29,7 @@ public class MemberController {
 		session.setAttribute("name", target.getGm_name());
 		session.setAttribute("level", target.getGm_level());
 		
-		return "in/in";
+		return "member/test-in";
 	}
 	
 	/* 회원가입 페이지 */
@@ -56,5 +55,10 @@ public class MemberController {
 	}
 	
 	/* 로그아웃 */
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
+	}
 	
 }

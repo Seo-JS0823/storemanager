@@ -180,22 +180,6 @@
 	</div>
 </div>
 </form>
-<script>
-	const infomation = document.getElementById('infomation');
-	infomation.addEventListener('click', (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-		const infoModal = document.getElementById('gm_infomation');
-		infoModal.style.transform = 'translateX(0%)';
-	});
-	
-	const infomationClose = document.getElementById('infomation-close');
-	infomationClose.addEventListener('click', (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-		const infoModal = document.getElementById('gm_infomation');
-		infoModal.style.transform = 'translateX(100%)';
-	})
-</script>
+<script src="/js/member.js"></script>
 </body>
 </html>

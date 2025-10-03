@@ -1,5 +1,5 @@
 /* 왼쪽 메뉴바 + 전체 그리드 레이아웃 */
-.material-symbols-outlined:hover:not(.main-menu .material-symbols-outlined) {
+.material-symbols-outlined:hover:not(.m-box .material-symbols-outlined) {
 	transform: scale(1.5);
 	text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 }

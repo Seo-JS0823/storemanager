@@ -25,7 +25,7 @@
 	</div>
 	<!-- 사용자 프로필 -->
 	<div>
-		<div><img src="/img/image008.jpg"/></div>
+		<div><img src="/img/test-image008.jpg"/></div>
 		<div><label>사용자</label><div><%=name %></div></div>
 		<div><label>직급</label><div><%=level %></div></div>
 		<div><label>이메일</label><div id="info-email">이메일</div></div>
