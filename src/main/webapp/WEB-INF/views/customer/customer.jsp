@@ -11,39 +11,65 @@
 	<link rel="stylesheet" href="/css/m-header.css">
 	<title></title>
 <style>
-	
+
 </style>
 </head>
 <body>
-<script>
+<!-- <script>
+async function openDetail(idx){
+	const res = await fetch('/api/customer/' + encodeURIComponent(idx));
+	if(!res.ok) return alert('조회 실패');
+	const d = await res.josn(); // d.gcm_name, d.gcm_email ...
+	
+	const html = `
+		<div class = "modal-header"><b>거래처 상세
+		<button onclick="closeModal()">&times;</button></div>
+		<div class="modal-middle">
+			<div><b>거래처명:</b> ${escapeHtml(d.gcm_name||'')}</div>
+			<div><b>전화:</b> ${escapeHtml(d.gcm_email||'')}</div>
+			<div><b>전화:</b> ${escapeHtml(d.gcm_email||'')}</div>
+			<div><b>전화:</b> ${escapeHtml(d.gcm_email||'')}</div>
+		</div>
+		<div class="modal-bottom">
+			<button onclcik="closeModal()">닫기</button>
+		</div>`;
+		document.getElementById('slide-modal').innerHTML = html;
+		openModal();
+		function openModal(){ document.getElementById('modal').style.display = 'block'; }
+		function closeModal(){ document.getElementById('modal').style.display = 'none'; }
 
- 
- //idx가 왜 필요하지? 식별자
-/*  function openDetail(idx) {
-	fetch('/api/customer/' + idx) // 예: /customer/3으로 GET
-		.then(res => {
-			if (!res.ok) throw new Error('조회 실패')
-			return res.json(); //json 파싱
-		})
-		.then(data => {
-			// 응답 JSON의 필드를 DOM에 채워넣기(data에서 값 꺼내서 텍스트 세팅하고 상세 박스 보이게 만듦)
-			document.getElementById('name').textContent		=	data.gcmName ?? '';//??'' 널 병합 연산자. null이나 undefined면 빈칸
-			document.getElementById('email').textContent	=	data.gcmEmail ?? '';
-			document.getElementById('tel').textContent		=	data.gcmTel ?? '';
-			document.getElementById('addr').textContent		=	data.gcmAddr ?? '';
-			document.getElementById('detail').style.display =   'block';// display:none 다시 보이게
-		})
-		.catch(console.error);
+		// 상세 조회 → 모달에 주입
+		async function openDetail(idx){
+		  try{
+		    const res = await fetch('/api/customer/' + encodeURIComponent(idx)); // 예: /api/customer/3
+		    if(!res.ok) throw new Error('조회 실패');
+		    const d = await res.json(); // { gcm_name, gcm_email, gcm_tel, gcm_addr, ... } (snake_case)
+
+		    // 값 주입 (null/undefined 방지)
+		    document.getElementById('name').textContent  = d.gcm_name  ?? '';
+		    document.getElementById('email').textContent = d.gcm_email ?? '';
+		    document.getElementById('tel').textContent   = d.gcm_tel   ?? '';
+		    document.getElementById('addr').textContent  = d.gcm_addr  ?? '';
+
+		    openModal();
+		  }catch(e){
+		    console.error(e);
+		    alert('상세 조회 중 오류가 발생했습니다.');
+		  }
+		}
+
+		// TODO: 수정/삭제는 추후 구현
+		function openEdit(idx){ alert('수정 모달은 이어서 붙일게요. idx=' + idx); }
+		function softDelete(idx){ alert('소프트 삭제는 이어서 붙일게요. idx=' + idx); }
 }
-function renderItems(list){
-	const box = document.querySelector('.m-items');
-	if (!box) return;
-	
-	
-} */
+ 
+function openModal(){ /* ... */ }
+function closeModal(){ /* ... */ }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
  
-</script>
+ 
+</script> -->
 <div class="wrap">
 	<%@ include file="../layout/left-menu.jsp"%>
 	<div class="right-wrap">
@@ -106,10 +132,9 @@ function renderItems(list){
 					      <div><c:out value="${c.gcm_Tel}"/></div>       <!-- 전화 -->
 					      <div><c:out value="${c.gcm_Addr}"/></div>      <!-- 주소 -->
 					      <div>
-					        <!-- 등록일 표시 (LocalDateTime이면 아래 주석 참고) -->
-					        <c:out value="${c.gcm_Regdate}"/>
+										        <c:out value="${c.gcm_Regdate}"/>
 					      </div>
-					      <div></div> <!-- 입고일(해당없음이면 비워둠) -->
+					      <div></div> 
 					      <div class="btns-box">
 					        <div class="items-btn orange" onclick="openDetail('${c.gcm_Idx}')"></div>
 					        <div class="items-btn green"  onclick="openEdit('${c.gcm_Idx}')"></div>
@@ -118,9 +143,7 @@ function renderItems(list){
 					    </div>
 				</c:forEach>
 					
-				<%-- <c:if test="${empty customerList}">
-					    <div>데이터가 없습니다.</div>
-				</c:if> --%>
+			
 		</div>
 		
 		<!-- 아이템 리스트 뿌려주기 -->
@@ -132,6 +155,6 @@ function renderItems(list){
 	<div><b>전화번호</b><span id="tel"></span></div>
 	<div><b>주소</b><span id="addr"></span></div>
 </div>
-
+ 
 </body>
 </html>
