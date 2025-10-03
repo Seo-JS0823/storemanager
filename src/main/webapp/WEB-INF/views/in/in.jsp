@@ -23,7 +23,7 @@
 		justify-content: center;
 	}
 	
-	.company-modal {
+	.select-modal {
 		background-color : white;
 		height : 40%;
 		width : 50%;
@@ -50,21 +50,29 @@
 </head>
 <body>
 <form>
-<!-- 태크 보관소 -->
-<template id="company-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
-<div>
-
-<label for="company">거래처 선택: </label>
-			
-		<select>
-			<c:forEach var="list" items="${list}">
-			<option value="gcm_name">${list.gi_name}</option>
-			<option value="gcm_name">ㅇㅇㅇ</option>
-			<input type="hidden" id="hiddenCompany" value="${list.gcm_code}"/>
+<!-- 태그 보관소 -->
+<template id="items-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
+	<div>
+	<label for="items"></label>
+		<input list="items-list" id="item-name" style="width:15%"/>
+		<datalist id="items-list">
+			<c:forEach var="itemsName" items="${itemsName}">
+			<option value="${itemsName.gi_name}">
+			<%-- <input type="hidden" id="hiddenItems" value="${list.gcm_code}"/> --%>			
 			</c:forEach>
-		</select>
-</div>
+		</datalist>
+	</div>
 </template>
+
+ <template id="companys-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
+	<div>
+	<label for="companys"></label>
+		<input list="companys-list" id="company-name" style="width:15%"/>
+		<datalist id="companys-list">
+		
+		</datalist>
+	</div>
+</template> 
 
 <!-- 모달 창 -->
 <div id="company-select-modal"></div>
@@ -91,10 +99,10 @@
 							<span>상세보기</span>
 							<div class="m-state green"></div>
 							<span>입고수정</span>
-							<div class="m-state red"></div>
-							<span>출고생성</span>
+					<!-- 		<div class="m-state red"></div>
+							<span>출고생성</span> -->
 						</div>
-						<div class="green" id="in-create">입고생성</div>
+						<div class="green" id="in-create">입고</div>
 					</div>
 				</div>
 				<!-- 검색 라인 -->
@@ -142,9 +150,9 @@
 				</div>
 				
 				<div class="m-items"> <!-- 입고 리스트 -->
-				<c:forEach var="list" items="${list}">
+				<c:forEach var="list" items="${list}" varStatus="status">
 					<div>
-						<div>${list.gih_idx}</div>
+						<div>${status.index + 1}</div>
 						<div>${list.gi_name}</div>
 						<div>동서식품</div>
 						<div>${list.gih_price}원</div>
@@ -155,7 +163,7 @@
 							<!-- Ball -->
 							<div class="items-btn orange"></div>
 							<div class="items-btn green"></div>
-							<div class="items-btn red"></div>
+							<!-- <div class="items-btn red"></div> -->
 						</div>
 				  </div>
 				</c:forEach> 
@@ -181,23 +189,58 @@
 </div>
 </form>
 <script>
+
 const inCreateEl = document.querySelector('#in-create');
 
 inCreateEl.addEventListener('click', (e) => {
-	const overlay = document.createElement('div');
-	const companySelectModalEl = document.createElement('div');
-	const message = document.createElement('p');
-	const companySelect = document.querySelector('#company-select').content.cloneNode(true);
+	
+	const overlay         = document.createElement('div');   // 클릭할떄 나온는 회색배경
+	const SelectModalEl   = document.createElement('div');   // 입고생성 처음 뜨는 모달창
+	
+	const itemsMessage    = document.createElement('h2');   
+	const itemsSelect 	  = document.querySelector('#items-select').content.cloneNode(true); // 위에 template 갖고올때 쓰는문법
+	
+	const companysMessage = document.createElement('h2');
+	const companysSelect  = document.querySelector('#companys-select').content.cloneNode(true);
+	
 	
 	overlay.className = "overlay"; 
-	companySelectModalEl.className = "company-modal";
-	message.className = "message";
-	message.innerHTML = "입고할 거래처 선택";
+	SelectModalEl.className = "select-modal";
+	
+	itemsMessage.className = "items-message";
+	itemsMessage.innerHTML = "입고할 물품 선택 : ";
+	
+	companysMessage.className = "companys-message";
+	companysMessage.innerHTML = "거래처 선택 : ";
 	
 	document.body.appendChild(overlay);
-	overlay.appendChild(companySelectModalEl);
-	companySelectModalEl.appendChild(message);
-	companySelectModalEl.appendChild(companySelect);
+	overlay.appendChild(SelectModalEl);
+	SelectModalEl.appendChild(itemsMessage);
+	SelectModalEl.appendChild(itemsSelect);
+	SelectModalEl.appendChild(companysMessage);
+	SelectModalEl.appendChild(companysSelect);
+	
+	const itemsNameEl     = document.querySelector('#item-name') // 선택칸에 최종 입력된 상품
+
+	
+	itemsNameEl.addEventListener('change', () => {
+		const companyListEl = document.querySelector('#companys-list')
+				
+		let itemsName = itemsNameEl.value
+		fetch('/in/items/' + itemsName)
+			.then( response => response.json() )
+			.then( data => {
+				companyListEl.innerHTML = '';
+				
+				data.forEach( companys => {
+				    const option = document.createElement("option");
+				    option.value = companys.gcm_name;
+				    option.textContent = companys.gcm_name;
+				    companyListEl.appendChild(option);
+				} )
+				
+			} )
+	})
 	
 })
 
