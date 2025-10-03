@@ -14,4 +14,8 @@ public class ItemService {
       
         return itemMapper.findAllItems();
     }
+
+    public void saveNewItem(ItemDTO newItem) {
+        itemMapper.saveNewItem(newItem);
+    }
 }

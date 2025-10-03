@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="/css/reset.css">
 	<link rel="stylesheet" href="/css/wrap.css">
 	<link rel="stylesheet" href="/css/m-header.css">
+	<link rel="stylesheet" href="/css/modal.css">
 	<title></title>
 <style>
 	
@@ -35,12 +36,13 @@
 						<div class="m-state green"></div><span>입고수정</span>
 						<div class="m-state red"></div><span>출고생성</span>
 					</div>
-					<div class="green" id="각자따로">품목등록</div>
+					<div class="green" id="show-item-form-btn">품목등록</div>
 				</div>
 			</div>
 			<!-- 검색 라인 -->
 			<div class="m-search">
 				<div>
+				<form action=:/items method="get" class="m-search line">	
                 	<div class="m-search-line">
                     	<div class="m-search-date"> <!-- 날짜 구간 -->
                             <input type="date" name="startdate">
@@ -56,6 +58,7 @@
                             <input type="text" name="search" placeholder="검색어를 입력하세요."><div>검색</div>
                         </div>
                     </div>
+                  </form>
                </div>
 			</div>
 			<!-- 정렬 구간 -->
@@ -90,9 +93,33 @@
 					<div></div>
 				</div>
 			</div>
-		
+		  <div id="right-modal-container"></div>
 		<!-- 아이템 리스트 뿌려주기 -->
 	</div>
 </div>
+	<script>
+    // '품목등록' 버튼과 사이드바 공간을 변수에 저장
+    const showFormBtn = document.getElementById('show-item-form-btn');
+    const sidebar = document.getElementById('right-modal-container');
+
+    //'품목등록' 버튼에 클릭 이벤트를 설정
+    showFormBtn.addEventListener('click', function() {
+        //컨트롤러의 '/items/new-form' 주소로 HTML을 요청
+        fetch('/items/new-form')
+            .then(response => response.text()) 
+            .then(html => {
+                sidebar.innerHTML = html;
+                //CSS 스타일
+                sidebar.style.transform = 'translateX(0)';                
+                const closeBtn = document.getElementById('modal-clear');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        sidebar.style.transform = 'translateX(100%)';
+                    });
+                }
+            })
+            .catch(error => console.error('폼을 불러오는 중 오류 발생:', error));
+    });
+</script>
 </body>
 </html>
