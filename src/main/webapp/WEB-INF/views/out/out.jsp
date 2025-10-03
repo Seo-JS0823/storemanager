@@ -12,13 +12,13 @@
     <title></title>
 	<style>
 	    .side-bar{
-			position:absolute;
-			height:100%;
-			width:40rem;
-			right:-40rem;
-			top:0;
-			transition: 0.5s;
-			z-index:10;
+            position:absolute;
+            height:100%;
+            width:48rem;
+            right:-48rem;
+            top:0;
+            transition: 1s;
+            z-index:10;
 		}
         .back-ground{
             display:none;
@@ -31,90 +31,160 @@
         .side-bar{  
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-            background-color: aquamarine;
+            background-color: #F5F5F5;
+            box-shadow: 20px 0px 40px rgba(0, 0, 0, 0.5);
         }
-        .side-bar > div:nth-child(1){ height: 10%;}
-        .side-bar > div:nth-child(2){ height: 50%;}
-        .container-head{
-            width: 40rem;
-            height: 20%;
-            margin: 3rem 0;
+        .side-bar > div:nth-child(1){
+            height: 8.75rem;
+            width: 90%;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 0.2rem solid #666;
+            margin-bottom: 1rem;
+        }
+        .side-bar> div:nth-child(1) > div:nth-child(2) {
+            font-size: 2rem;
+            height: 3rem;
+            margin-top: auto;
+            font-weight: 600;
+        }
+        #state {
+            margin-top: auto;
+            margin-right: 1rem;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: #00AA00;
+        }
+        /* 상단 밑 본문 영역 */
+        .side-bar > div:nth-child(2) {
+            width: 90%;
+            height: auto;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
         }
-        .container-head > div:nth-child(1){
-           width: 10rem;
-           height: 5rem;
-           margin: 0 6rem;
-           padding: 0 1rem;
-           font-size: 1.3rem;
-           font-weight: 550;
-           background-color: yellow;
-        }
-        .container-head > div:nth-child(2){
-            width: 100%;
-            height: 2rem;
-            border-bottom: 0.1rem solid black;
-        }
-        .container-item{
-            width: 40rem;
-            height: 100%;
-            margin: 0 1rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        .container-item > div:nth-child(1){
+        /* 이미지 영역 */
+        .side-bar > div:nth-child(2) > div:nth-child(1) {
             width: 15rem;
             height: 15rem;
-            background-color:white;
-        }
-        .container-item > div:nth-child(2){
-            width: calc(100% - 2rem);
-            height: 4rem;
+            margin-bottom: 0.5rem;
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+        }
+        .side-bar > div:nth-child(2) > div:nth-child(1) span {
+            font-size: 10rem;
+            font-weight: 50;
+            text-align: center;
+            color: gray;
+        }
+        .side-bar > div:nth-child(2) img {
+            width: 100%;
+            height: 100%;
+        }
+        /* 품목 데이터 영역 */
+        .side-bar > div:nth-child(3) {
+            width: 90%;
+            height: 18rem;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 1px;
+        }
+        .side-bar > div:nth-child(3) > div {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        .side-bar > div:nth-child(3) > div p {
+            margin: 0;
+            width: 50%;
+            font-size: 1.7rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .side-bar > div:nth-child(3) > div div,
+        .side-bar > div:nth-child(3) > div input[type=text] {
+            width: 45%;
+            height: 45%;
+            margin: 0 auto;
             background-color: white;
+            border: 1px solid rgba(33, 33, 33, 0.3);
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
         }
-        .container-item > div:nth-child(3){
-            width: calc(100% - 2rem);
+        .side-bar > div:nth-child(3) > div input[type=text] {
+            outline: none;
+            padding-left: 0.5rem;
+        }
+        /* REMARK 영역 */
+        .side-bar > div:nth-child(4) {
+            width: 90%;
+            height: 13rem;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            padding-left: 2.5rem;
+        }
+        .side-bar > div:nth-child(4) > div:nth-child(1) {
+            width: 100%;
+            height: auto;
+            font-size: 1.5rem;
+        }
+        .side-bar > div:nth-child(4) > textarea {
+            resize: none;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            padding: 0.5rem;
+        }
+        /* 저장 or 수정, 취소 영역 */
+        .side-bar > div:nth-child(5) {
+            width: 90%;
+            height: 8rem;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            gap: 2rem;
+        }
+        .side-bar > div:nth-child(5) button {
+            width: 8rem;
             height: 4rem;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        .side-bar > div:nth-child(5) button:active {
+            box-shadow: 0 0 5px rgba(33, 33, 33, 0.5);
+        }
+        .side-bar > div:nth-child(5) button:nth-of-type(1) { background-color: #00AA00; }
+        .side-bar > div:nth-child(5) button:nth-of-type(2) { background-color: #DC3545; }
+        .md-bg{
+            position:absolute;
+            top:0;
+            inset:0;
+            display:none;
             align-items: center;
+            justify-content: center;
+            background-color: #00000030;
+        }
+        .md-bg > div{
+            width:40rem;
+            height:30rem;
             background-color: white;
-        }
-        .container-item > div:nth-child(4){
-            width: calc(100% - 2rem);
-            height: 4rem;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            background-color: white;
-        }
-        .container-item > div:nth-child(5){
-            width: 20rem;
-            height: 10rem;
-            background-color:white;
-        }
-        .container-item > div:nth-child(6){
-            width: calc(100% - 2rem);
-            height: 3rem;
-            gap: 1rem;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            align-items: center;
-            background-color:white;
         }
 	</style>
 </head>
@@ -123,42 +193,41 @@
     <!-- start of side-bar -->
     <div class="side-bar">
         <div>
-            <div class="container-head">
-                <div>출고관리</div>
-                <div></div>
-            </div>
+            <div id="state"></div>
+            <div>출고관리</div>
         </div>
         <div>
-            <div class="container-item">
-                <div>이미지</div>
-                <div>
-                    <div>출고번호</div>
-                    <div><input type="number" name="gih_idx"></div>
-                    <div>품목명</div>
-                    <div><input type="text" name="gi_name"></div>
-                </div>
-                <div>
-                    <div>거래처코드</div>
-                    <div><input type="number" name="gi_code"></div>
-                    <div>거래처명</div>
-                    <div><input type="text" name="gcm_name"></div>
-                </div>
-                <div>
-                    <div>출고단가</div>
-                    <div><input type="number" name="gih_price"></div>
-                    <div>수량</div>
-                    <div><input type="number" name="gih_qty"></div>
-                </div>
-                <div><textarea name="gih_remark" maxlength="130"></textarea></div>
-                <div>
-                    <div><button>저장</button></div>
-                    <div><button>취소</div>
-                </div>
-            </div>
+            <div><span class="material-symbols-outlined">hide_image</span></div>
+        </div>
+        <div>
+            <div><p>출고번호</p><input type="text" name="gih_idx" readonly></div>
+            <div><p>품목명</p><input type="text" name="gi_name" readonly></div>
+            <div><p>거래처코드</p><input type="text" name="gi_code" readonly></div>
+            <div><p>거래처명</p><input type="text" name="gcm_name" readonly></div>
+            <div><p>출고단가</p><input type="text" name="gih_price"></div>
+            <div><p>수량</p><input type="text" name="gih_qty"></div>
+        </div>
+        <div>
+            <div><textarea name="gih_remark" rows="5" cols="40" maxlength="130"></textarea></div>
+        </div>
+        <div>
+            <button id="btnUpdate">수정</button>
+            <button id="btnCancle">취소</button>
         </div>
     </div>
     <div class="back-ground"></div>
-    <!-- end of side-bar -->
+    <!-- end of side-bar // start of modal -->
+    <div class="md-bg">
+        <div>
+            <input type="text" placeholder="아이템 또는 거래처 검색">
+            <input type="radio" id="btn item" name="item" value="1">
+			<label for="btn item">품목</label>
+			<input type="radio" id="btn customer" name="customer" value="2">
+			<label for="btn customer">거래처</label>
+        </div>
+        <div>여기에 리스트가 나와야함</div>
+    </div>
+    <!-- end of modal  -->
     <%@ include file="../layout/left-menu.jsp"%>
     <div class="right-wrap">
         <%@ include file="../layout/header.jsp"%>
@@ -174,10 +243,8 @@
                 <div>
                     <div>
                         <div class="m-state orange"></div><span>상세보기</span>
-                        <div class="m-state green"></div><span>출고수정</span>
-                        <div class="m-state red"></div><span>출고</span>
                     </div>
-                    <div class="green" id="각자따로">- 출고</div>
+                    <div class="green" id="btnOut">- 출고</div>
                 </div>
             </div>
             <!-- 검색 라인 -->
@@ -212,6 +279,7 @@
                 <div></div>
             </div>
             <div class="m-items">
+               <!--  출고목록 리스트 -->
                <c:forEach var="out" items="${ outList }">
 		       <div>
                     <div>1(순번)</div>
@@ -219,28 +287,77 @@
                     <div>${ out.gcm_name }</div>
                     <div>${ out.gih_price }원</div>
                     <div>${ out.gih_qty }EA</div>
-                    <div>${out.total}원</div>
+                    <div>원</div>
                     <div>${out.gih_regdate}</div>
                     <div class="btns-box"> <!-- Ball -->
                         <input id="idx" name="gih_idx" type="hidden" value="${ out.gih_idx }">
                         <div class="items-btn orange"></div>
-                        <div class="items-btn green"></div>
-                        <div class="items-btn red"></div>
                     </div>
                 </div>
+                </c:forEach>
+                <!--  출고목록 리스트 -->
                 <div></div>
-		     </c:forEach>
             </div>
+            <!--  페이징 처리 -->
+            <div class="paging">
+                <div>◀◀</div>
+                <div>◀</div>
+                <!-- c:forEach start -->
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <!-- c:forEach End -->
+                <div>▶</div>
+                <div>▶▶</div>
+            </div>
+            <!-- 페이징 처리 -->
         </div>
     </div>
-   </div>
+</div>
 <script>
-let bgEl = document.getElementsByClassName('back-ground')[0];
-let btnEl1 = document.getElementsByClassName('items-btn orange')[0];
-let btnEl2 = document.getElementsByClassName('items-btn green')[0];
-let btnEl3 = document.getElementsByClassName('items-btn red')[0];
+let btnOut = document.getElementById('btnOut');                             // 출고버튼
+let bgEl = document.getElementsByClassName('back-ground')[0];               // side-bar 나올때 백그라운드
+let modalEl = document.getElementsByClassName("md-bg")[0];                  // 팝업 modal
+let btnUpdate = document.getElementById('btnUpdate');                       // 버튼-수정(내역보기)
+//let btnItems = document.getElementsByClassName('items-btn orange')[0];      // 버튼-상세보기
 
-btnEl1.onclick = e => {
+for(let i=0; i < 10; i++){
+	btnItems = document.getElementsByClassName('items-btn orange')[i]       // 버튼-상세보기
+}
+
+bgEl.onclick = e => showSidebar(false);
+btnOut.onclick = e => showModal(true);
+modalEl.onclick = e => showModal(false);
+modalEl.children[0].onclick = e => e.stopPropagation();
+
+let showSidebar = x => {
+    let el = document.getElementsByClassName("side-bar")[0];
+    let bg = document.getElementsByClassName("back-ground")[0];
+    
+    if(x){
+         el.style.right = "0";
+         bg.style.display = "block";
+        
+    } else {
+        el.style.right = "";
+        bg.style.display = "";
+    }
+}
+
+let showModal = x => {
+    let el = document.getElementsByClassName("md-bg")[0];
+    
+    if(x){
+        el.style.display = "flex";
+    } else {
+        el.style.display = "";
+    }
+}
+
+// 버튼-상세보기 누를 시 처리
+btnItems.onclick = e => {
 	const idx = document.querySelector('#idx').value;
 	//alert(idx);
 	
@@ -263,13 +380,11 @@ btnEl1.onclick = e => {
 	showSidebar(true);
 } 
 
-btnEl2.onclick = e => {
-    // 모달창을 띄운다
-    showSidebar(true);
+//버튼-수정 누를시 처리
+/* btnUpdate.onclick = e => {
     
-    // 수정 데이터를 입력하고 데이터를 넘긴다(거래처명, 출고단가, 수량, 비고만 수정가능)
+    // 수정 데이터를 입력하고 데이터를 넘긴다(출고단가, 수량, 비고만 수정가능)
     let idx = document.querySelector('#idx').value;
-    let gcm_name = document.getElementsByName('gcm_name')[0].value;
     let gih_price = document.getElementsByName('gih_price')[0].value;
     let gih_qty = document.getElementsByName('gih_qty')[0].value;
     let gih_remark = document.getElementsByName('gih_remark')[0].value;
@@ -279,13 +394,11 @@ btnEl2.onclick = e => {
         method: "PATCH",
         headers: {
             "Accept"       : "application/json",
-            "Content-Type" : "application/json",                                                                                                
+            "Content-Type" : "application/json",                                                                                               
             "Access-Control-Origin": "*"     // CORS 정책을 피한다
         },
         body:JSON.stringify({
             gih_idx : idx,
-            gih_idx : idx
-            gcm_name : gcm_name,
             gih_price : gih_price,
             gih_qty : gih_qty,
             gih_remark : gih_remark
@@ -298,32 +411,14 @@ btnEl2.onclick = e => {
             // 저장된 데이터를 가져오고 처리해줘야함
             console.log(data)
         })
-        
-}
-
-btnEl3.onclick = e => showSidebar(true);
-bgEl.onclick = e => showSidebar(false);
-
-let showSidebar = x => {
-	let el = document.getElementsByClassName("side-bar")[0];
-	let bg = document.getElementsByClassName("back-ground")[0];
-	
-	if(x){
-		 el.style.right = "0";
-         bg.style.display = "block";
-		
-	} else {
-		el.style.right = "";
-		bg.style.display = "";
-	}
-}
+} */
 </script>
 <script>
    let dateStart = document.getElementById("startdate");
    let dateEnd = document.getElementById("enddate");
    
    let today = new Date();
-   let endDateValue =today.toISOString().substring(0,10);
+   let endDateValue = today.toISOString().substring(0,10);
    let startDateValue = new Date(today.setDate(today.getDate()-7)).toISOString().substring(0,10);
    
    dateStart.value = startDateValue;
