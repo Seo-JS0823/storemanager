@@ -182,6 +182,7 @@
             sidebar.style.transform = 'translateX(100%)';
         }
     });
+    
 </script>
 </body>
 </html>
