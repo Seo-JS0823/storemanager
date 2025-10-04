@@ -1,14 +1,12 @@
 package com.storemanager.item;
 
-import com.storemanager.item.ItemDTO; 
-import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
 
 @Mapper
 public interface ItemMapper {
 
-     List<ItemDTO> findAllItems();
+     List<ItemDTO> selectItemList();
 
-	 public void saveNewItem(ItemDTO newItem);
-    
+     int insertItem(ItemDTO item);
 }
