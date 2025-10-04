@@ -1,11 +1,22 @@
 package com.storemanager.member;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -26,10 +37,15 @@ public class MemberController {
 		MemberDTO target = memberService.login(member);
 		if(target == null) return "redirect:/";
 		
-		session.setAttribute("name", target.getGm_name());
-		session.setAttribute("level", target.getGm_level());
+		session.setAttribute("gm_id", target.getGm_id());
 		
 		return "member/test-in";
+	}
+	
+	@PostMapping("/member-profile")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> memberProfile(@RequestBody String id) {
+		return memberService.profile(id);
 	}
 	
 	/* 회원가입 페이지 */
@@ -40,8 +56,35 @@ public class MemberController {
 	
 	/* 회원가입 실행 */
 	@PostMapping("/join")
-	public String join(MemberDTO member) {
-		return memberService.join(member);
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> join(
+			@RequestPart("gm_image") MultipartFile file, 
+			@RequestPart("member") String memberData) {
+		
+		String joinValidate = memberService.join(file, memberData);
+		Map<String, Object> response = null;
+		if(joinValidate == null) {
+			response = Map.of(
+				"status" , "FALSE",
+				"message" , "알 수 없는 이유로 회원가입에 실패하였습니다.",
+				"redirectUrl" , "/joinV"
+			);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		} else {
+			response = Map.of(
+				"status" , "TRUE",
+				"message" , "회원가입에 성공하였습니다.",
+				"redirectUrl" , "/"
+			);
+			return ResponseEntity.ok(response);
+		}
+	}
+	
+	/* 사용자 프로필 미리보기 */
+	@GetMapping("uploads/{fileName}")
+	@ResponseBody
+	public ResponseEntity<byte[]> thumb(@PathVariable("fileName") String fileUrl) {
+		return memberService.thumb(fileUrl);
 	}
 	
 	/* 회원가입 ID Validation true: 사용 가능한 아이디 , false: 사용 불가능한 아이디 */

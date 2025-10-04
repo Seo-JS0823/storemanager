@@ -30,8 +30,8 @@
     /* ===== wrap ===== */
     .wrap{
         display: flex;
-        width: 90rem; 
-        height: 45rem;
+        width: 120rem; 
+        height: 60rem;
         border-radius: 1rem; 
         box-shadow: 0.7rem 0.7rem 1rem #b3b3b3;
         overflow: hidden;
@@ -146,11 +146,15 @@
             </div>
         </div>
     </div>
+<script src="/js/member.js">
+</script>
 <script>
 	const login = document.getElementById('member-login');
 	login.addEventListener('click', (event) => {
 		const id = document.getElementById('id').value;
 		const pwd = document.getElementById('pwd').value;
+		memberProfileData.id = id;
+		
 		if(id === '') {
 			event.preventDefault();
 			alert('아이디를 입력하세요.');
