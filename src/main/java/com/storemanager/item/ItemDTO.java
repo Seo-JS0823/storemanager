@@ -14,3 +14,4 @@ public class ItemDTO {
     private String giDelFlag;
     private String gcmName;
 }
+ 
