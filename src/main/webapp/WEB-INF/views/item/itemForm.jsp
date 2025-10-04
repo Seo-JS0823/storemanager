@@ -28,6 +28,6 @@
                 <button type="submit" class="btn green">저장</button>
                 <button type="button" class="btn gray" id="modal-close-btn">취소</button>
             </div>
-        </form>   
+        </form>
     </div>
 </div> 
