@@ -1,0 +1,156 @@
+Render.callJSON(param1, param2, param3, param4, param5);
+
+---[ 함수 설명 ]---
+기본 [URL] + 쿼리 파라미터에 대한 정보 (JSON) + 렌더링 대상 ID (HTML 태그) + 콜백 함수의 조합으로 만든
+fetch로 받은 JSON 데이터로 HTML에 렌더링하는 함수입니다.
+
+★★★★★★★★★★★★★★★★★★★★ [ 파라미터에 대한 설명 ] ★★★★★★★★★★★★★★★★★★★★★★★★★
+
+[ param1 ]
+기본 URL 입니다.
+전체 URL이 "/api/test?currentPage=1&keyword=주부성" 라고 가정합시다.
+param1 = "/api/test" 가 됩니다. 물음표와 쿼리 파라미터는 넣지 않습니다.
+
+[ param2 ]
+쿼리 파라미터에 대한 정보입니다. JSON Object로 줘야합니다. 위 URL을 예시로
+{
+   currentPage : 1,
+   keyword : '주부성'
+}
+이때 내부에서는 첫 번째 파라미터로 받은 URL과 두 번째 파라미터로 받은 JSON 형식의 쿼리 파라미터에 대한 정보를 합쳐서 전체 GET URL 형식으로 만듭니다.
+
+[ param3 ]
+렌더링 대상이 되는 태그의 ID 입니다.
+ex) <div id="customer-list-container"></div>
+param3 = 'customer-list-container' 가 됩니다.
+
+[ param4 ]
+fetch를 보내서 받은 데이터로 화면에 렌더링할 콜백 함수를 정의합니다.
+createElement 해서 만든 태그를 반환하거나, 반환하지 않아도 됩니다.
+
+ex1) 이벤트 할당 X
+(jsonData) => {
+   const item = document.createElement('div');
+   item.innerHTML = `
+   <div>${jsonData.itemName}</div>
+   <div>${jsonData.itemTotalCount}</div>
+   `
+   return item;
+}
+
+ex2) 이벤트 할당 O - ModalControl.open('modal-container') 는 예제 함수
+(jsonData) => {
+   const item = document.createElement('div');
+   item.innerHTML = `
+   <div>${jsonData.itemName}</div>
+   <div>${jsonData.itemTotalCount}</div>
+   `
+
+   item.addEventListener('click', () => {
+      ModalControl.open('modal-container');
+   });
+
+   return item;   
+}
+
+[ param 5 ]
+fetch로 전달받은 JSON 데이터의 형식이
+1. [ {...}, {...}, {...}, {...} ]
+2. results:
+      common: {...}
+      items: [ {...}, {...}, {...}, {...}, {...} ]
+두 가지 형식이 있습니다. items 밑에 뭔가 더 있을수도 있구요.
+보통 Spring Boot Controller 에서 @ResponseBody 를 붙이고 List<ExampleDTO> 같은 타입으로 반환하게 되면
+[ {...}, {...}, {...} ] 같은 형식으로 응답을 내려줍니다.
+
+1번 형식의 JSON 데이터라면 param5는 생략해도됩니다.
+2번 형식의 JSON 데이터라면 5번째 파라미터로 추출할 JSON 데이터를 지정합니다. = 'results.items'
+
+두 가지 경우 모두 잘 작동합니다.
+
+★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
+Render.setComponent(param1, param2);
+
+---[ 함수 설명 ]---
+렌더링할 UI 형식을 저장하는 함수입니다.
+
+예를 들어 렌더링할 태그의 형식이
+<div> ... </div>
+<div> ... </div>
+<div> ... </div>
+이렇게 생겼다고 가정합시다.
+
+[ param1 ]
+사용자 지정 저장과 가져올 때 사용하는 key값 입니다. 문자열이에욤.
+
+[ param2 ]
+Render.callJSON의 param4와 동일합니다.
+
+사용 예제
+Render.setComponent('bill-list', (bill) => {
+   const tag = document.createElement('div');
+   tag.innerHTML = `
+   <div>${bill.gi_code}</div>
+   <div>${bill.gih_qry}</div>
+   <div>${bill.gcm_code}<div>
+   `
+
+   tag.addEventListener('click', () => {
+      console.log(`${bill.gcm_name} 을 선택하였습니다.`);
+   });
+
+   return tag;
+});
+
+이제 이걸 어디서 써야하냐면
+
+Render.callJSON(
+   '/bill/test',
+   {
+      keyword: '남양',
+      currentPage: 3,
+      countPerPage: 10
+   },
+   'bill-list-container',
+   (bill) => Render.getComponent('bill-list', bill)
+);
+
+Render.callJSON / Render.setComponent / Render.getComponent 는 HTML 렌더링하는 함수로 페이징과 관련없습니다.
+
+★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
+이 함수를 사용하면서 발생하는 에러 유형 2가지가 있습니다.
+에러가 발생하면 크롬 브라우저의 F12 개발자 도구의 콘솔창에서 확인할 수 있습니다.
+
+[ Error 1 ]
+등록된 컴포넌트가 없습니다.
+: Render.setComponent로 key값을 등록해서 DOM 문서 형식을 지정하지 않았거나,
+: Render.getComponent의 첫 번째 파라미터가 오타난겁니다.
+
+[ Error 2 ]
+parentTag 의 ID 를 찾을 수 없습니다. 전달한 parent 값 : ???
+: Render.callJSON 함수의 세 번째 파라미터로 전달하는 (렌더링 대상 태그의 ID) 가 없거나, 오타.
+: 또는 <body>...</body> 사이에 렌더링 대상이 되는 태그의 id 속성에 오타가 난 겁니다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

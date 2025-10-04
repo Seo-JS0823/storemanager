@@ -14,9 +14,9 @@
 	<!-- 회원가입 -->
 	<insert id="join">
 		INSERT INTO GE_MEMBER
-			(GM_ID, GM_LEVEL,GM_PWD, GM_NAME, GM_EMAIL, GM_TEL)
+			(GM_ID, GM_LEVEL, GM_PWD, GM_NAME, GM_EMAIL, GM_TEL, GM_PATH)
 		VALUES
-			(#{gm_id}, #{gm_level}, #{gm_pwd}, #{gm_name}, #{gm_email}, #{gm_tel})
+			(#{gm_id}, #{gm_level}, #{gm_pwd}, #{gm_name}, #{gm_email}, #{gm_tel}, #{gm_path})
 	</insert>
 	
 	<!-- 회원가입시 존재하는 아이디인지 검증 -->
