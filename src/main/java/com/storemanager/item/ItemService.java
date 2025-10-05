@@ -1,21 +1,21 @@
 package com.storemanager.item;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
-@Service 
-@RequiredArgsConstructor 
+@Service
 public class ItemService {
 
-    private final ItemMapper itemMapper; 
+    @Autowired
+    private ItemMapper itemMapper;
 
-    public List<ItemDTO> findAllItems() {
-      
-        return itemMapper.findAllItems();
+    public List<ItemDTO> selectItemList() {
+        return itemMapper.selectItemList();
     }
 
-    public void saveNewItem(ItemDTO newItem) {
-        itemMapper.saveNewItem(newItem);
+    public int insertItem(ItemDTO item) {
+        return itemMapper.insertItem(item);
     }
 }
+ 
