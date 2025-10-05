@@ -306,7 +306,8 @@
 #gm_infomation > div:nth-of-type(2) > div {
 	display: flex;
 }
-#gm_infomation > div:nth-of-type(2) > div > div {
+#gm_infomation > div:nth-of-type(2) > div > div,
+#gm_infomation > div:nth-of-type(2) > div > input {
 	width: calc(100% - 10rem);
 	height: 4rem;
 	line-height: 4rem;
@@ -330,7 +331,6 @@
 #gm_infomation > div:nth-of-type(2) > div > label p {
 	padding:0; margin:0;
 }
-
 
 
 

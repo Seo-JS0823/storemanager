@@ -32,6 +32,10 @@
 		<div><label>입사일</label><div id="info-regdate"></div></div>
 		<div><label>전화번호</label><div id="info-tel"></div></div>
 	</div>
+	<!-- 버튼 -->
+	<div>
+		<button id="profile-update">회원정보 변경</button>
+	</div>
 </div>
 
 

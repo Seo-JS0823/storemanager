@@ -180,6 +180,7 @@
 	</div>
 </div>
 </form>
+<script src="/js/render.js"></script>
 <script src="/js/member.js"></script>
 </body>
 </html>

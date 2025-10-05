@@ -284,36 +284,6 @@ p {
 				window.location.href = data.redirectUrl;
 			})
 			
-			/*
-			const formEl = document.getElementById('join-form');
-			formEl.action = '/join';
-			formEl.method = 'post';
-			formEl.submit();
-			
-			
-			const member = {
-				gm_id : idValidate,
-				gm_level : levelValidate,
-				gm_pwd : pwdValidate,
-				gm_name : nameValidate,
-				gm_tel : telValidate,
-				gm_email : emailValidate,
-				gm_path : imageValidate
-			}
-			
-			fetch('/join', {
-				method: 'post',
-				headers: {
-					'Content-Type':'application/json'
-				},
-				body:JSON.stringify(member)
-			})
-			.then(response => response.json())
-			.then(data => {
-				alert(data.message);
-				window.location.href = data.redirectUrl;
-			});
-			*/
 		} else {
 			event.preventDefault();
 			alert('입력한 값이 올바르지 않습니다.');
@@ -346,9 +316,8 @@ p {
 			img.onload = () => URL.revokeObjectURL(url);
 			
 			const reader = new FileReader();
-			let bCode;
 			
-			reader.onload = (element) => {
+			reader.onload = () => {
 				imageValidate = fileObject;
 				
 				const image = document.getElementById('image-reg');
