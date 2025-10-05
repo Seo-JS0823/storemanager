@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String id = (String) session.getAttribute("gm_id");
+	String name = (String) session.getAttribute("gm_name");
+	String level = (String) session.getAttribute("gm_level");
 %>
 <div>
 	<div class="header">

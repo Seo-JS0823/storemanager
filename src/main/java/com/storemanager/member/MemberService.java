@@ -1,14 +1,9 @@
 package com.storemanager.member;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
-import java.util.Base64;
-import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.storemanager.member.encoder.BCrypt;
+import com.storemanager.member.encoder.BCryptPasswordEncoder;
+import com.storemanager.member.upload.ImageUpload;
 
 @Service
 public class MemberService {
@@ -32,12 +28,10 @@ public class MemberService {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
-	private final Path fileStorage = Paths.get("uploads").toAbsolutePath().normalize();
-	
 	// Login 로직
 	public MemberDTO login(MemberDTO member) {
 		MemberDTO target = memberMapper.login(member.getGm_id());
-		boolean validate = has(member.getGm_pwd(), target.getGm_pwd());
+		boolean validate = BCryptPasswordEncoder.has(member.getGm_pwd(), target.getGm_pwd());
 		if(!validate) {
 			return null;
 		}
@@ -47,44 +41,38 @@ public class MemberService {
 	
 	// Join 로직
 	@Transactional
-	public String join(MultipartFile file, String memberData) {
-		MemberDTO member = null;
-		String path = null;
-		String fileName = null;
-		String originalFileName = file.getOriginalFilename();
-		String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	public ResponseEntity<Map<String, Object>> join(MultipartFile file, String memberData) {
+		MemberDTO member = this.jsonToDTO(memberData);
+		if(member == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		
-		try {
-			member = objectMapper.readValue(memberData, MemberDTO.class);
-			path = "uploads/" + today + "-" + member.getGm_id() + "-" + originalFileName;
-			fileName = today + "-" + member.getGm_id() + "-" + originalFileName;
-			member.setGm_path(path);
-			member.setGm_pwd(this.encode(member));
-		} catch(JsonMappingException e1) {
-			e1.printStackTrace();
-			return null;
-		} catch(JsonProcessingException e2) {
-			e2.printStackTrace();
-			return null;
-		}
+		String path = ImageUpload.saveUrl(file.getOriginalFilename(), member.getGm_id());
+		String fileName = ImageUpload.saveFileName(file.getOriginalFilename(), member.getGm_id());
 		
-		// 이미지 파일 경로에 저장
-		try(InputStream is =  file.getInputStream()) {
-			Path filePath = this.fileStorage.resolve(fileName);
-			
-			Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+		member.setGm_path(path);
+		member.setGm_pwd(BCryptPasswordEncoder.encode(member));
+		
+		if(!ImageUpload.fileSave(file, fileName).equals(fileName)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		}
 		
 		// 회원가입 시작
 		int joinValidate = memberMapper.join(member);
+		Map<String, Object> response = null;
 		if(joinValidate == 0) {
-			return null;
+			response = Map.of(
+				"status" , "FALSE",
+				"message" , "알 수 없는 이유로 회원가입에 실패하였습니다.",
+				"redirectUrl" , "/joinV"
+			);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		} else {
+			response = Map.of(
+				"status" , "TRUE",
+				"message" , "회원가입에 성공하였습니다.",
+				"redirectUrl" , "/"
+			);
+			return ResponseEntity.ok(response);			
 		}
-		
-		return "회원가입이 완료되었습니다.";
 	}
 	
 	// Member Profile
@@ -106,18 +94,12 @@ public class MemberService {
 	// Member Profile Image Thumb
 	public ResponseEntity<byte[]> thumb(String fileUrl) {
 		Path path = Paths.get("uploads/" + fileUrl);
+		Map<String, Object> imageData = ImageUpload.getImageData(path);
+		if(imageData == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		
-		byte[] file = null;
-		String contentType = null;
-		try {
-			file = Files.readAllBytes(path);
-			contentType = Files.probeContentType(path);
-		} catch (IOException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		}
 		return ResponseEntity.status(HttpStatus.OK)
-				             .header("Content-Type", contentType)
-				             .body(file);
+				             .header("Content-Type", (String) imageData.get("type"))
+				             .body((byte[]) imageData.get("data"));
 	}
 	
 	// join Id Validation 로직
@@ -127,16 +109,17 @@ public class MemberService {
 		else return false;
 	}
 	
-	public String encode(MemberDTO member) {
-		if(member == null) throw new IllegalArgumentException();
-		
-		int cost = 11;
-		String salt = BCrypt.gensalt(cost);
-		return BCrypt.hashpw(member.getGm_pwd(), salt);
-	}
-	
-	public boolean has(String param1, String param2) {
-		return BCrypt.checkpw(param1, param2);
+	// JSON 문자열을 MemberDTO로 변환
+	public MemberDTO jsonToDTO(String member) {
+		MemberDTO target = null;
+		try {
+			target = objectMapper.readValue(member, MemberDTO.class);
+		} catch(JsonMappingException e1) {
+			return null;
+		} catch(JsonProcessingException e2) {
+			return null;
+		}
+		return target;
 	}
 	
 }

@@ -1,13 +1,8 @@
 package com.storemanager.member;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +33,8 @@ public class MemberController {
 		if(target == null) return "redirect:/";
 		
 		session.setAttribute("gm_id", target.getGm_id());
+		session.setAttribute("gm_name", target.getGm_name());
+		session.setAttribute("gm_level", target.getGm_level());
 		
 		return "member/test-in";
 	}
@@ -60,24 +57,7 @@ public class MemberController {
 	public ResponseEntity<Map<String, Object>> join(
 			@RequestPart("gm_image") MultipartFile file, 
 			@RequestPart("member") String memberData) {
-		
-		String joinValidate = memberService.join(file, memberData);
-		Map<String, Object> response = null;
-		if(joinValidate == null) {
-			response = Map.of(
-				"status" , "FALSE",
-				"message" , "알 수 없는 이유로 회원가입에 실패하였습니다.",
-				"redirectUrl" , "/joinV"
-			);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-		} else {
-			response = Map.of(
-				"status" , "TRUE",
-				"message" , "회원가입에 성공하였습니다.",
-				"redirectUrl" , "/"
-			);
-			return ResponseEntity.ok(response);
-		}
+		return memberService.join(file, memberData);
 	}
 	
 	/* 사용자 프로필 미리보기 */
