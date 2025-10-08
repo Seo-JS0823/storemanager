@@ -17,5 +17,16 @@ public class ItemService {
     public int insertItem(ItemDTO item) {
         return itemMapper.insertItem(item);
     }
+
+	public ItemDTO selectItemById(String giCode) {
+		return itemMapper.selectItemById(giCode);
+	}
+	
+    public int updateItem(ItemDTO item) {
+        return itemMapper.updateItem(item);
+    }
+
+	public void deleteItem(String giCode) {
+	}
 }
  

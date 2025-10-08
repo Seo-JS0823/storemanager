@@ -72,9 +72,9 @@
 							<div></div>
 							<div></div>
 							<div class="btns-box">
-								<div class="items-btn orange"></div>
-								<div class="items-btn green"></div>
-								<div class="items-btn red"></div>
+								<button class="detail-btn" data-gicode="${item.giCode}">상세</button>
+								<button class="update-btn" data-gicode="${item.giCode}">수정</button>
+								<button class="delete-btn" data-gicode="${item.giCode}">삭제</button>
 							</div>
 						</div>
 					</c:forEach>
@@ -89,17 +89,113 @@
         const showFormBtn = document.getElementById('show-item-form-btn');
         const sidebar = document.getElementById('right-modal-container');
 
-        // '품목등록' 버튼 클릭 시 모달창 표시
+        // '품목등록' 버튼 모달창 
         showFormBtn.addEventListener('click', showRegistrationModal);
 
-        // --- 함수 정의 ---
+        // '상세보기' 버튼들
+        document.querySelectorAll('.detail-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const giCode = this.dataset.gicode;
+
+                try {
+                    const response = await fetch('/items/' + giCode);
+                    if (!response.ok) throw new Error('데이터 로딩 실패');
+                    
+                    const item = await response.json();
+
+                    const contentHtml = `
+                        <div class="right-modal-wrap">
+                            <div class="modal-header">
+                                <div>
+                                    <span class="material-symbols-outlined">description</span>
+                                    <span>품목 상세보기</span>
+                                </div>
+                                <span class="material-symbols-outlined" id="modal-clear">close</span>
+                            </div>
+                            <div class="modal-content">
+                                <div class="modal-item">
+                                    <label>품목 코드</label>
+                                    <input type="text" value="${item.giCode || ''}" readonly>
+                                </div>
+                                <div class="modal-item">
+                                    <label>품목명</label>
+                                    <input type="text" value="${item.giName || ''}" readonly>
+                                </div>
+                                <div class="modal-item">
+                                    <label>거래처</label>
+                                    <input type="text" value="${item.gcmName || ''} (${item.gcmCode || ''})" readonly>
+                                </div>
+                                <div class="modal-btn-box">
+                                    <button type="button" class="btn gray" id="modal-close-btn">닫기</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    sidebar.innerHTML = contentHtml;
+                    sidebar.style.transform = 'translateX(0)';
+
+                    sidebar.querySelector('#modal-clear').addEventListener('click', hideModal);
+                    sidebar.querySelector('#modal-close-btn').addEventListener('click', hideModal);
+
+                } catch (error) {
+                    console.error('상세보기 오류:', error);
+                    alert('상세 정보를 불러오는 데 실패했습니다.');
+                }
+            });
+        });
+        
+        //업데이트 버튼 기능
+        document.querySelectorAll('.update-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const giCode = this.dataset.gicode;
+                try {
+                    const response = await fetch('/items/updateform/' + giCode);
+                    if (!response.ok) throw new Error('수정 폼 로딩 실패');
+                    const formHtml = await response.text();
+                    sidebar.innerHTML = formHtml;
+                    sidebar.style.transform = 'translateX(0)';
+                } catch (error) {
+                    console.error('수정 폼 로딩 오류:', error);
+                    alert('수정 폼을 불러오는 데 실패했습니다.');
+                }
+            });
+        });
+        
+        // --- 삭제 버튼 기능 ---
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const giCodeToDelete = this.dataset.gicode;
+                
+                if (confirm(`'${giCodeToDelete}' 품목을 정말로 삭제하시겠습니까?`)) {
+                    
+                    fetch('/items/' + giCodeToDelete, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(error => { throw new Error(error.message || '삭제에 실패했습니다.') });
+                        }
+                        return response.json(); 
+                    })
+                    .then(data => {
+                        alert(data.message);
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('삭제 중 오류 발생:', error);
+                        alert('삭제 실패: ' + error.message);
+                    });
+                }
+            });
+        });
+
+        // 품목 등록 기능
         async function showRegistrationModal() {
-            // API 주소
             const formUrl = '/items/new-form';
             const suppliersUrl = '/api/com-members';
 
             try {
-                // 두 API를 동시에 호출해서 폼 HTML과 거래처 목록을 가져옴
                 const [formResponse, suppliersResponse] = await Promise.all([
                     fetch(formUrl),
                     fetch(suppliersUrl)
@@ -112,12 +208,10 @@
                 const formHtml = await formResponse.text();
                 const suppliers = await suppliersResponse.json();
 
-                // 사이드바에 폼 HTML을 삽입
                 sidebar.innerHTML = formHtml;
                 
-                // 가져온 거래처 목록으로 드롭다운을 채움
                 const supplierSelect = sidebar.querySelector('#gcmCode');
-                supplierSelect.innerHTML = '<option value="" disabled selected>거래처를 선택하세요</option>'; // 기본 옵션
+                supplierSelect.innerHTML = '<option value="" disabled selected>거래처를 선택하세요</option>';
                 suppliers.forEach(supplier => {
                     const option = document.createElement('option');
                     option.value = supplier.gcmCode;
@@ -125,10 +219,7 @@
                     supplierSelect.appendChild(option);
                 });
 
-                // 모달창을 부드럽게 표시
                 sidebar.style.transform = 'translateX(0)';
-
-                // 폼 제출 및 취소 버튼에 이벤트 리스너 추가
                 addModalEventListeners();
 
             } catch (error) {
@@ -152,12 +243,18 @@
         async function handleFormSubmit(event) {
             event.preventDefault(); 
             const form = event.target;
+            
+            // FormData를 URL-encoded string으로 변환
             const formData = new FormData(form);
+            const bodyData = new URLSearchParams(formData).toString();
 
             try {
                 const response = await fetch(form.action, {
                     method: 'POST',
-                    body: new URLSearchParams(formData)
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: bodyData
                 });
 
                 if (!response.ok) {
@@ -165,12 +262,10 @@
                 }
 
                 const result = await response.json();
-
-                if (result.status === 'success') {
-                    alert(result.message);
+                
+                alert(result.message);
+                if (response.ok) {
                     location.reload(); 
-                } else {
-                    alert('등록 실패: ' + (result.message || '알 수 없는 오류'));
                 }
             } catch (error) {
                 console.error('폼 제출 중 오류 발생:', error);

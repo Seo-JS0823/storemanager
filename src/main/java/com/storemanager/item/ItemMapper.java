@@ -6,8 +6,13 @@ import java.util.List;
 @Mapper
 public interface ItemMapper {
 
-     List<ItemDTO> selectItemList();
+    List<ItemDTO> selectItemList();
 
-     int insertItem(ItemDTO item);
+    ItemDTO selectItemById(String giCode);
+
+    int insertItem(ItemDTO item);
+
+    int updateItem(ItemDTO item);
+
+    int deleteItem(String giCode);
 }
- 
