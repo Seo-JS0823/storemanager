@@ -89,13 +89,10 @@ public class MemberController {
 	/* 회원정보변경 */
 	@PostMapping("/profile-update")
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> profileUpdate(@RequestBody String member) {
-		MemberDTO target = memberService.jsonToDTO(member);
-		target.setGm_pwd(BCryptPasswordEncoder.encode(target));
-		
-		Map<String, String> response = memberService.profileUpdate(target);
-		
-		return ResponseEntity.ok(response);
+	public ResponseEntity<Map<String, String>> profileUpdate(
+			@RequestPart(value = "file", required = false) MultipartFile file,
+			@RequestPart("member") String member) {
+		return memberService.profileUpdate(file, member);
 	}
 	
 }

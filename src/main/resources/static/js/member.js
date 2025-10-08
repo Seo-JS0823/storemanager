@@ -1,6 +1,9 @@
 const memberProfileData = {
 	_profile: {},
+	_fileByte: undefined,
 	_fetchs: false,
+	_password: undefined,
+	
 	set profile(profile) {
 		this._profile = profile;
 	},
@@ -13,6 +16,20 @@ const memberProfileData = {
 	},
 	get fetchs() {
 		return this._fetchs;
+	},
+	
+	set fileByte(fileByte) {
+		this._fileByte = fileByte;
+	},
+	get fileByte() {
+		return this._fileByte;
+	},
+	
+	set password(password) {
+		this._password = password;
+	},
+	get password() {
+		return this._password;
 	}
 }
 Render.setComponent('Profile-Header', (text) => {
@@ -26,7 +43,7 @@ Render.setComponent('Profile-Header', (text) => {
 		event.preventDefault();
 		event.stopPropagation();
 		const modal = document.getElementById('gm_infomation');
-		modal.style.transform = 'translateX(100%)';
+		modal.style.transform = 'translateX(100%)';	
 	});
 	
 	const span = document.createElement('span');
@@ -130,9 +147,95 @@ Render.setComponent('Profile-Content-Update', (json) => {
 	const imageBox = document.createElement('div');
 	imageBox.id = 'member-profile-image';
 	const imgT = document.createElement('img');
+	imgT.id = 'profile-thumb';
 	imgT.src = json.filepath;
 	imageBox.appendChild(imgT);
 	parent.appendChild(imageBox);
+	
+	/*
+	display: inline-block;
+	font-size: 1.5rem;
+	width: 30rem;
+	height: 3rem;
+	line-height: 3rem;
+	text-align: center;
+	color: white;
+	background-color: #00AA00;
+	cursor: pointer;
+	border-radius: 0.5rem;
+	*/
+	const profileUpdateBox = document.createElement('div');
+	profileUpdateBox.setAttribute('style', `
+	width: 30rem;
+	margin: 0 auto;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+	`);
+	const profileUpdate = document.createElement('input');
+	profileUpdate.type = 'file';
+	profileUpdate.id = 'profile-update';
+	profileUpdate.setAttribute('style', `
+	position: absolute;
+	width: 0;
+	height: 0;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	`);
+	profileUpdate.addEventListener('change', (event) => {
+		const fileObject = event.target.files[0];
+		
+		const fileType = fileObject.type;
+		if(!fileType.startsWith('image/')) {
+			alert('이미지 파일만 업로드 가능합니다.');
+			return;
+		}
+		
+		if(fileObject) {
+			const url = URL.createObjectURL(fileObject);
+			const thumb = document.getElementById('profile-thumb');
+			thumb.src = url;
+			
+			const reader = new FileReader();
+			reader.onload = () => {
+				const thumbText = document.getElementById('profile-update-text');
+				thumbText.textContent = fileObject.name;
+				
+				memberProfileData.fileByte = fileObject;
+			};
+			reader.readAsArrayBuffer(fileObject);
+		}
+	});
+	const profileUpdateLabel = document.createElement('label');
+	profileUpdateLabel.textContent = '변경할 이미지 업로드';
+	profileUpdateLabel.setAttribute('for', 'profile-update');
+	profileUpdateLabel.setAttribute('style', `
+	font-size: 1.5rem;
+	width: 30rem;
+	height: 3rem;
+	line-height: 3rem;
+	text-align: center;
+	color: white;
+	background-color: #00AA00;
+	cursor: pointer;
+	border-radius: 0.5rem;
+	margin: 0 auto;`);
+	const profileUpdateText = document.createElement('div');
+	profileUpdateText.id = 'profile-update-text';
+	profileUpdateText.setAttribute('style', `
+	width: 30rem;
+	padding-left: 0.5rem;
+	border: none;
+	font-size: 1.3rem;
+	margin: 0 auto;
+	height: 2rem;
+	line-height: 2rem;
+	`);
+	profileUpdateBox.appendChild(profileUpdate);
+	profileUpdateBox.appendChild(profileUpdateLabel);
+	profileUpdateBox.appendChild(profileUpdateText);
+	parent.appendChild(profileUpdateBox);
 	
 	const message1 = document.createElement('div');
 	message1.textContent = '변경할 정보를 입력해주세요.';
@@ -193,26 +296,105 @@ Render.setComponent('Profile-Content-Update', (json) => {
 	profile4.appendChild(profile4dv);
 	parent.appendChild(profile4);
 	
-	const profile5 = document.createElement('div');
-	const profile5lb = document.createElement('label');
-	const profile5dv = document.createElement('input');
-	profile5lb.textContent = '비밀번호';
-	profile5dv.id = 'info-pwd';
-	profile5dv.type = 'password';
-	profile5.appendChild(profile5lb);
-	profile5.appendChild(profile5dv);
-	parent.appendChild(profile5);
+	const passwordSelector = document.createElement('div');
+	passwordSelector.id = 'password-selector';
+	passwordSelector.setAttribute('style', `
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	width: 100%;
+	margin: 0 auto;
+	gap: 1rem;
+	`);
+	const passwordSelectorText = document.createElement('div');
+	passwordSelectorText.textContent = '비밀번호 변경하기';
+	passwordSelectorText.style.border = 'none';
+	passwordSelectorText.style.textAlign = 'center';
+	passwordSelectorText.style.width = '30rem';
+	passwordSelectorText.style.height = '3rem';
+	passwordSelectorText.style.lineHeight = '3rem';	
+	passwordSelectorText.style.textAlign = 'center';
+	passwordSelectorText.style.color = 'white';
+	passwordSelectorText.style.backgroundColor = '#00AA00';
+	passwordSelectorText.style.borderRadius = '0.5rem';		
+	passwordSelector.appendChild(passwordSelectorText);
+	passwordSelector.addEventListener('click', () => {
+		const profile5 = document.createElement('div');
+		profile5.id = 'profile5';
+		profile5.style.display = 'flex';
+		profile5.style.width = '100%';
+		profile5.style.border = 'none';
+		const profile5lb = document.createElement('label');
+		const profile5dv = document.createElement('input');
+		profile5lb.textContent = '비밀번호';
+		profile5dv.id = 'info-pwd';
+		profile5dv.type = 'password';
+		profile5dv.addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+		});
+		profile5.appendChild(profile5lb);
+		profile5.appendChild(profile5dv);
+		
+		const profile6 = document.createElement('div');
+		profile6.id = 'profile6';
+		profile6.style.display = 'flex';
+		profile6.style.width = '100%';
+		profile6.style.border = 'none';
+		const profile6lb = document.createElement('label');
+		const profile6dv = document.createElement('input');
+		profile6lb.textContent = '비밀번호 확인';
+		profile6dv.id = 'info-pwd-reg';
+		profile6dv.type = 'password';
+		profile6dv.setAttribute('data-ok', 'no');
+		profile6dv.addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+		});
+		profile6dv.addEventListener('change', () => {
+			const pwdReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+			if(pwdReg.test(document.getElementById('info-pwd').value)) {
+				if(document.getElementById('info-pwd').value === document.getElementById('info-pwd-reg').value) {
+					const pwdRegEl = document.getElementById('pwd-reg');
+					pwdRegEl.style.color = '#00AA00';
+					pwdRegEl.textContent = '비밀번호가 일치합니다.';
+					
+					const pwd = document.getElementById('info-pwd-reg');
+					pwd.setAttribute('data-ok', 'ok');
+					
+					memberProfileData.password = document.getElementById('info-pwd-reg').value;
+				} else {
+					const pwdRegEl = document.getElementById('pwd-reg');
+					pwdRegEl.style.color = '#DC3545';
+					pwdRegEl.textContent = '비밀번호가 일치하지 않습니다.';
+					
+					const pwd = document.getElementById('info-pwd-reg');
+					pwd.setAttribute('data-ok', 'no');
+				}
+			} else {
+				const pwdRegEl = document.getElementById('pwd-reg');
+				pwdRegEl.style.color = '#DC3545';
+				pwdRegEl.textContent = '비밀번호는 영문 소문자, 숫자, 특수문자를 하나씩 포함해야 합니다.';
+			}
+		});
+		profile6.appendChild(profile6lb);
+		profile6.appendChild(profile6dv);
+		
+		if(memberProfileData.password === undefined) {
+			passwordSelector.appendChild(profile5);
+			passwordSelector.appendChild(profile6);
+			memberProfileData.password = '';
+		} else {
+			passwordSelector.removeChild(document.getElementById('profile5'));
+			passwordSelector.removeChild(document.getElementById('profile6'));
+			memberProfileData.password = undefined;
+		}
+	});
+	parent.appendChild(passwordSelector);
 	
-	const profile6 = document.createElement('div');
-	const profile6lb = document.createElement('label');
-	const profile6dv = document.createElement('input');
-	profile6lb.textContent = '비밀번호 확인';
-	profile6dv.id = 'info-pwd-reg';
-	profile6dv.type = 'password';
-	profile6dv.setAttribute('data-ok', 'no');
-	profile6.appendChild(profile6lb);
-	profile6.appendChild(profile6dv);
-	parent.appendChild(profile6);
+	
 	
 	const passwordOK = document.createElement('div');
 	passwordOK.id = 'pwd-reg';
@@ -223,30 +405,6 @@ Render.setComponent('Profile-Content-Update', (json) => {
 	passwordOK.style.fontSize = '1.3rem';
 	parent.appendChild(passwordOK);
 	
-	profile6dv.addEventListener('change', () => {
-		const pwdReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-		if(pwdReg.test(document.getElementById('info-pwd').value)) {
-			if(document.getElementById('info-pwd').value === document.getElementById('info-pwd-reg').value) {
-				const pwdRegEl = document.getElementById('pwd-reg');
-				pwdRegEl.style.color = '#00AA00';
-				pwdRegEl.textContent = '비밀번호가 일치합니다.';
-				
-				const pwd = document.getElementById('info-pwd-reg');
-				pwd.setAttribute('data-ok', 'ok');
-			} else {
-				const pwdRegEl = document.getElementById('pwd-reg');
-				pwdRegEl.style.color = '#DC3545';
-				pwdRegEl.textContent = '비밀번호가 일치하지 않습니다.';
-				
-				const pwd = document.getElementById('info-pwd-reg');
-				pwd.setAttribute('data-ok', 'no');
-			}
-		} else {
-			const pwdRegEl = document.getElementById('pwd-reg');
-			pwdRegEl.style.color = '#DC3545';
-			pwdRegEl.textContent = '비밀번호는 영문 소문자, 숫자, 특수문자를 하나씩 포함해야 합니다.';
-		}
-	});
 	
 	const updateBtn = document.createElement('button');
 	updateBtn.textContent = '회원정보 변경';
@@ -254,22 +412,30 @@ Render.setComponent('Profile-Content-Update', (json) => {
 		event.preventDefault();
 		event.stopPropagation();
 		
+		let pwdServer;
+		
+		if(memberProfileData.password === undefined) {
+			pwdServer = 'FALSE';
+		} else {
+			pwdServer = memberProfileData.password
+		}
+		
 		const update = {
 			gm_id:document.getElementById('info-id').value,
 			gm_level:document.getElementById('info-level').value,
 			gm_email:document.getElementById('info-email').value,
 			gm_tel:document.getElementById('info-tel').value,
-			gm_pwd:document.getElementById('info-pwd-reg').value
+			gm_pwd:pwdServer
 		}
 		
 		const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		const telReg = /^0\d{1,2}-\d{3,4}-\d{4}$/;
 		
-		// 여기서 작업 다시 시작
-		
-		if(document.getElementById('info-pwd-reg').getAttribute('data-ok') !== 'ok') {
-			alert('비밀번호가 일치하지 않습니다.');
-			return;
+		if(memberProfileData.password !== undefined) {
+			if(document.getElementById('info-pwd-reg').getAttribute('data-ok') !== 'ok') {
+				alert('비밀번호가 일치하지 않습니다.');
+				return;
+			}
 		}
 		
 		if(update.gm_email === '') {
@@ -292,17 +458,21 @@ Render.setComponent('Profile-Content-Update', (json) => {
 			return;
 		}
 		
+		const formEl = new FormData();
+		formEl.append('member', JSON.stringify(update));
+		if(memberProfileData.fileByte !== undefined) {
+			formEl.append('file', memberProfileData.fileByte);
+		}
+		
 		fetch('/profile-update', {
 			method: 'post',
-			headers: {
-				'Content-Type':'application/json'
-			},
-			body: JSON.stringify(update)
+			body: formEl
 		})
 		.catch(error => console.log(error))
 		.then(response => response.json())
 		.then(data => {
 			alert(data.message);
+			memberProfileData.fetchs = false;
 		});
 		
 		
@@ -315,10 +485,27 @@ Render.setComponent('Profile-Content-Update', (json) => {
 		event.preventDefault();
 		event.stopPropagation();
 		
-		changeHTML([
-			Render.getComponent('Profile-Header', '정보 관리'),
-			Render.getComponent('Profile-Content', memberProfileData._profile)
-		]);
+		if(!memberProfileData.fetchs) {
+			fetch('/member-profile', {
+					method: 'post',
+					body: document.getElementById('profile-id').value
+			})
+			.then(response => response.json())
+			.then(data => {
+				memberProfileData.profile = data;
+				memberProfileData.password = undefined;
+				
+				changeHTML([
+					Render.getComponent('Profile-Header', '정보 관리'),
+					Render.getComponent('Profile-Content', data)
+				])
+			})
+		} else {
+			changeHTML([
+				Render.getComponent('Profile-Header', '정보 관리'),
+				Render.getComponent('Profile-Content', memberProfileData._profile)
+			]);
+		}
 	});
 	parent.appendChild(backBtn);
 	
@@ -344,12 +531,14 @@ Render.setComponent('Profile-Footer', () => {
 	
 	return parent;
 });
+
 function changeHTML(component = []) {
 	document.getElementById('gm_infomation').innerHTML = '';
 	component.forEach(cp => {
 		document.getElementById('gm_infomation').appendChild(cp);
 	})
 }
+
 const GMinfomation = document.getElementById('infomation');
 if(GMinfomation !== null) {
 	GMinfomation.addEventListener('click', (event) => {
@@ -369,8 +558,10 @@ if(GMinfomation !== null) {
 				.then(data => {
 					memberProfileData.profile = data;
 					memberProfileData.fetchs = true;
-					infoModal.appendChild(Render.getComponent('Profile-Header', '정보 관리'));
-					infoModal.appendChild(Render.getComponent('Profile-Content', memberProfileData.profile));
+					changeHTML([
+						infoModal.appendChild(Render.getComponent('Profile-Header', '정보 관리')),
+						infoModal.appendChild(Render.getComponent('Profile-Content', memberProfileData.profile))
+					])
 					
 				})
 			}

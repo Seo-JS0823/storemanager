@@ -101,19 +101,38 @@ public class MemberService {
 	}
 	
 	// Member Profile Update
-	public Map<String, String> profileUpdate(MemberDTO member) {
-		int success = memberMapper.profileUpdate(member);
-		if(success == 0) {
-			return Map.of(
-				"message", "회원정보 변경에 실패하였습니다.",
-				"redirectUrl", "/"
-			);
-		} else {
-			return Map.of(
-				"message", "회원정보가 변경되었습니다.",
-				"redirectUrl", "/"
-			);
+	@Transactional
+	public ResponseEntity<Map<String, String>> profileUpdate(MultipartFile file, String memberData) {
+		MemberDTO member = jsonToDTO(memberData);
+		
+		if(file != null) {
+			String path = ImageUpload.saveUrl(file.getOriginalFilename(), member.getGm_id());
+			String fileName = ImageUpload.saveFileName(file.getOriginalFilename(), member.getGm_id());
+			
+			member.setGm_path(path);
+			if(member.getGm_pwd() != "FALSE") {
+				member.setGm_pwd(BCryptPasswordEncoder.encode(member));			
+			}
+			
+			if(!ImageUpload.fileSave(file, fileName).equals(fileName)) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+			}
 		}
+		
+		if(!member.getGm_pwd().equals("FALSE")) {
+			member.setGm_pwd(BCryptPasswordEncoder.encode(member));
+		}
+		
+		int updated = memberMapper.profileUpdate(member);
+		if(updated == 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		
+		Map<String, String> response = Map.of(
+			"message", "회원정보가 변경되었습니다.",
+			"redirectUrl", ""
+		);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				             .body(response);
 	}
 	
 	
