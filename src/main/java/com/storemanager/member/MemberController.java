@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.storemanager.member.encoder.BCryptPasswordEncoder;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -84,4 +86,29 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
+	/* 회원정보변경 */
+	@PostMapping("/profile-update")
+	@ResponseBody
+	public ResponseEntity<Map<String, String>> profileUpdate(@RequestBody String member) {
+		MemberDTO target = memberService.jsonToDTO(member);
+		target.setGm_pwd(BCryptPasswordEncoder.encode(target));
+		
+		Map<String, String> response = memberService.profileUpdate(target);
+		
+		return ResponseEntity.ok(response);
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

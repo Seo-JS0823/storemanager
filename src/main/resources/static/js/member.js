@@ -15,7 +15,341 @@ const memberProfileData = {
 		return this._fetchs;
 	}
 }
+Render.setComponent('Profile-Header', (text) => {
+	const parent = document.createElement('div');
+	
+	const closeBtn = document.createElement('button');
+	closeBtn.id = 'infomation-close';
+	closeBtn.textContent = '닫 기';
+	closeBtn.addEventListener('click', (event) => {
+		// TODO: Close Modal
+		event.preventDefault();
+		event.stopPropagation();
+		const modal = document.getElementById('gm_infomation');
+		modal.style.transform = 'translateX(100%)';
+	});
+	
+	const span = document.createElement('span');
+	span.style.fontWeight = 600;
+	span.textContent = text;
+	
+	parent.appendChild(closeBtn);
+	parent.appendChild(span);
+	return parent;
+});
+Render.setComponent('Profile-Content', (json) => {
+	const parent = document.createElement('div');
+	
+	const imageBox = document.createElement('div');
+	imageBox.id = 'member-profile-image';
+	const imgT = document.createElement('img');
+	imgT.src = json.filepath;
+	imageBox.appendChild(imgT);
+	parent.appendChild(imageBox);
+	
+	const profile = document.createElement('div');
+	const profilelb = document.createElement('label');
+	const profiledv = document.createElement('div');
+	profilelb.textContent = '아이디';
+	profiledv.id = 'info-id';
+	profiledv.textContent = json.member.gm_id;
+	profile.appendChild(profilelb);
+	profile.appendChild(profiledv);
+	parent.appendChild(profile);
+	
+	const profile1 = document.createElement('div');
+	const profile1lb = document.createElement('label');
+	const profile1dv = document.createElement('div');
+	profile1lb.textContent = '사용자';
+	profile1dv.id = 'info-name';
+	profile1dv.textContent = json.member.gm_name;
+	profile1.appendChild(profile1lb);
+	profile1.appendChild(profile1dv);
+	parent.appendChild(profile1);
 
+	const profile2 = document.createElement('div');
+	const profile2lb = document.createElement('label');
+	const profile2dv = document.createElement('div');
+	profile2lb.textContent = '직급';
+	profile2dv.id = 'info-level';
+	profile2dv.textContent = json.member.gm_level;
+	profile2.appendChild(profile2lb);
+	profile2.appendChild(profile2dv);
+	parent.appendChild(profile2);
+
+	const profile3 = document.createElement('div');
+	const profile3lb = document.createElement('label');
+	const profile3dv = document.createElement('div');
+	profile3lb.textContent = '이메일';
+	profile3dv.id = 'info-email';
+	profile3dv.textContent = json.member.gm_email;
+	profile3.appendChild(profile3lb);
+	profile3.appendChild(profile3dv);
+	parent.appendChild(profile3);
+
+	const profile4 = document.createElement('div');
+	const profile4lb = document.createElement('label');
+	const profile4dv = document.createElement('div');
+	profile4lb.textContent = '입사일';
+	profile4dv.id = 'info-regdate';
+	profile4dv.textContent = json.member.gm_regdate;
+	profile4.appendChild(profile4lb);
+	profile4.appendChild(profile4dv);
+	parent.appendChild(profile4);
+
+	const profile5 = document.createElement('div');
+	const profile5lb = document.createElement('label');
+	const profile5dv = document.createElement('div');
+	profile5lb.textContent = '전화번호';
+	profile5dv.id = 'info-tel';
+	profile5dv.textContent = json.member.gm_tel;
+	profile5.appendChild(profile5lb);
+	profile5.appendChild(profile5dv);
+	parent.appendChild(profile5);
+	
+	const profile6 = document.createElement('button');
+	profile6.textContent = '회원 정보 변경';
+	profile6.addEventListener('click', (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		
+		const modal = document.getElementById('gm_infomation');
+		modal.innerHTML = '';
+		
+		modal.appendChild(Render.getComponent('Profile-Header', '회원정보 변경'));
+		modal.appendChild(Render.getComponent('Profile-Content-Update', memberProfileData.profile));
+		
+	});
+	parent.appendChild(profile6);
+	
+	return parent;
+});
+Render.setComponent('Profile-Content-Update', (json) => {
+	const parent = document.createElement('div');
+	
+	const imageBox = document.createElement('div');
+	imageBox.id = 'member-profile-image';
+	const imgT = document.createElement('img');
+	imgT.src = json.filepath;
+	imageBox.appendChild(imgT);
+	parent.appendChild(imageBox);
+	
+	const message1 = document.createElement('div');
+	message1.textContent = '변경할 정보를 입력해주세요.';
+	message1.style.fontSize = '2rem';
+	message1.style.fontWeight = 600;
+	message1.style.margin = '0 auto';
+	parent.appendChild(message1);
+	
+	const profile = document.createElement('div');
+	const profilelb = document.createElement('label');
+	const profiledv = document.createElement('input');
+	profilelb.textContent = '아이디';
+	profiledv.id = 'info-id';
+	profiledv.value = json.member.gm_id;
+	profiledv.setAttribute('readonly', true);
+	profile.appendChild(profilelb);
+	profile.appendChild(profiledv);
+	parent.appendChild(profile);
+	
+	const profile1 = document.createElement('div');
+	const profile1lb = document.createElement('label');
+	const profile1dv = document.createElement('input');
+	profile1lb.textContent = '사용자';
+	profile1dv.id = 'info-name';
+	profile1dv.value = json.member.gm_name;
+	profile1dv.setAttribute('readonly', true);
+	profile1.appendChild(profile1lb);
+	profile1.appendChild(profile1dv);
+	parent.appendChild(profile1);
+
+	const profile2 = document.createElement('div');
+	const profile2lb = document.createElement('label');
+	const profile2dv = document.createElement('input');
+	profile2lb.textContent = '직급';
+	profile2dv.id = 'info-level';
+	profile2dv.value = json.member.gm_level;
+	profile2.appendChild(profile2lb);
+	profile2.appendChild(profile2dv);
+	parent.appendChild(profile2);
+
+	const profile3 = document.createElement('div');
+	const profile3lb = document.createElement('label');
+	const profile3dv = document.createElement('input');
+	profile3lb.textContent = '이메일';
+	profile3dv.id = 'info-email';
+	profile3dv.value = json.member.gm_email;
+	profile3.appendChild(profile3lb);
+	profile3.appendChild(profile3dv);
+	parent.appendChild(profile3);
+	
+	const profile4 = document.createElement('div');
+	const profile4lb = document.createElement('label');
+	const profile4dv = document.createElement('input');
+	profile4lb.textContent = '전화번호';
+	profile4dv.id = 'info-tel';
+	profile4dv.value = json.member.gm_tel;
+	profile4.appendChild(profile4lb);
+	profile4.appendChild(profile4dv);
+	parent.appendChild(profile4);
+	
+	const profile5 = document.createElement('div');
+	const profile5lb = document.createElement('label');
+	const profile5dv = document.createElement('input');
+	profile5lb.textContent = '비밀번호';
+	profile5dv.id = 'info-pwd';
+	profile5dv.type = 'password';
+	profile5.appendChild(profile5lb);
+	profile5.appendChild(profile5dv);
+	parent.appendChild(profile5);
+	
+	const profile6 = document.createElement('div');
+	const profile6lb = document.createElement('label');
+	const profile6dv = document.createElement('input');
+	profile6lb.textContent = '비밀번호 확인';
+	profile6dv.id = 'info-pwd-reg';
+	profile6dv.type = 'password';
+	profile6dv.setAttribute('data-ok', 'no');
+	profile6.appendChild(profile6lb);
+	profile6.appendChild(profile6dv);
+	parent.appendChild(profile6);
+	
+	const passwordOK = document.createElement('div');
+	passwordOK.id = 'pwd-reg';
+	passwordOK.style.width = '100%';
+	passwordOK.style.height = '3rem';
+	passwordOK.style.lineHeight = '3rem';
+	passwordOK.style.paddingLeft = '0.5rem';
+	passwordOK.style.fontSize = '1.3rem';
+	parent.appendChild(passwordOK);
+	
+	profile6dv.addEventListener('change', () => {
+		const pwdReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+		if(pwdReg.test(document.getElementById('info-pwd').value)) {
+			if(document.getElementById('info-pwd').value === document.getElementById('info-pwd-reg').value) {
+				const pwdRegEl = document.getElementById('pwd-reg');
+				pwdRegEl.style.color = '#00AA00';
+				pwdRegEl.textContent = '비밀번호가 일치합니다.';
+				
+				const pwd = document.getElementById('info-pwd-reg');
+				pwd.setAttribute('data-ok', 'ok');
+			} else {
+				const pwdRegEl = document.getElementById('pwd-reg');
+				pwdRegEl.style.color = '#DC3545';
+				pwdRegEl.textContent = '비밀번호가 일치하지 않습니다.';
+				
+				const pwd = document.getElementById('info-pwd-reg');
+				pwd.setAttribute('data-ok', 'no');
+			}
+		} else {
+			const pwdRegEl = document.getElementById('pwd-reg');
+			pwdRegEl.style.color = '#DC3545';
+			pwdRegEl.textContent = '비밀번호는 영문 소문자, 숫자, 특수문자를 하나씩 포함해야 합니다.';
+		}
+	});
+	
+	const updateBtn = document.createElement('button');
+	updateBtn.textContent = '회원정보 변경';
+	updateBtn.addEventListener('click', (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		
+		const update = {
+			gm_id:document.getElementById('info-id').value,
+			gm_level:document.getElementById('info-level').value,
+			gm_email:document.getElementById('info-email').value,
+			gm_tel:document.getElementById('info-tel').value,
+			gm_pwd:document.getElementById('info-pwd-reg').value
+		}
+		
+		const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		const telReg = /^0\d{1,2}-\d{3,4}-\d{4}$/;
+		
+		// 여기서 작업 다시 시작
+		
+		if(document.getElementById('info-pwd-reg').getAttribute('data-ok') !== 'ok') {
+			alert('비밀번호가 일치하지 않습니다.');
+			return;
+		}
+		
+		if(update.gm_email === '') {
+			alert('이메일을 입력하세요.');
+			return;
+		}
+		
+		if(update.gm_tel === '') {
+			alert('전화번호를 입력하세요.');
+			return;
+		}
+		
+		if(!emailReg.test(update.gm_email)) {
+			alert('올바른 이메일 형식으로 입력하세요.');
+			return;
+		}
+		
+		if(!telReg.test(update.gm_tel)) {
+			alert('올바른 전화번호 형식으로 입력하세요.');
+			return;
+		}
+		
+		fetch('/profile-update', {
+			method: 'post',
+			headers: {
+				'Content-Type':'application/json'
+			},
+			body: JSON.stringify(update)
+		})
+		.catch(error => console.log(error))
+		.then(response => response.json())
+		.then(data => {
+			alert(data.message);
+		});
+		
+		
+	})
+	parent.appendChild(updateBtn);
+	
+	const backBtn = document.createElement('button');
+	backBtn.textContent = '뒤로 가기';
+	backBtn.addEventListener('click', (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		
+		changeHTML([
+			Render.getComponent('Profile-Header', '정보 관리'),
+			Render.getComponent('Profile-Content', memberProfileData._profile)
+		]);
+	});
+	parent.appendChild(backBtn);
+	
+	return parent;
+});
+Render.setComponent('Profile-Footer', () => {
+	const parent = document.createElement('div');
+	const updateBtn = document.createElement('button');
+	updateBtn.id = 'profile-update';
+	updateBtn.textContent = '회원 정보 변경';
+	updateBtn.addEventListener('click', (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		
+		const modal = document.getElementById('gm_infomation');
+		modal.innerHTML = '';
+		
+		modal.appendChild(Render.getComponent('Profile-Header', '회원정보 변경'));
+		modal.appendChild(Render.getComponent('Profile-Content-Update', memberProfileData.profile));
+		
+	});
+	parent.appendChild(updateBtn);
+	
+	return parent;
+});
+function changeHTML(component = []) {
+	document.getElementById('gm_infomation').innerHTML = '';
+	component.forEach(cp => {
+		document.getElementById('gm_infomation').appendChild(cp);
+	})
+}
 const GMinfomation = document.getElementById('infomation');
 if(GMinfomation !== null) {
 	GMinfomation.addEventListener('click', (event) => {
@@ -33,16 +367,11 @@ if(GMinfomation !== null) {
 				})
 				.then(response => response.json())
 				.then(data => {
+					memberProfileData.profile = data;
 					memberProfileData.fetchs = true;
-					document.getElementById('info-name').textContent = data.member.gm_id;
-					document.getElementById('info-level').textContent = data.member.gm_level;
-					document.getElementById('info-email').textContent = data.member.gm_email;
-					document.getElementById('info-regdate').textContent = data.member.gm_regdate;
-					document.getElementById('info-tel').textContent = data.member.gm_tel;
+					infoModal.appendChild(Render.getComponent('Profile-Header', '정보 관리'));
+					infoModal.appendChild(Render.getComponent('Profile-Content', memberProfileData.profile));
 					
-					const img = document.createElement('img');
-					img.src = data.filepath
-					document.getElementById('member-profile-image').appendChild(img);
 				})
 			}
 		}
@@ -73,3 +402,24 @@ if(GMlogoutEl !== null) {
 		}
 	})
 }
+const GMProfileUpdateEl = document.getElementById('profile-update');
+if(GMProfileUpdateEl !== null) {
+	GMProfileUpdateEl.addEventListener('click', (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		
+		changeHTML([Render.getComponent('Profile-Header', '회원정보 변경'),
+		            Render.getComponent('Profile-Content-Update', memberProfileData.profile)]);
+		
+	});
+}
+
+
+
+
+
+
+
+
+
+

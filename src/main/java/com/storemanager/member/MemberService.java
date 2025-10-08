@@ -100,6 +100,24 @@ public class MemberService {
 				             .body((byte[]) imageData.get("data"));
 	}
 	
+	// Member Profile Update
+	public Map<String, String> profileUpdate(MemberDTO member) {
+		int success = memberMapper.profileUpdate(member);
+		if(success == 0) {
+			return Map.of(
+				"message", "회원정보 변경에 실패하였습니다.",
+				"redirectUrl", "/"
+			);
+		} else {
+			return Map.of(
+				"message", "회원정보가 변경되었습니다.",
+				"redirectUrl", "/"
+			);
+		}
+	}
+	
+	
+	
 	// join Id Validation 로직
 	public boolean joinIdValidation(String gm_id) {
 		int target = memberMapper.joinIdValidation(gm_id);

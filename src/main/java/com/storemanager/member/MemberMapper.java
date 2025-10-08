@@ -10,4 +10,6 @@ public interface MemberMapper {
 	int join(MemberDTO member);
 	
 	int joinIdValidation(String gm_id);
+	
+	int profileUpdate(MemberDTO member);
 }

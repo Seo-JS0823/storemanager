@@ -29,4 +29,14 @@
 			GM_ID = #{gm_id}
 	</select>
 	
+	<!-- 회원정보 변경 -->
+	<update id="profileUpdate">
+		UPDATE GE_MEMBER SET
+			GM_LEVEL = #{gm_level},
+			GM_EMAIL = #{gm_email},
+			GM_TEL = #{gm_tel},
+			GM_PWD = #{gm_pwd}
+		WHERE
+			GM_ID = #{gm_id}
+	</update>
 </mapper>
