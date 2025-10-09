@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 * {
 	box-sizing: border-box;
 }
@@ -19,4 +20,27 @@ form {
 a {
 	text-decoration: none;
 	color: black;
+=======
+* {
+	box-sizing: border-box;
+}
+html {
+	font-size: 10px;
+	font-family: sans-serif;
+}
+body {
+	min-width: 165rem;
+	min-height: 75rem;
+	padding: 0;
+	margin: 0;
+	width: 100vw;
+	height: 100vh;
+}
+form {
+	display: contents;
+}
+a {
+	text-decoration: none;
+	color: black;
+>>>>>>> fe880323677131d19633a252e168557fc548128b
 }
