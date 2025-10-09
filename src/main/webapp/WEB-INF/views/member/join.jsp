@@ -179,8 +179,7 @@ p {
     }
     .image-alflqhrl img {
     	border-radius: 50%;
-    	background-size: cover;
-    	background-position: center;
+    	object-fit: cover;
     }
 /* Join Modal */
 #join-modal {

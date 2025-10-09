@@ -34,8 +34,13 @@
 		UPDATE GE_MEMBER SET
 			GM_LEVEL = #{gm_level},
 			GM_EMAIL = #{gm_email},
-			GM_TEL = #{gm_tel},
-			GM_PWD = #{gm_pwd}
+			GM_TEL = #{gm_tel}
+			<if test="gm_pwd != 'FALSE'">
+				, GM_PWD = #{gm_pwd}
+			</if>
+			<if test="gm_path != null">
+				, GM_PATH = #{gm_path}
+			</if>
 		WHERE
 			GM_ID = #{gm_id}
 	</update>
