@@ -1,6 +1,7 @@
 package com.storemanager.bill;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +56,8 @@ public class BillController {
 
 		if(itemChk.equals("true") && comChk.equals("false")) {
 			whereStr = " AND GIH.GI_NAME LIKE '%"+searchStr+"%' ";
-			System.out.println("whereStr1 : "+whereStr);
 		}else if(itemChk.equals("false") && comChk.equals("true")) {
 			whereStr = " AND GCM.GCM_NAME LIKE '%"+searchStr+"%' ";
-			System.out.println("whereStr2 : "+whereStr);
 		}
 		
 		String startDay = startDate;
@@ -85,10 +84,8 @@ public class BillController {
 
 		if(itemChk.equals("true") && comChk.equals("false")) {
 			whereStr = " AND GIH.GI_NAME LIKE '%"+searchStr+"%' ";
-			System.out.println("whereStr1 : "+whereStr);
 		}else if(itemChk.equals("false") && comChk.equals("true")) {
 			whereStr = " AND GCM.GCM_NAME LIKE '%"+searchStr+"%' ";
-			System.out.println("whereStr2 : "+whereStr);
 		}
 
 		String startDay = startDate;
@@ -98,5 +95,95 @@ public class BillController {
 		List<BillDTO> billInList = billMapper.getBillListIn(startDay, endDay, whereStr);
 
 		return billInList;
+	}
+	
+	@GetMapping("/bill/createbill/{idxs}/{gcmNames}/{giNames}/{inout}")
+	//@GetMapping("/bill/createbill")
+	@ResponseBody
+	public String createbill(ModelAndView mv, BillDTO billDto,
+			@PathVariable("idxs") String idxs,@PathVariable("gcmNames") String gcmNames,
+			@PathVariable("giNames") String giNames, @PathVariable("inout") String inout
+			) {
+		String day = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+		String dayChk = day+"%";
+		String gbcNumber = "";
+		
+		// GBC_NUMBER Check
+		int gbc_idx_chk = billMapper.chkBillNumber(dayChk);
+		
+		int gbcNumChk = (int)(Math.log10(gbc_idx_chk)+1);
+		
+		if (gbcNumChk == 1) {
+			gbcNumber = day+"000"+String.valueOf(gbc_idx_chk);
+		}else if(gbcNumChk == 2) {
+			gbcNumber = day+"00"+String.valueOf(gbc_idx_chk);
+		}else if(gbcNumChk == 3) {
+			gbcNumber = day+"0"+String.valueOf(gbc_idx_chk);
+		}else {
+			gbcNumber = day+String.valueOf(gbc_idx_chk);
+		}
+		
+		// List
+		billMapper.createBill(gbcNumber, idxs, giNames, gcmNames, inout);
+		
+		return "OK";
+	}
+	
+	@GetMapping("/bill/billall/{startDate}/{endDate}/{itemChk}/{comChk}/{searchStr}")
+	@ResponseBody
+	public List<BillDTO> billAllList(ModelAndView mv, BillDTO billDto,
+			@PathVariable("startDate") String startDate,@PathVariable("endDate") String endDate,
+			@PathVariable("itemChk") String itemChk, @PathVariable("comChk") String comChk,
+			@PathVariable("searchStr") String searchStr) {
+		
+		if(searchStr.equals("null")) {
+			searchStr = "";
+		}
+		
+		String whereStr = "";
+
+		if(itemChk.equals("true") && comChk.equals("false")) {
+			whereStr = " AND GBC_GI_NAME LIKE '%"+searchStr+"%' ";
+		}else if(itemChk.equals("false") && comChk.equals("true")) {
+			whereStr = " AND GBC_GCM_NAME LIKE '%"+searchStr+"%' ";
+		}
+		
+		String startDay = startDate;
+		String endDay = endDate;
+		
+		// List
+		List<BillDTO> billOutList = billMapper.getBillListALL(startDay, endDay, whereStr);
+
+		return billOutList;
+	}
+	
+	@GetMapping("/bill/gcmchk/{GbcGisList}")
+	@ResponseBody
+	public List<BillDTO> gcmChk(ModelAndView mv, BillDTO billDto, @PathVariable("GbcGisList") String GbcGisList) {
+		
+		// List
+		List<BillDTO> billOutList = billMapper.getGcmChk(GbcGisList);
+
+		return billOutList;
+	}
+	
+	@GetMapping("/bill/gcmchk1/{GbcGisList}")
+	@ResponseBody
+	public List<BillDTO> gcmChk1(ModelAndView mv, BillDTO billDto, @PathVariable("GbcGisList") String GbcGisList) {
+		
+		// List
+		List<BillDTO> billOutList = billMapper.getGcmChk1(GbcGisList);
+
+		return billOutList;
+	}
+	
+	@GetMapping("/bill/gcmchk2/{GbcGisList}")
+	@ResponseBody
+	public List<BillDTO> gcmChk2(ModelAndView mv, BillDTO billDto, @PathVariable("GbcGisList") String GbcGisList) {
+		
+		// List
+		List<BillDTO> billOutList = billMapper.getGcmChk2(GbcGisList);
+
+		return billOutList;
 	}
 }
