@@ -5,10 +5,10 @@
 
     <select id="selectItemList" resultType="com.storemanager.item.ItemDTO">
         SELECT
-            i.GI_CODE,
-            i.GI_NAME,
-            i.GCM_CODE,
-            c.GCM_NAME  -- GE_COM_MEMBER 테이블에서 매입처명을 가져옵니다.
+            i.GI_CODE    AS giCode,
+            i.GI_NAME    AS giName,
+            i.GCM_CODE   AS gcmCode,
+            c.GCM_NAME   AS gcmName
         FROM
             GE_ITEMS i
         LEFT JOIN
@@ -17,50 +17,33 @@
             i.GI_CODE DESC
     </select>
 
-    <insert id="insertItem" parameterType="com.storemanager.item.ItemDTO">
-        INSERT INTO GE_ITEMS (
-            GI_CODE,
-            GI_NAME,
-            GCM_CODE,
-            GI_DEL_FLAG
-        ) VALUES (
-            #{giCode},
-            #{giName},
-            #{gcmCode},
-            'N'
-        )
-    </insert>
-
-    <!-- 상세보기 버튼 -->
     <select id="selectItemById" parameterType="string" resultType="com.storemanager.item.ItemDTO">
         SELECT
-            i.GI_CODE,
-            i.GI_NAME,
-            i.GCM_CODE,
-            c.GCM_NAME
+            i.GI_CODE    AS giCode,
+            i.GI_NAME    AS giName,
+            i.GCM_CODE   AS gcmCode,
+            c.GCM_NAME   AS gcmName
         FROM
             GE_ITEMS i
         LEFT JOIN
             GE_COM_MEMBER c ON i.GCM_CODE = c.GCM_CODE
         WHERE
-            i.GI_CODE = #{giCode}
+            i.GI_CODE =  #{giCode, jdbcType=VARCHAR}
     </select>
-    
-    <!-- 수정 버튼 -->
-	<update id="updateItem"
-		parameterType="com.storemanager.item.ItemDTO">
-		UPDATE GE_ITEMS
-		SET
-		GI_NAME = #{giName},
-		GCM_CODE = #{gcmCode}
-		WHERE
-		GI_CODE = #{giCode}
-	</update>
 
-     <!-- 삭제 버튼 -->
-	<delete id="deleteItem" parameterType="string">
-		DELETE FROM GE_ITEMS
-		WHERE GI_CODE = #{giCode}
-	</delete>
+    <insert id="insertItem" parameterType="com.storemanager.item.ItemDTO">
+        INSERT INTO GE_ITEMS (GI_CODE, GI_NAME, GCM_CODE, GI_DEL_FLAG) 
+        VALUES (#{giCode}, #{giName}, #{gcmCode}, 'N')
+    </insert>
+
+    <update id="updateItem" parameterType="com.storemanager.item.ItemDTO">
+        UPDATE GE_ITEMS SET GI_NAME = #{giName}, GCM_CODE = #{gcmCode}
+        WHERE GI_CODE = #{giCode}
+    </update>
+
+    <delete id="deleteItem" parameterType="string">
+        DELETE FROM GE_ITEMS
+        WHERE GI_CODE =  #{giCode, jdbcType=VARCHAR}
+    </delete>
+
 </mapper>
- 
