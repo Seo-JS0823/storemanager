@@ -275,7 +275,7 @@
 		}
 	}
 	#ds-stick-image > div {
-		width: 10%;
+		width: 15%;
 		border-top-left-radius: 1rem;
 		border-top-right-radius: 1rem;
 		display: flex;
@@ -300,7 +300,7 @@
 		gap: 2rem;
 	}
 	#ds-stick-text > div {
-		width: 10%;
+		width: 15%;
 		height: 100%;
 		display: flex;
 		justify-content: center;
@@ -419,26 +419,11 @@
 						
 						<!-- 막대 영역 -->
 						<div id="ds-stick-content">
-							<div>당월 총 입고</div>
+							<div id="ds-stick-innerHead"></div>
 							<!-- 막대 그림 -->
-							<div id="ds-stick-image">
-							<!-- 
-								<div>39%</div>
-								<div>36%</div>
-								<div>12%</div>
-								<div>7%</div>
-								<div>6%</div>
-							-->
-							</div>
-							<div id="ds-stick-text">
-							<!-- 
-								<div>문어</div>
-								<div>시금치</div>
-								<div>양갱</div>
-								<div>오징어</div>
-								<div>원두</div>
-							-->								
-							</div>
+							<div id="ds-stick-image"></div>
+							<!-- 막대 그림 텍스트 -->
+							<div id="ds-stick-text"></div>
 						</div>
 					</div>
 				</div>
@@ -532,20 +517,156 @@ function befSales() {
 }
 befSales();
 
-// CHART 당월 총 입고
+// CHART 당월 총 입/출고
+// 입고 : total-in (Array)
+// 출고 : total-out (Array)
+const chartData = {
+	_totalIn: undefined,
+	_totalInQty: undefined,
+	_totalInSum: undefined,
+	_totalInPer: undefined,
+	_totalOut: undefined,
+	_totalOut: undefined,
+	_totalOutSum: undefined,
+	_totalOutPer: undefined,
+	
+	set totalIn(totalIn) {
+		this._totalIn = totalIn;
+	},
+	get totalIn() {
+		return this._totalIn;
+	},
+	set totalInQty(totalInQty) {
+		this._totalInQty = totalInQty;
+	},
+	get totalInQty() {
+		return this._totalInQty;
+	},
+	set totalInSum(totalInSum) {
+		this._totalInSum = totalInSum;
+	},
+	get totalInSum() {
+		return this._totalInSum;
+	},
+	set totalInPer(totalInPer) {
+		this._totalInPer = totalInPer;
+	},
+	get totalInPer() {
+		return this._totalInPer;
+	},
+	
+	set totalOut(totalOut) {
+		this._totalOut = totalOut;
+	},
+	get totalOut() {
+		return this._totalOut;
+	},
+	set totalOutQty(totalOutQty) {
+		this._totalOutQty = totalOutQty;
+	},
+	get totalOutQty() {
+		return this._totalOutQty;
+	},
+	set totalOutSum(totalOutSum) {
+		this._totalOutSum = totalOutSum;
+	},
+	get totalOutSum() {
+		return this._totalOutSum;
+	},
+	set totalOutPer(totalOutPer) {
+		this._totalOutPer = totalOutPer;
+	},
+	get totalOutPer() {
+		return this._totalOutPer;
+	}
+}
+function stickChartRender(inout) {
+	const stickImage = document.getElementById('ds-stick-image');
+	stickImage.innerHTML = '';
+	const stickText = document.getElementById('ds-stick-text');
+	stickText.innerHTML = '';
+	const stickHeader = document.getElementById('ds-stick-innerHead');
+	stickHeader.innerHTML = '';
+	const color = ['#DC3545', 'orange', '#FFD700', '#00AA00', '#1E90FF'];
+	
+	let i = 0;
+	if(inout === 'IN') {
+		stickHeader.textContent = '당월 총 입고';
+		chartData.totalIn.forEach(data => {
+			const topText = document.createElement('div');
+			topText.style.top = '-20px';
+			topText.style.position = 'absolute';
+			topText.style.color = 'black';
+			topText.textContent = chartData.totalInPer[i] + ' %';
+			const image = document.createElement('div');
+			image.style.height = chartData.totalInPer[i] + '%';
+			image.style.position = 'relative';
+			image.style.backgroundColor = color[i];
+			image.appendChild(topText);
+			stickImage.appendChild(image);
+			
+			const text = document.createElement('div');
+			text.style.textAlign = 'center';
+			text.innerHTML = `
+			\${data.gi_name}
+			<br>
+			\${Math.abs(data.gih_qty)}EA
+			<br>
+			\${Math.abs(data.gih_qty * data.gih_price)} 원`;
+			stickText.appendChild(text);
+			i++;
+		});
+	} else if(inout === 'OUT') {
+		stickHeader.textContent = '당월 총 출고';
+		chartData.totalOut.forEach(data => {
+			const topText = document.createElement('div');
+			topText.style.top = '-20px';
+			topText.style.position = 'absolute';
+			topText.style.color = 'black';
+			topText.textContent = chartData.totalOutPer[i] + ' %';
+			const image = document.createElement('div');
+			image.style.height = chartData.totalOutPer[i] + '%';
+			image.style.position = 'relative';
+			image.style.backgroundColor = color[i];
+			image.appendChild(topText);
+			stickImage.appendChild(image);
+			
+			const text = document.createElement('div');
+			text.style.textAlign = 'center';
+			text.innerHTML = `\${data.gi_name}
+			<br>
+			\${Math.abs(data.gih_qty)}EA
+			<br>
+			\${Math.abs(data.gih_qty * data.gih_price)} 원`;
+			stickText.appendChild(text);
+			i++;
+		});
+	}
+}
 function stickTotalNowIn() {
-	fetch('/dash/stick-total-now-in')
+	fetch('/dash/stick-total-now')
 	.catch(error => console.log(error))
 	.then(response => response.json())
 	.then(data => {
+		chartData.totalIn = data.total_in;
+		chartData.totalInQty = data.total_in_qty;
+		chartData.totalInSum = data.total_in_sum;
+		chartData.totalInPer = data.total_in_per;
+		chartData.totalOut = data.total_out;
+		chartData.totalOutQty = data.total_out_qty;
+		chartData.totalOutSum = data.total_out_sum;
+		chartData.totalOutPer = data.total_out_per;
 		
+		stickChartRender('IN');
 	});
 }
-// CHART 당월 총 출고
-function stickTotalNowOut() {
-	
-}
-
+stickTotalNowIn();
+document.getElementById('s-t-now-in').addEventListener('click', () => {
+	stickChartRender('IN');
+});
+document.getElementById('s-t-now-out').addEventListener('click', () => {
+	stickChartRender('OUT');
+});
 // 최신 입고 내역
 function InTopFive() {
 	

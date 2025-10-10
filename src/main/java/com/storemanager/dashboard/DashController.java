@@ -63,10 +63,17 @@ public class DashController {
 	}
 	
 	// 당월 총 입고 TOP 5
-	@GetMapping("/dash/stick-total-now-in")
+	@GetMapping("/stick-total-now")
 	@ResponseBody
-	public ResponseEntity<Map<String,List<DashDTO>>> stickTotalNowIn() {
-		
+	public ResponseEntity<Map<String, Object>> stickTotalNowIn() {
+		return ResponseEntity.ok(service.stickTotalNow());
+	}
+	
+	// 최신 입고 내역 TOP 5
+	@GetMapping("/in-top-five")
+	@ResponseBody
+	public ResponseEntity<String> inTopFive() {
+		return null;
 	}
 	
 	// 1,000,000 형식으로 포맷해서 문자열 반환

@@ -3,26 +3,30 @@
 <mapper namespace="com.storemanager.dashboard.DashMapper">
 	<!-- 당월 입고가 총계 -->
 	<select id="nowInPrice" resultType="int">
+		select SUM(T.TOTALS) from(
 		select
-			SUM(GIH_PRICE)
+			SUM(GIH_QTY) * AVG(GIH_PRICE) AS TOTALS
 		from
 			GE_ITEMS_HIST
 		where
 			GIH_INOUT = 'IN' AND
 			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
 			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+		group by GI_NAME) AS T
 	</select>
 	
 	<!-- 당월 출고가 총계 -->
 	<select id="nowOutPrice" resultType="int">
+		select SUM(T.TOTALS) from(
 		select
-			SUM(GIH_PRICE)
+			SUM(ABS(GIH_QTY)) * AVG(GIH_PRICE) AS TOTALS
 		from
 			GE_ITEMS_HIST
 		where
 			GIH_INOUT = 'OUT' AND
 			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
 			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+		group by GI_NAME) AS T
 	</select>
 	
 	<!-- 당월 총 입고 TOP 5 -->
@@ -30,7 +34,8 @@
 		select
 			GI_NAME,
 			SUM(GIH_QTY) as GIH_QTY,
-			AVG(GIH_PRICE) as GIH_PRICE
+			AVG(GIH_PRICE) as GIH_PRICE,
+			SUM(GIH_QTY) * AVG(GIH_PRICE) as ORDERS
 		from
 			GE_ITEMS_HIST
 		WHERE
@@ -39,6 +44,8 @@
 			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
 		group by
 			GI_NAME
+		order by ORDERS DESC
+		limit 5
 	</select>
 	
 	<!-- 당월 총 출고 TOP 5 -->
@@ -46,7 +53,8 @@
 		select
 			GI_NAME,
 			SUM(GIH_QTY) as GIH_QTY,
-			AVG(GIH_PRICE) as GIH_PRICE
+			AVG(GIH_PRICE) as GIH_PRICE,
+			SUM(ABS(GIH_QTY)) * AVG(GIH_PRICE) as ORDERS
 		from
 			GE_ITEMS_HIST
 		WHERE
@@ -55,7 +63,25 @@
 			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
 		group by
 			GI_NAME
-		
+		order by ORDERS DESC		
+		limit 5
+	</select>
+	
+	<!-- 최신 입고 내역 TOP 5 -->
+	<select id="inTopFive" resultType="com.storemanager.dash.DashDTO">
+		SELECT 
+		   DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE, 
+		   GCM.GCM_NAME, 
+		   GIH.GI_NAME, 
+		   GIH.GIH_QTY, 
+		   GIH.GIH_PRICE, 
+		   (GIH.GIH_QTY*GIH.GIH_PRICE) AMOUNT 
+		FROM 
+		   GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
+		WHERE
+		   GIH.GIH_INOUT='IN' and GIH.GCM_CODE = GCM.GCM_CODE
+		ORDER BY GIH.GIH_REGDATE DESC
+		LIMIT 0,5;
 	</select>
 	
 </mapper>
