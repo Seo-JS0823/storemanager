@@ -21,19 +21,6 @@ public class ItemController {
     @GetMapping("")
     public String itemList(Model model) {
         List<ItemDTO> itemList = itemService.selectItemList();
-        
-        System.out.println("==========================================");
-        System.out.println("[진단] itemList 변수를 확인합니다.");
-        if (itemList != null && !itemList.isEmpty()) {
-            System.out.println("[진단] 데이터 개수: " + itemList.size());
-            // 첫 번째 데이터의 giCode 값을 출력해봅니다.
-            ItemDTO firstItem = itemList.get(0);
-            System.out.println("[진단] 첫 번째 데이터의 giCode: " + firstItem.getGiCode());
-        } else {
-            System.out.println("[진단] itemList가 비어있거나 null입니다.");
-        }
-        System.out.println("==========================================");
-        
         model.addAttribute("items", itemList);
         return "item/item";
     }
@@ -62,7 +49,7 @@ public class ItemController {
     }
     
     // 4. 품목 상세보기 API (JSON 데이터 반환)
-    @GetMapping("/detail/{giCode}") // <-- 주소 충돌을 피하기 위해 /detail/ 경로 추가
+    @GetMapping("/detail/{giCode}")
     @ResponseBody
     public ResponseEntity<?> getItemById(@PathVariable("giCode") String giCode) {
         ItemDTO item = itemService.selectItemById(giCode);
@@ -73,7 +60,19 @@ public class ItemController {
         }
     }
 
-    // 5. 업데이트 폼(HTML) 요청
+    // 5. 업데이트 모달에 필요한 데이터 요청 API
+    @GetMapping("/updateData/{giCode}")
+    @ResponseBody
+    public ResponseEntity<?> getUpdateData(@PathVariable("giCode") String giCode) {
+        ItemDTO item = itemService.selectItemById(giCode);
+        if (item != null) {
+            return ResponseEntity.ok(item);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // 6. 업데이트 폼(HTML) 요청 (이것은 별도의 페이지로 이동할 때 사용)
     @GetMapping("/updateform/{giCode}")
     public String updateItemForm(@PathVariable("giCode") String giCode, Model model) {
         ItemDTO item = itemService.selectItemById(giCode);
@@ -81,7 +80,7 @@ public class ItemController {
         return "item/itemUpdateForm";
     }
 
-    // 6. 품목 업데이트 기능 (데이터 처리)
+    // 7. 품목 업데이트 기능
     @PostMapping("/update")
     @ResponseBody
     public ResponseEntity<?> updateItem(ItemDTO itemDTO) {
@@ -98,8 +97,8 @@ public class ItemController {
         }
     }
     
-    // 7. 품목 삭제 기능 (데이터 처리)
-    @DeleteMapping("/delete/{giCode}") // <-- 주소 충돌을 피하기 위해 /delete/ 경로 추가
+    // 8. 품목 삭제 기능
+    @DeleteMapping("/delete/{giCode}")
     @ResponseBody
     public ResponseEntity<?> deleteItem(@PathVariable("giCode") String giCode) {
         try {

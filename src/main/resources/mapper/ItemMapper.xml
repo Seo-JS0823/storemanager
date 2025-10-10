@@ -4,19 +4,20 @@
 <mapper namespace="com.storemanager.item.ItemMapper">
 
     <select id="selectItemList" resultType="com.storemanager.item.ItemDTO">
-        SELECT
-            i.GI_CODE    AS giCode,
-            i.GI_NAME    AS giName,
-            i.GCM_CODE   AS gcmCode,
-            c.GCM_NAME   AS gcmName
-        FROM
-            GE_ITEMS i
-        LEFT JOIN
-            GE_COM_MEMBER c ON i.GCM_CODE = c.GCM_CODE
-        ORDER BY
-            i.GI_CODE DESC
+    SELECT
+        i.GI_CODE    AS giCode,
+        i.GI_NAME    AS giName,
+        i.GCM_CODE   AS gcmCode,
+        c.GCM_NAME   AS gcmName
+    FROM
+        GE_ITEMS i
+    LEFT JOIN
+        GE_COM_MEMBER c ON i.GCM_CODE = c.GCM_CODE
+    WHERE
+        i.GI_DEL_FLAG = 'N'
+    ORDER BY
+        i.GI_CODE DESC
     </select>
-
     <select id="selectItemById" parameterType="string" resultType="com.storemanager.item.ItemDTO">
         SELECT
             i.GI_CODE    AS giCode,
@@ -41,9 +42,16 @@
         WHERE GI_CODE = #{giCode}
     </update>
 
-    <delete id="deleteItem" parameterType="string">
-        DELETE FROM GE_ITEMS
-        WHERE GI_CODE =  #{giCode, jdbcType=VARCHAR}
-    </delete>
+    <update id="deleteItem" parameterType="string">
+    UPDATE GE_ITEMS
+    SET GI_DEL_FLAG = 'Y'
+    WHERE GI_CODE =  #{giCode}
+    </update>
+    
+    <update id="restoreItem" parameterType="string">
+    UPDATE GE_ITEMS
+    SET GI_DEL_FLAG = 'N'
+    WHERE GI_CODE = #{giCode}
+    </update>
 
 </mapper>
