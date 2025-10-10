@@ -1,7 +1,6 @@
 package com.storemanager.dashboard;
 
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class DashController {
 		return ResponseEntity.ok(nowOutPrice);		
 	}
 	
-	// 당월 매출 총이익
+	// 전월 매출액
 	@GetMapping("/bef-sales")
 	@ResponseBody
 	public ResponseEntity<Map<String, String>> befSales() {
@@ -55,37 +54,13 @@ public class DashController {
 		} else {
 			response = Map.of(
 				"color", "#DC3545",
-				"sales", "▲" + this.priceFormat(befSales)
+				"sales", "▲"+ this.priceFormat(befSales)
 			);
 		}
 		
 		return ResponseEntity.ok(response);
 	}
 	
-	// 당월 총 입고 TOP 5
-	@GetMapping("/stick-total-now")
-	@ResponseBody
-	public ResponseEntity<Map<String, Object>> stickTotalNowIn() {
-		return ResponseEntity.ok(service.stickTotalNow());
-	}
-	
-	// 최신 입고 내역 TOP 5
-	@GetMapping("/in-top-five")
-	@ResponseBody
-	public ResponseEntity<List<DashDTO>> inTopFive() {
-		List<DashDTO> inList = service.inTopFive();
-		return ResponseEntity.ok(inList);
-	}
-
-	// 최신 출고 내역 TOP 5
-	@GetMapping("/out-top-five")
-	@ResponseBody
-	public ResponseEntity<List<DashDTO>> outTopFive() {
-		List<DashDTO> outList = service.outTopFive();
-		return ResponseEntity.ok(outList);
-	}
-	
-	// 1,000,000 형식으로 포맷해서 문자열 반환
 	private String priceFormat(Integer price) {
 		NumberFormat format = NumberFormat.getCurrencyInstance(Locale.KOREA);
 		return format.format(price).replaceAll("₩", "") + " 원";

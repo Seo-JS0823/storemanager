@@ -29,7 +29,6 @@
 	#dash-container > div:nth-of-type(1) > div {
 		width: 25%;
 		height: 13rem;
-		margin: 0 auto;
 		border-radius: 1rem;
 		overflow: hidden;
 	}
@@ -89,13 +88,14 @@
 	/* ID:ds-donut-box */
 	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) {
 		width: 100%;
-		height: 100%;
+		height: 25rem;
 		border: 1px solid rgba(33, 33, 33, 0.2);
 		border-radius: 1rem;
 		overflow: hidden;
 	}
 	/* ID:ds-donut-header */
-	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
+	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
+	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) {
 		width: 100%;
 		height: 4rem;
 		font-size: 1.5rem;
@@ -106,21 +106,24 @@
 		padding: 0 2rem;
 		color: black;
 	}
-	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
+	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
+	#ds-stick-headerText {
 		width: 30%;
 		display: flex;
 		align-items: center;
 	}
-	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) {
+	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2),
+	#ds-stick-headerBTNS {
 		width: 70%;
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
 		gap: 1rem;
 	}
-	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) button {
-		font-size: 1.2em;
-		padding: 0.3rem 1rem;
+	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) button,
+	#ds-stick-headerBTNS button {
+		font-size: 1rem;
+		padding: 0.3rem 0.8rem;
 		border: none;
 		color: white;
 		border-radius: 0.5rem;
@@ -245,13 +248,10 @@
 		flex-direction: column;
 		padding: 2rem;
 	}
-	#ds-stick-content > div:first-child {
-		font-size: 1.8rem;
-	}
 	#ds-stick-image {
 		position: relative;
 		width: 80%;
-		height: 60%;
+		height: 80%;
 		margin: 0 auto;
 		display: flex;
 		align-items: flex-end;
@@ -275,20 +275,18 @@
 		}
 	}
 	#ds-stick-image > div {
-		width: 15%;
+		width: 10%;
 		border-top-left-radius: 1rem;
 		border-top-right-radius: 1rem;
 		display: flex;
 		justify-content: center;
 		font-size: 1.3rem;
 		color: white;
-		/* TEST
 		&:nth-of-type(1) { background-color: #DC3545; height: 39%; }
 		&:nth-of-type(2) { background-color: orange; height: 36%; }
 		&:nth-of-type(3) { background-color: #FFD700; height: 12%; }
 		&:nth-of-type(4) { background-color: #00AA00; height: 7%; }
 		&:nth-of-type(5) { background-color: #1E90FF; height: 6%; }
-		*/
 	}
 	#ds-stick-text {
 		width: 80%;
@@ -300,7 +298,7 @@
 		gap: 2rem;
 	}
 	#ds-stick-text > div {
-		width: 15%;
+		width: 10%;
 		height: 100%;
 		display: flex;
 		justify-content: center;
@@ -395,8 +393,12 @@
 					<div id="now-out-price"></div>
 				</div>
 				<div>
-					<div>당월 매출 총이익</div>
-					<div id="bef-sales"></div>
+					<div>전월 매출액</div>
+					<div id="bef-sales">▼ 7,542,000 원</div>
+				</div>
+				<div>
+					<div>남은 재고 입고가 총계</div>
+					<div id="remain-items-price">31,540,400 원</div>
 				</div>
 			</div>
 			
@@ -404,26 +406,67 @@
 			<div>
 				<!-- 첫 번째 레이아웃 : 컴포넌트 버전 -->
 				<div>
+					<!-- 도넛 차트 -->
+					<div id="ds-donut-box">
+						<div id="ds-donut-header">
+							<div id="ds-donut-headerTEXT">
+								<span style="margin-right: 0.5rem;" class="material-symbols-outlined">donut_large</span>
+								당월 총 입고 차트
+							</div>
+							<div id="ds-donut-headerBTNS">
+								<button id="d-t-now-in">당월 총 입고</button>
+								<button id="d-t-now-out">당월 총 출고</button>
+								<button id="dbef-items-intop">전월 입고 상위 품목</button>
+								<button id="dbef-items-outtop">전월 출고 상위 품목</button>
+							</div>
+						</div>
+						<!-- 도넛 영역 -->
+						<div id="ds-donut-content">
+							<!-- 도넛 그림 -->
+							<div id="ds-donut-image"></div>
+							<!-- 도넛 그림 텍스트 내용 -->
+							<div id="ds-donut-text">
+								<div><div>39%</div><div>문어</div></div>
+								<div><div>36%</div><div>시금치</div></div>
+								<div><div>12%</div><div>양갱</div></div>
+								<div><div>7%</div><div>오징어</div></div>
+								<div><div>6%</div><div>원두</div></div>
+							</div>
+						</div>
+					</div>
+					
 					<!-- 막대 차트 -->
 					<div id="ds-stick-box">
 						<div id="ds-stick-header">
 							<div id="ds-stick-headerText">
 								<span style="margin-right: 0.5rem;" class="material-symbols-outlined">bar_chart</span>
-								당월 입/출고 현황
+								당월 총 입고 차트
 							</div>
 							<div id="ds-stick-headerBTNS">
 								<button id="s-t-now-in">당월 총 입고</button>
 								<button id="s-t-now-out">당월 총 출고</button>
+								<button id="sbef-items-intop">전월 입고 상위 품목</button>
+								<button id="sbef-items-outtop">전월 출고 상위 품목</button>
 							</div>
 						</div>
 						
 						<!-- 막대 영역 -->
 						<div id="ds-stick-content">
-							<div id="ds-stick-innerHead"></div>
 							<!-- 막대 그림 -->
-							<div id="ds-stick-image"></div>
-							<!-- 막대 그림 텍스트 -->
-							<div id="ds-stick-text"></div>
+							<div id="ds-stick-image">
+								<div>39%</div>
+								<div>36%</div>
+								<div>12%</div>
+								<div>7%</div>
+								<div>6%</div>
+							</div>
+							<div id="ds-stick-text">
+								<div>문어</div>
+								<div>시금치</div>
+								<div>양갱</div>
+								<div>오징어</div>
+								<div>원두</div>								
+							</div>
 						</div>
 					</div>
 				</div>
@@ -436,7 +479,14 @@
 							최신 입고 내역
 						</div>
 						<!-- 최신 입고 내역 리스트 parent box -->
-						<div id="in-top5-box"></div>
+						<div id="in-top5-box">
+							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
+							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
+							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
+							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
+							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
+							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
+						</div>
 					</div>
 					<div id="out-parent">
 						<div>
@@ -444,7 +494,14 @@
 							최신 출고 내역
 						</div>
 						<!-- 최신 출고 내역 리스트 parent box -->
-						<div id="out-top5-box"></div>
+						<div id="out-top5-box">
+							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
+							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
+							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
+							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
+							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
+							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
+						</div>
 					</div>
 					<div id="bill-parent">
 						<div>
@@ -490,7 +547,7 @@ function nowOutPrice() {
 	});
 }
 nowOutPrice();
-// 당월 매출 총이익
+// 전월 매출액
 function befSales() {
 	fetch('/dash/bef-sales')
 	.catch(error => console.log(error))
@@ -501,246 +558,56 @@ function befSales() {
 		befSales.style.color = json.color;
 	});
 }
-befSales();
-
-// CHART 당월 총 입/출고
-// 입고 : total-in (Array)
-// 출고 : total-out (Array)
-const chartData = {
-	_totalIn: undefined,
-	_totalInQty: undefined,
-	_totalInSum: undefined,
-	_totalInPer: undefined,
-	_totalOut: undefined,
-	_totalOut: undefined,
-	_totalOutSum: undefined,
-	_totalOutPer: undefined,
+befSales();	
+// 남은 재고 입고가 총계
+Render.setComponent('remain-items-price', () => {
 	
-	set totalIn(totalIn) {
-		this._totalIn = totalIn;
-	},
-	get totalIn() {
-		return this._totalIn;
-	},
-	set totalInQty(totalInQty) {
-		this._totalInQty = totalInQty;
-	},
-	get totalInQty() {
-		return this._totalInQty;
-	},
-	set totalInSum(totalInSum) {
-		this._totalInSum = totalInSum;
-	},
-	get totalInSum() {
-		return this._totalInSum;
-	},
-	set totalInPer(totalInPer) {
-		this._totalInPer = totalInPer;
-	},
-	get totalInPer() {
-		return this._totalInPer;
-	},
+});
+function remainItemsPrice() {
 	
-	set totalOut(totalOut) {
-		this._totalOut = totalOut;
-	},
-	get totalOut() {
-		return this._totalOut;
-	},
-	set totalOutQty(totalOutQty) {
-		this._totalOutQty = totalOutQty;
-	},
-	get totalOutQty() {
-		return this._totalOutQty;
-	},
-	set totalOutSum(totalOutSum) {
-		this._totalOutSum = totalOutSum;
-	},
-	get totalOutSum() {
-		return this._totalOutSum;
-	},
-	set totalOutPer(totalOutPer) {
-		this._totalOutPer = totalOutPer;
-	},
-	get totalOutPer() {
-		return this._totalOutPer;
-	}
 }
-function stickChartRender(inout) {
-	const stickImage = document.getElementById('ds-stick-image');
-	stickImage.innerHTML = '';
-	const stickText = document.getElementById('ds-stick-text');
-	stickText.innerHTML = '';
-	const stickHeader = document.getElementById('ds-stick-innerHead');
-	stickHeader.innerHTML = '';
-	const color = ['#DC3545', 'orange', '#FFD700', '#00AA00', '#1E90FF'];
+
+// CHART 당월 총 입고
+function donutTotalNowIn() {
 	
-	let i = 0;
-	if(inout === 'IN') {
-		stickHeader.textContent = '당월 총 입고';
-		chartData.totalIn.forEach(data => {
-			const topText = document.createElement('div');
-			topText.style.top = '-20px';
-			topText.style.position = 'absolute';
-			topText.style.color = 'black';
-			topText.textContent = chartData.totalInPer[i] + ' %';
-			const image = document.createElement('div');
-			image.style.height = chartData.totalInPer[i] + '%';
-			image.style.position = 'relative';
-			image.style.backgroundColor = color[i];
-			image.appendChild(topText);
-			stickImage.appendChild(image);
-			
-			const text = document.createElement('div');
-			text.style.textAlign = 'center';
-			text.innerHTML = `
-			\${data.gi_name}
-			<br>
-			\${Math.abs(data.gih_qty)}EA
-			<br>
-			\${Math.abs(data.gih_qty * data.gih_price)} 원`;
-			stickText.appendChild(text);
-			i++;
-		});
-	} else if(inout === 'OUT') {
-		stickHeader.textContent = '당월 총 출고';
-		chartData.totalOut.forEach(data => {
-			const topText = document.createElement('div');
-			topText.style.top = '-20px';
-			topText.style.position = 'absolute';
-			topText.style.color = 'black';
-			topText.textContent = chartData.totalOutPer[i] + ' %';
-			const image = document.createElement('div');
-			image.style.height = chartData.totalOutPer[i] + '%';
-			image.style.position = 'relative';
-			image.style.backgroundColor = color[i];
-			image.appendChild(topText);
-			stickImage.appendChild(image);
-			
-			const text = document.createElement('div');
-			text.style.textAlign = 'center';
-			text.innerHTML = `\${data.gi_name}
-			<br>
-			\${Math.abs(data.gih_qty)}EA
-			<br>
-			\${Math.abs(data.gih_qty * data.gih_price)} 원`;
-			stickText.appendChild(text);
-			i++;
-		});
-	}
 }
 function stickTotalNowIn() {
-	fetch('/dash/stick-total-now')
-	.catch(error => console.log(error))
-	.then(response => response.json())
-	.then(data => {
-		chartData.totalIn = data.total_in;
-		chartData.totalInQty = data.total_in_qty;
-		chartData.totalInSum = data.total_in_sum;
-		chartData.totalInPer = data.total_in_per;
-		chartData.totalOut = data.total_out;
-		chartData.totalOutQty = data.total_out_qty;
-		chartData.totalOutSum = data.total_out_sum;
-		chartData.totalOutPer = data.total_out_per;
-		
-		stickChartRender('IN');
-	});
+	
 }
-stickTotalNowIn();
-document.getElementById('s-t-now-in').addEventListener('click', () => {
-	stickChartRender('IN');
-});
-document.getElementById('s-t-now-out').addEventListener('click', () => {
-	stickChartRender('OUT');
-});
+// CHART 당월 총 출고
+function donutTotalNowOut() {
+	
+}
+function stickTotalNowOut() {
+	
+}
+// CHART 전월 입고 상위 품목
+function donutBefItemsInTop() {
+	
+}
+function stickBefItemsInTop() {
+	
+}
+// CHART 전월 출고 상위 품목
+function donutBefItemsOutTop() {
+	
+}
+function stickBefItemsOutTop() {
+	
+}
+// 차트 퍼센테이지
+function ChartPerCalc() {
+	
+}
+
 // 최신 입고 내역
-function inTopFive() {
-	fetch('/dash/in-top-five')
-	.catch(error => console.log(error))
-	.then(response => response.json())
-	.then(json => {
-		const inTop = document.getElementById('in-top5-box');
-		inTop.innerHTML = `
-		<div>
-			<div>입고 날짜</div>
-			<div>거래처</div>
-			<div>품목</div>
-			<div>수량</div>
-			<div>단가</div>
-			<div>총 입고액</div>
-		</div>
-		`;
-		console.log(json);
-		json.forEach(data => {
-			const box = document.createElement('div');
-			const regdate = document.createElement('div');
-			regdate.textContent = data.gih_regdate;
-			const gcmName = document.createElement('div');
-			gcmName.textContent = data.gcm_name;
-			const giName = document.createElement('div');
-			giName.textContent = data.gi_name;
-			const gihQty = document.createElement('div');
-			gihQty.textContent = data.str_gih_qty;
-			const gihPrice = document.createElement('div');
-			gihPrice.textContent = data.str_gih_price;
-			const amount = document.createElement('div');
-			amount.textContent = data.str_amount + ' 원';
-			
-			box.appendChild(regdate);
-			box.appendChild(gcmName);
-			box.appendChild(giName);
-			box.appendChild(gihQty);
-			box.appendChild(gihPrice);
-			box.appendChild(amount);
-			inTop.appendChild(box);
-		});
-	});
+function InTopFive() {
+	
 }
-inTopFive();
 // 최신 출고 내역
-function outTopFive() {
-	fetch('/dash/out-top-five')
-	.catch(error => console.log(error))
-	.then(response => response.json())
-	.then(json => {
-		const outTop = document.getElementById('out-top5-box');
-		outTop.innerHTML = `
-		<div>
-			<div>출고 날짜</div>
-			<div>거래처</div>
-			<div>품목</div>
-			<div>수량</div>
-			<div>단가</div>
-			<div>총 출고액</div>
-		</div>
-		`;
-		console.log(json);
-		json.forEach(data => {
-			const box = document.createElement('div');
-			const regdate = document.createElement('div');
-			regdate.textContent = data.gih_regdate;
-			const gcmName = document.createElement('div');
-			gcmName.textContent = data.gcm_name;
-			const giName = document.createElement('div');
-			giName.textContent = data.gi_name;
-			const gihQty = document.createElement('div');
-			gihQty.textContent = data.str_gih_qty;
-			const gihPrice = document.createElement('div');
-			gihPrice.textContent = data.str_gih_price;
-			const amount = document.createElement('div');
-			amount.textContent = data.str_amount + ' 원';
-			
-			box.appendChild(regdate);
-			box.appendChild(gcmName);
-			box.appendChild(giName);
-			box.appendChild(gihQty);
-			box.appendChild(gihPrice);
-			box.appendChild(amount);
-			outTop.appendChild(box);
-		});
-	});
+function OutTopFive() {
+	
 }
-outTopFive();
 // 명세서?
 function whatAreYouDoing() {
 	

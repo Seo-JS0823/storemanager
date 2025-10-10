@@ -152,6 +152,8 @@ WHERE
 							<div id="ds-stick-headerBTNS">
 								<button id="s-t-now-in">당월 총 입고</button>
 								<button id="s-t-now-out">당월 총 출고</button>
+								<button id="sbef-items-intop">전월 입고 상위 품목</button>
+								<button id="sbef-items-outtop">전월 출고 상위 품목</button>
 							</div>
 						</div>
 						

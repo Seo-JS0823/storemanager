@@ -43,6 +43,10 @@
                             <input type="date" name="enddate">
                         </div>
                         <div class="m-search-option">
+                            <input type="checkbox" id="includeDeleted" name="includeDeleted" value="true">
+                            <label for="includeDeleted">삭제된 품목 보기</label>
+                        </div>                        
+                        <div class="m-search-option">
                             <div><input type="radio" id="searchEvent1" name="searchoption"><p>상품명</p></div>
                             <div><input type="radio" id="searchEvent2" name="searchoption"><p>매입처명</p></div>
                             <div><input type="radio" id="searchEvent3" name="searchoption"><p>거래단가</p></div>
@@ -53,28 +57,33 @@
                   </form>
                </div>
 			</div>
-			<div class="m-search-sort">
-					<div>번호</div>
-					<div>품목코드</div>
-					<div>상품명</div>
-					<div>매입처명</div>
-					<div></div>
-					<div></div>
-					<div></div>
+				<div class="m-search-sort">
+						<div>번호</div>
+						<div>품목</div>
+						<div>품목코드</div>
+						<div>거래처</div>
+						<div>거래처코드</div>
+						<div></div>
+						<div>관리</div>
 				</div>
 				<div class="m-items">
 					<c:forEach var="item" items="${items}" varStatus="loop">
-						<div>
+						<div class="${item.giDelFlag == 'Y' ? 'deleted-item' : ''}">
 							<div>${loop.count}</div>
-							<div>${item.giCode}</div>
 							<div>${item.giName}</div>
+							<div>${item.giCode}</div>
 							<div>${item.gcmName}</div>
-							<div></div>
+							<div>${item.gcmCode}</div>
 							<div></div>
 							<div class="btns-box">
-								<button class="detail-btn" data-gicode="${item.giCode}">상세</button>
-								<button class="update-btn" data-gicode="${item.giCode}">업데이트</button>
-								<button class="delete-btn" data-gicode="${item.giCode}">삭제</button>
+								<c:if test="${item.giDelFlag == 'N'}">
+									<button class="detail-btn" data-gicode="${item.giCode}">상세</button>
+									<button class="update-btn" data-gicode="${item.giCode}">업데이트</button>
+									<button class="delete-btn" data-gicode="${item.giCode}">삭제</button>
+								</c:if>
+								<c:if test="${item.giDelFlag == 'Y'}">
+									<button class="restore-btn" data-gicode="${item.giCode}">복구</button>
+								</c:if>
 							</div>
 						</div>
 					</c:forEach>
@@ -212,20 +221,37 @@ document.addEventListener('DOMContentLoaded', function() {
 	        modalContainer.style.transform = 'translateX(0)';
 	
 	        const imageInput = modalContainer.querySelector('#itemImageFile');
-	        const imagePreview = modalContainer.querySelector('#imagePreview');
-	        if (imageInput && imagePreview) {
+	        const imgElement = modalContainer.querySelector('#previewImageElement');
+	        const initialTextSpan = modalContainer.querySelector('#initialTextSpan');
+	        const deleteBtn = modalContainer.querySelector('#deleteImageBtn');
+	
+	        if (imageInput && imgElement && initialTextSpan && deleteBtn) {
+	            
 	            imageInput.addEventListener('change', function() {
 	                const file = this.files[0];
 	                if (file) {
 	                    const reader = new FileReader();
 	                    reader.onload = function(e) {
-	                    	console.log("파일 읽기 결과:", e.target.result);
-	                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Image preview">`;
+	                        imgElement.src = e.target.result;
+	                        imgElement.style.display = 'block';
+	                        initialTextSpan.style.display = 'none';
+	                        deleteBtn.style.display = 'inline-block';
 	                    }
 	                    reader.readAsDataURL(file);
 	                } else {
-	                    imagePreview.innerHTML = '<span>이미지 추가</span>';
+	                    imgElement.src = '';
+	                    imgElement.style.display = 'none';
+	                    initialTextSpan.style.display = 'block';
+	                    deleteBtn.style.display = 'none';
 	                }
+	            });
+	
+	            deleteBtn.addEventListener('click', function() {
+	                imageInput.value = ''; 
+	                imgElement.src = '';
+	                imgElement.style.display = 'none';
+	                initialTextSpan.style.display = 'block';
+	                deleteBtn.style.display = 'none';
 	            });
 	        }
 	        
