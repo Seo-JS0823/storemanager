@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.storemanager.dashboard.DashMapper">
+	<!-- 당월 입고가 총계 -->
+	<select id="nowInPrice" resultType="int">
+		select
+			SUM(GIH_PRICE)
+		from
+			GE_ITEMS_HIST
+		where
+			GIH_INOUT = 'IN' AND
+			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
+			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+	</select>
+	
+	<!-- 당월 출고가 총계 -->
+	<select id="nowOutPrice" resultType="int">
+		select
+			SUM(GIH_PRICE)
+		from
+			GE_ITEMS_HIST
+		where
+			GIH_INOUT = 'OUT' AND
+			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
+			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+	</select>
+	
+	<!-- 전월 매출액 계산 -->
+	<select id="befSales" resultType="int">
+		select
+			SUM(GIH_PRICE)
+		from
+			GE_ITEMS_HIST
+		where
+			GIH_INOUT = 'OUT' AND
+			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
+			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+	</select>
+</mapper>

@@ -212,17 +212,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	        modalContainer.style.transform = 'translateX(0)';
 	
 	        const imageInput = modalContainer.querySelector('#itemImageFile');
+<<<<<<< HEAD
 	        //const imagePreview = modalContainer.querySelector('#imagePreview');
           	const imgElement = modalContainer.querySelector('#previewImageElement'); 
         	const initialTextSpan = modalContainer.querySelector('#initialTextSpan');
         	
 	        //if (imageInput && imagePreview) 
 	          if (imageInput && imgElement && initialTextSpan){
+=======
+	        const imagePreview = modalContainer.querySelector('#imagePreview');
+	        if (imageInput && imagePreview) {
+>>>>>>> eea2abf2b6d884f1fc682e9609a082361275a6eb
 	            imageInput.addEventListener('change', function() {
 	                const file = this.files[0];
 	                if (file) {
 	                    const reader = new FileReader();
 	                    reader.onload = function(e) {
+<<<<<<< HEAD
 	                    	//console.log("파일 읽기 결과:", e.target.result);
 	                    imgElement.src = e.target.result;
                         imgElement.style.display = 'block'; 
@@ -235,6 +241,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	                    imgElement.style.display = 'none';
 	                    initialTextSpan.style.display = 'block';	                	
 	                    //imagePreview.innerHTML = '<span>이미지 추가</span>';
+=======
+	                    	console.log("파일 읽기 결과:", e.target.result);
+	                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Image preview">`;
+	                    }
+	                    reader.readAsDataURL(file);
+	                } else {
+	                    imagePreview.innerHTML = '<span>이미지 추가</span>';
+>>>>>>> eea2abf2b6d884f1fc682e9609a082361275a6eb
 	                }
 	            });
 	        }
