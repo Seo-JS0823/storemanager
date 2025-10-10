@@ -137,7 +137,6 @@
     </div>
 
     <form id="item-register-form" action="/items/register" method="post" enctype="multipart/form-data">
-<<<<<<< HEAD
 		<div class="image-area">
 			<label for="itemImageFile" class="image-preview" id="imagePreview">
 				<img id="previewImageElement" src="" alt="Image preview"
@@ -147,16 +146,6 @@
 		</div>
 
 		<div class="input-grid">
-=======
-        <div class="image-area">
-            <label for="itemImageFile" class="image-preview" id="imagePreview">
-                <span>이미지 추가</span>
-            </label>
-            <input type="file" id="itemImageFile" name="file" accept="image/*">
-        </div>
-
-        <div class="input-grid">
->>>>>>> eea2abf2b6d884f1fc682e9609a082361275a6eb
             <div class="form-group">
                 <label for="gcmCode">거래처 선택</label>
                 <select id="gcmCode" name="gcmCode" required></select>
