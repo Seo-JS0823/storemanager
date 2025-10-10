@@ -1,1 +1,0 @@
-const JUSO_KEY = config.apikey;

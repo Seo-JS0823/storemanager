@@ -38,7 +38,7 @@ public class MemberController {
 		session.setAttribute("gm_name", target.getGm_name());
 		session.setAttribute("gm_level", target.getGm_level());
 		
-		return "member/test-in";
+		return "redirect:/dash";
 	}
 	
 	@PostMapping("/member-profile")
@@ -93,6 +93,26 @@ public class MemberController {
 			@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("member") String member) {
 		return memberService.profileUpdate(file, member);
+	}
+	
+	/* 비밀번호 찾기 페이지 */
+	@GetMapping("/profile-findV")
+	public String profileFindView() {
+		return "member/find";
+	}
+	
+	/* 비밀번호 찾기 전 아이디, 이메일 검증 */
+	@PostMapping("/profile-find-call")
+	@ResponseBody
+	public ResponseEntity<String> profileFindCall(@RequestBody String target) {
+		return memberService.profileFindCall(target);
+	}
+	
+	/* 비밀번호 찾기 - 변경 */
+	@PostMapping("/profile-find")
+	@ResponseBody
+	public ResponseEntity<String> profileFind(@RequestBody String target) {
+		return memberService.profileFind(target);
 	}
 	
 }
