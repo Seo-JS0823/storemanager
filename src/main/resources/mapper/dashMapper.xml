@@ -25,15 +25,37 @@
 			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
 	</select>
 	
-	<!-- 전월 매출액 계산 -->
-	<select id="befSales" resultType="int">
+	<!-- 당월 총 입고 TOP 5 -->
+	<select id="stickTotalNowIn" resultType="com.storemanager.dashboard.DashDTO">
 		select
-			SUM(GIH_PRICE)
+			GI_NAME,
+			SUM(GIH_QTY) as GIH_QTY,
+			AVG(GIH_PRICE) as GIH_PRICE
 		from
 			GE_ITEMS_HIST
-		where
+		WHERE
+			GIH_INOUT = 'IN' AND
+			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
+			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+		group by
+			GI_NAME
+	</select>
+	
+	<!-- 당월 총 출고 TOP 5 -->
+	<select id="stickTotalNowOut" resultType="com.storemanager.dashboard.DashDTO">
+		select
+			GI_NAME,
+			SUM(GIH_QTY) as GIH_QTY,
+			AVG(GIH_PRICE) as GIH_PRICE
+		from
+			GE_ITEMS_HIST
+		WHERE
 			GIH_INOUT = 'OUT' AND
 			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
 			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+		group by
+			GI_NAME
+		
 	</select>
+	
 </mapper>

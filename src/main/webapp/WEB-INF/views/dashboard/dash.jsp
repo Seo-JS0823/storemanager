@@ -29,6 +29,7 @@
 	#dash-container > div:nth-of-type(1) > div {
 		width: 25%;
 		height: 13rem;
+		margin: 0 auto;
 		border-radius: 1rem;
 		overflow: hidden;
 	}
@@ -88,14 +89,13 @@
 	/* ID:ds-donut-box */
 	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) {
 		width: 100%;
-		height: 25rem;
+		height: 100%;
 		border: 1px solid rgba(33, 33, 33, 0.2);
 		border-radius: 1rem;
 		overflow: hidden;
 	}
 	/* ID:ds-donut-header */
-	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
-	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) {
+	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
 		width: 100%;
 		height: 4rem;
 		font-size: 1.5rem;
@@ -106,24 +106,21 @@
 		padding: 0 2rem;
 		color: black;
 	}
-	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
-	#ds-stick-headerText {
+	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
 		width: 30%;
 		display: flex;
 		align-items: center;
 	}
-	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2),
-	#ds-stick-headerBTNS {
+	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) {
 		width: 70%;
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
 		gap: 1rem;
 	}
-	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) button,
-	#ds-stick-headerBTNS button {
-		font-size: 1rem;
-		padding: 0.3rem 0.8rem;
+	#dash-container > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) button {
+		font-size: 1.2em;
+		padding: 0.3rem 1rem;
 		border: none;
 		color: white;
 		border-radius: 0.5rem;
@@ -248,10 +245,13 @@
 		flex-direction: column;
 		padding: 2rem;
 	}
+	#ds-stick-content > div:first-child {
+		font-size: 1.8rem;
+	}
 	#ds-stick-image {
 		position: relative;
 		width: 80%;
-		height: 80%;
+		height: 60%;
 		margin: 0 auto;
 		display: flex;
 		align-items: flex-end;
@@ -282,11 +282,13 @@
 		justify-content: center;
 		font-size: 1.3rem;
 		color: white;
+		/* TEST
 		&:nth-of-type(1) { background-color: #DC3545; height: 39%; }
 		&:nth-of-type(2) { background-color: orange; height: 36%; }
 		&:nth-of-type(3) { background-color: #FFD700; height: 12%; }
 		&:nth-of-type(4) { background-color: #00AA00; height: 7%; }
 		&:nth-of-type(5) { background-color: #1E90FF; height: 6%; }
+		*/
 	}
 	#ds-stick-text {
 		width: 80%;
@@ -393,12 +395,8 @@
 					<div id="now-out-price"></div>
 				</div>
 				<div>
-					<div>전월 매출액</div>
-					<div id="bef-sales">▼ 7,542,000 원</div>
-				</div>
-				<div>
-					<div>남은 재고 입고가 총계</div>
-					<div id="remain-items-price">31,540,400 원</div>
+					<div>당월 매출 총이익</div>
+					<div id="bef-sales"></div>
 				</div>
 			</div>
 			
@@ -406,66 +404,40 @@
 			<div>
 				<!-- 첫 번째 레이아웃 : 컴포넌트 버전 -->
 				<div>
-					<!-- 도넛 차트 -->
-					<div id="ds-donut-box">
-						<div id="ds-donut-header">
-							<div id="ds-donut-headerTEXT">
-								<span style="margin-right: 0.5rem;" class="material-symbols-outlined">donut_large</span>
-								당월 총 입고 차트
-							</div>
-							<div id="ds-donut-headerBTNS">
-								<button id="d-t-now-in">당월 총 입고</button>
-								<button id="d-t-now-out">당월 총 출고</button>
-								<button id="dbef-items-intop">전월 입고 상위 품목</button>
-								<button id="dbef-items-outtop">전월 출고 상위 품목</button>
-							</div>
-						</div>
-						<!-- 도넛 영역 -->
-						<div id="ds-donut-content">
-							<!-- 도넛 그림 -->
-							<div id="ds-donut-image"></div>
-							<!-- 도넛 그림 텍스트 내용 -->
-							<div id="ds-donut-text">
-								<div><div>39%</div><div>문어</div></div>
-								<div><div>36%</div><div>시금치</div></div>
-								<div><div>12%</div><div>양갱</div></div>
-								<div><div>7%</div><div>오징어</div></div>
-								<div><div>6%</div><div>원두</div></div>
-							</div>
-						</div>
-					</div>
-					
 					<!-- 막대 차트 -->
 					<div id="ds-stick-box">
 						<div id="ds-stick-header">
 							<div id="ds-stick-headerText">
 								<span style="margin-right: 0.5rem;" class="material-symbols-outlined">bar_chart</span>
-								당월 총 입고 차트
+								당월 입/출고 현황
 							</div>
 							<div id="ds-stick-headerBTNS">
 								<button id="s-t-now-in">당월 총 입고</button>
 								<button id="s-t-now-out">당월 총 출고</button>
-								<button id="sbef-items-intop">전월 입고 상위 품목</button>
-								<button id="sbef-items-outtop">전월 출고 상위 품목</button>
 							</div>
 						</div>
 						
 						<!-- 막대 영역 -->
 						<div id="ds-stick-content">
+							<div>당월 총 입고</div>
 							<!-- 막대 그림 -->
 							<div id="ds-stick-image">
+							<!-- 
 								<div>39%</div>
 								<div>36%</div>
 								<div>12%</div>
 								<div>7%</div>
 								<div>6%</div>
+							-->
 							</div>
 							<div id="ds-stick-text">
+							<!-- 
 								<div>문어</div>
 								<div>시금치</div>
 								<div>양갱</div>
 								<div>오징어</div>
-								<div>원두</div>								
+								<div>원두</div>
+							-->								
 							</div>
 						</div>
 					</div>
@@ -547,7 +519,7 @@ function nowOutPrice() {
 	});
 }
 nowOutPrice();
-// 전월 매출액
+// 당월 매출 총이익
 function befSales() {
 	fetch('/dash/bef-sales')
 	.catch(error => console.log(error))
@@ -558,45 +530,19 @@ function befSales() {
 		befSales.style.color = json.color;
 	});
 }
-befSales();	
-// 남은 재고 입고가 총계
-Render.setComponent('remain-items-price', () => {
-	
-});
-function remainItemsPrice() {
-	
-}
+befSales();
 
 // CHART 당월 총 입고
-function donutTotalNowIn() {
-	
-}
 function stickTotalNowIn() {
-	
+	fetch('/dash/stick-total-now-in')
+	.catch(error => console.log(error))
+	.then(response => response.json())
+	.then(data => {
+		
+	});
 }
 // CHART 당월 총 출고
-function donutTotalNowOut() {
-	
-}
 function stickTotalNowOut() {
-	
-}
-// CHART 전월 입고 상위 품목
-function donutBefItemsInTop() {
-	
-}
-function stickBefItemsInTop() {
-	
-}
-// CHART 전월 출고 상위 품목
-function donutBefItemsOutTop() {
-	
-}
-function stickBefItemsOutTop() {
-	
-}
-// 차트 퍼센테이지
-function ChartPerCalc() {
 	
 }
 
