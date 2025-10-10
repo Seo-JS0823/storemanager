@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         imgElement.style.display = 'block'; 
                         initialTextSpan.style.display = 'none';
 	                        //imagePreview.innerHTML = `<img src="${e.target.result}" alt="Image preview">`;
-	                    }
+	                    } 
 	                    reader.readAsDataURL(file);
 	                } else {
 	                    imgElement.src = '';
