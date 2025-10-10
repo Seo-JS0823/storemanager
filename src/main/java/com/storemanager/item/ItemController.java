@@ -17,21 +17,23 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    // 1. 품목 목록 페이지 조회
+    //품목 목록 페이지 조회
     @GetMapping("")
-    public String itemList(Model model) {
-        List<ItemDTO> itemList = itemService.selectItemList();
+    public String itemList(Model model,
+            @RequestParam(name = "includeDeleted", required = false, defaultValue = "false") boolean includeDeleted,
+            @RequestParam(name = "search", required = false) String search) {	
+        List<ItemDTO> itemList = itemService.findItems(includeDeleted, search);
         model.addAttribute("items", itemList);
         return "item/item";
     }
      
-    // 2. 신규 등록 폼(HTML) 요청
+    //신규 등록 폼(HTML) 요청
     @GetMapping("/new-form")
     public String newItemForm() {
         return "item/itemForm";
     }
      
-    // 3. 품목 등록 기능 (데이터 처리)
+    //품목 등록 기능 (데이터 처리)
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity<?> registerItem(ItemDTO itemDTO) {
@@ -48,7 +50,7 @@ public class ItemController {
         }
     }
     
-    // 4. 품목 상세보기 API (JSON 데이터 반환)
+    //품목 상세보기 API (JSON 데이터 반환)
     @GetMapping("/detail/{giCode}")
     @ResponseBody
     public ResponseEntity<?> getItemById(@PathVariable("giCode") String giCode) {
@@ -60,7 +62,7 @@ public class ItemController {
         }
     }
 
-    // 5. 업데이트 모달에 필요한 데이터 요청 API
+    //업데이트 모달에 필요한 데이터 요청 API
     @GetMapping("/updateData/{giCode}")
     @ResponseBody
     public ResponseEntity<?> getUpdateData(@PathVariable("giCode") String giCode) {
@@ -72,7 +74,7 @@ public class ItemController {
         }
     }
 
-    // 6. 업데이트 폼(HTML) 요청 (이것은 별도의 페이지로 이동할 때 사용)
+    //업데이트 폼(HTML) 요청 (이것은 별도의 페이지로 이동할 때 사용)
     @GetMapping("/updateform/{giCode}")
     public String updateItemForm(@PathVariable("giCode") String giCode, Model model) {
         ItemDTO item = itemService.selectItemById(giCode);
@@ -80,7 +82,7 @@ public class ItemController {
         return "item/itemUpdateForm";
     }
 
-    // 7. 품목 업데이트 기능
+    //품목 업데이트 기능
     @PostMapping("/update")
     @ResponseBody
     public ResponseEntity<?> updateItem(ItemDTO itemDTO) {
@@ -97,7 +99,7 @@ public class ItemController {
         }
     }
     
-    // 8. 품목 삭제 기능
+    //품목 삭제 기능
     @DeleteMapping("/delete/{giCode}")
     @ResponseBody
     public ResponseEntity<?> deleteItem(@PathVariable("giCode") String giCode) {
