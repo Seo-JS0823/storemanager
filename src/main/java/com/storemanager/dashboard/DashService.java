@@ -44,9 +44,7 @@ public class DashService {
 		List<Integer> totalOutQty = totalOut.stream().map(DashDTO::getOrders).collect(Collectors.toList());
 		
 		Integer totalInSum = totalInQty.stream().mapToInt(Integer::intValue).sum();
-		System.out.println(totalInSum);
 		Integer totalOutSum = totalOutQty.stream().mapToInt(Integer::intValue).sum();
-		System.out.println(totalOutSum);		
 		
 		List<Double> totalInPer
 		= totalInQty.stream()
@@ -72,8 +70,15 @@ public class DashService {
 	}
 	
 	// 최신 입고 내역 TOP 5
-	public List<Object> inTopFive() {
-		return null;
+	public List<DashDTO> inTopFive() {
+		List<DashDTO> inList = dashMapper.inTopFive();
+		return inList;
+	}
+	
+	// 최신 출고 내역 TOP 5
+	public List<DashDTO> outTopFive() {
+		List<DashDTO> outList = dashMapper.outTopFive();
+		return outList;
 	}
 	
 }

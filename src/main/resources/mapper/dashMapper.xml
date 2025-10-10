@@ -68,20 +68,37 @@
 	</select>
 	
 	<!-- 최신 입고 내역 TOP 5 -->
-	<select id="inTopFive" resultType="com.storemanager.dash.DashDTO">
+	<select id="inTopFive" resultType="com.storemanager.dashboard.DashDTO">
 		SELECT 
 		   DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE, 
 		   GCM.GCM_NAME, 
 		   GIH.GI_NAME, 
-		   GIH.GIH_QTY, 
-		   GIH.GIH_PRICE, 
-		   (GIH.GIH_QTY*GIH.GIH_PRICE) AMOUNT 
+		   FORMAT(GIH.GIH_QTY,0) STR_GIH_QTY, 
+		   FORMAT(GIH.GIH_PRICE,0) STR_GIH_PRICE, 
+		   FORMAT((GIH.GIH_QTY*GIH.GIH_PRICE),0) STR_AMOUNT 
 		FROM 
 		   GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
 		WHERE
 		   GIH.GIH_INOUT='IN' and GIH.GCM_CODE = GCM.GCM_CODE
 		ORDER BY GIH.GIH_REGDATE DESC
-		LIMIT 0,5;
+		LIMIT 0,5
+	</select>
+	
+	<!-- 최신 출고 내역 TOP 5 -->
+	<select id="outTopFive" resultType="com.storemanager.dashboard.DashDTO">
+		SELECT
+		   DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE,
+		   GCM.GCM_NAME, 
+		   GIH.GI_NAME, 
+		   FORMAT((GIH.GIH_QTY*-1),0) STR_GIH_QTY,
+		   FORMAT(GIH.GIH_PRICE,0) STR_GIH_PRICE,
+		   FORMAT(((GIH.GIH_QTY*GIH.GIH_PRICE)*-1),0) STR_AMOUNT 
+		FROM
+			GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
+		WHERE
+			GIH.GIH_INOUT='OUT' and GIH.GCM_CODE = GCM.GCM_CODE
+		ORDER BY GIH.GIH_REGDATE DESC
+		limit 0,5
 	</select>
 	
 </mapper>

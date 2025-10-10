@@ -436,14 +436,7 @@
 							최신 입고 내역
 						</div>
 						<!-- 최신 입고 내역 리스트 parent box -->
-						<div id="in-top5-box">
-							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
-							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
-							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
-							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
-							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
-							<div> <div>입고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 입고액</div> </div>
-						</div>
+						<div id="in-top5-box"></div>
 					</div>
 					<div id="out-parent">
 						<div>
@@ -451,14 +444,7 @@
 							최신 출고 내역
 						</div>
 						<!-- 최신 출고 내역 리스트 parent box -->
-						<div id="out-top5-box">
-							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
-							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
-							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
-							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
-							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
-							<div> <div>출고 날짜</div><div>거래처</div><div>품목</div><div>수량</div><div>단가</div><div>총 출고액</div> </div>
-						</div>
+						<div id="out-top5-box"></div>
 					</div>
 					<div id="bill-parent">
 						<div>
@@ -668,13 +654,93 @@ document.getElementById('s-t-now-out').addEventListener('click', () => {
 	stickChartRender('OUT');
 });
 // 최신 입고 내역
-function InTopFive() {
-	
+function inTopFive() {
+	fetch('/dash/in-top-five')
+	.catch(error => console.log(error))
+	.then(response => response.json())
+	.then(json => {
+		const inTop = document.getElementById('in-top5-box');
+		inTop.innerHTML = `
+		<div>
+			<div>입고 날짜</div>
+			<div>거래처</div>
+			<div>품목</div>
+			<div>수량</div>
+			<div>단가</div>
+			<div>총 입고액</div>
+		</div>
+		`;
+		console.log(json);
+		json.forEach(data => {
+			const box = document.createElement('div');
+			const regdate = document.createElement('div');
+			regdate.textContent = data.gih_regdate;
+			const gcmName = document.createElement('div');
+			gcmName.textContent = data.gcm_name;
+			const giName = document.createElement('div');
+			giName.textContent = data.gi_name;
+			const gihQty = document.createElement('div');
+			gihQty.textContent = data.str_gih_qty;
+			const gihPrice = document.createElement('div');
+			gihPrice.textContent = data.str_gih_price;
+			const amount = document.createElement('div');
+			amount.textContent = data.str_amount + ' 원';
+			
+			box.appendChild(regdate);
+			box.appendChild(gcmName);
+			box.appendChild(giName);
+			box.appendChild(gihQty);
+			box.appendChild(gihPrice);
+			box.appendChild(amount);
+			inTop.appendChild(box);
+		});
+	});
 }
+inTopFive();
 // 최신 출고 내역
-function OutTopFive() {
-	
+function outTopFive() {
+	fetch('/dash/out-top-five')
+	.catch(error => console.log(error))
+	.then(response => response.json())
+	.then(json => {
+		const outTop = document.getElementById('out-top5-box');
+		outTop.innerHTML = `
+		<div>
+			<div>출고 날짜</div>
+			<div>거래처</div>
+			<div>품목</div>
+			<div>수량</div>
+			<div>단가</div>
+			<div>총 출고액</div>
+		</div>
+		`;
+		console.log(json);
+		json.forEach(data => {
+			const box = document.createElement('div');
+			const regdate = document.createElement('div');
+			regdate.textContent = data.gih_regdate;
+			const gcmName = document.createElement('div');
+			gcmName.textContent = data.gcm_name;
+			const giName = document.createElement('div');
+			giName.textContent = data.gi_name;
+			const gihQty = document.createElement('div');
+			gihQty.textContent = data.str_gih_qty;
+			const gihPrice = document.createElement('div');
+			gihPrice.textContent = data.str_gih_price;
+			const amount = document.createElement('div');
+			amount.textContent = data.str_amount + ' 원';
+			
+			box.appendChild(regdate);
+			box.appendChild(gcmName);
+			box.appendChild(giName);
+			box.appendChild(gihQty);
+			box.appendChild(gihPrice);
+			box.appendChild(amount);
+			outTop.appendChild(box);
+		});
+	});
 }
+outTopFive();
 // 명세서?
 function whatAreYouDoing() {
 	

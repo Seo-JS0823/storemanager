@@ -72,8 +72,17 @@ public class DashController {
 	// 최신 입고 내역 TOP 5
 	@GetMapping("/in-top-five")
 	@ResponseBody
-	public ResponseEntity<String> inTopFive() {
-		return null;
+	public ResponseEntity<List<DashDTO>> inTopFive() {
+		List<DashDTO> inList = service.inTopFive();
+		return ResponseEntity.ok(inList);
+	}
+
+	// 최신 출고 내역 TOP 5
+	@GetMapping("/out-top-five")
+	@ResponseBody
+	public ResponseEntity<List<DashDTO>> outTopFive() {
+		List<DashDTO> outList = service.outTopFive();
+		return ResponseEntity.ok(outList);
 	}
 	
 	// 1,000,000 형식으로 포맷해서 문자열 반환

@@ -17,6 +17,8 @@ public class DashDTO {
 	// 입고 내역 가져오는 컬럼
 	private String gih_regdate;
 	private String gcm_name;
-	private Integer amount;
+	private String str_gih_qty;
+	private String str_gih_price;
+	private String str_amount;
 	
 }

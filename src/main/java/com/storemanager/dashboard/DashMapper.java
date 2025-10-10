@@ -11,4 +11,7 @@ public interface DashMapper {
 	
 	public List<DashDTO> stickTotalNowIn(String startDate, String endDate);
 	public List<DashDTO> stickTotalNowOut(String startDate, String endDate);
+	
+	public List<DashDTO> inTopFive();
+	public List<DashDTO> outTopFive();
 }
