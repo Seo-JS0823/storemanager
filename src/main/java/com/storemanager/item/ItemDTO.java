@@ -15,6 +15,6 @@ public class ItemDTO {
     private String gcmName;
     
     private String giImg;   
-    private String remark;  
+    private String remark;   
 }
  

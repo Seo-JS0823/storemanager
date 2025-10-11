@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SupplierDTO {
-    private String gcmCode;
+    private String gcmCode; 
     private String gcmName;
 }

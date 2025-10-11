@@ -61,7 +61,7 @@ public class ItemController {
         return "item/detailForm";
     }
 
-    //업데이트 모달에 필요한 데이터 요청 API
+    //업데이트 모달에 필요한 데이터 요청 API 
     @GetMapping("/updateData/{giCode}")
     @ResponseBody
     public ResponseEntity<?> getUpdateData(@PathVariable("giCode") String giCode) {

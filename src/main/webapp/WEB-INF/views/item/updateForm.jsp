@@ -179,7 +179,7 @@
                        </option>
                     </c:forEach>
 				</select>
-			</div>
+			</div> 
 		</div>
 
 		<div class="remark-area">

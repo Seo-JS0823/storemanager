@@ -5,5 +5,5 @@ import java.util.List;
 
 @Mapper
 public interface SupplierMapper {
-    List<SupplierDTO> findAll();
+    List<SupplierDTO> findAll(); 
 }

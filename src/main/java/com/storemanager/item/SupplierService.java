@@ -1,4 +1,4 @@
-package com.storemanager.item;
+ package com.storemanager.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +11,6 @@ public class SupplierService {
     private final SupplierMapper supplierMapper;
 
     public List<SupplierDTO> findAll() {
-        return supplierMapper.findAll();
+        return supplierMapper.findAll(); 
     }
 }

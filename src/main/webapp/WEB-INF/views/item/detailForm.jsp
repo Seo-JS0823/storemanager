@@ -170,7 +170,7 @@
 			<textarea id="remark" readonly>${item.remark}</textarea>
 		</div>
 
-		<div class="form-actions">>
+		<div class="form-actions"> >
             <button type="button" class="btn-cancel modal-close-btn">닫 기</button>
 		</div>
 	</div>

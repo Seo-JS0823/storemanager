@@ -40,7 +40,7 @@
                 	<div class="m-search-line"> 
                     	<div class="m-search-date"> <input type="date" name="startdate">
                             <p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-                            <input type="date" name="enddate">
+                            <input type ="date" name="enddate">
                         </div>
                         <div class="m-search-option">
                             <input type="checkbox" id="includeDeleted" name="includeDeleted" value="true">

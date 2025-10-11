@@ -8,7 +8,7 @@
             GCM_CODE AS gcmCode,
             GCM_NAME AS gcmName
         FROM
-            GE_COM_MEMBER
+            GE_COM_MEMBER 
         ORDER BY
             GCM_NAME ASC
     </select>

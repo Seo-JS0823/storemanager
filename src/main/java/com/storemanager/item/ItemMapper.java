@@ -20,6 +20,6 @@ public interface ItemMapper {
     int deleteItem(@Param("giCode") String giCode);
 
 	List<ItemDTO> findItems(Map<String, Object> params);
-	
+	 
 	int restoreItem(@Param("giCode") String giCode);
 }

@@ -43,7 +43,7 @@ public class ItemService {
     public int deleteItem(String giCode) {
         return itemMapper.deleteItem(giCode);
     }
-    
+     
     @Transactional
     public int restoreItem(String giCode) {
         return itemMapper.restoreItem(giCode);

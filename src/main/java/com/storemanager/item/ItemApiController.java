@@ -18,7 +18,7 @@ public class ItemApiController {
     private final ItemService itemService;
     private final SupplierService supplierService; 
     
-    // 거래처 조회
+    // 거래처 조회 
     @GetMapping("/api/suppliers") 
     public ResponseEntity<List<SupplierDTO>> getSuppliers() {
         List<SupplierDTO> suppliers = supplierService.findAll();

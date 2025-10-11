@@ -23,7 +23,7 @@
             i.GI_CODE    AS giCode,
             i.GI_NAME    AS giName,
             i.GCM_CODE   AS gcmCode,
-            c.GCM_NAME   AS gcmName,
+            c.GCM_NAME   AS gcmName, 
             i.GI_IMG     AS giImg,
             i.REMARK     AS remark
 
