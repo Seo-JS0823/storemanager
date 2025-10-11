@@ -5,15 +5,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.storemanager.member.encoder.BCryptPasswordEncoder;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -29,16 +29,33 @@ public class MemberController {
 		return "member/login";
 	}
 	
+	// 로그인 실패시 URL
+	@GetMapping("/no")
+	public String loginFalse(Model model) {
+		model.addAttribute("message" , "로그인이 필요한 서비스입니다.");
+		return "member/login";
+	}
+	
+	// 로그인 아이디와 비번이 맞지 않을 때
+	@GetMapping("/noid")
+	public String loginIdFalse(Model model) {
+		model.addAttribute("message", "아이디 또는 비밀번호가 일치하지 않습니다.");
+		return "member/login";
+	}
+	
+	// 로그인 URL
 	@PostMapping("/login")
 	public String login(HttpSession session, MemberDTO member) {
 		MemberDTO target = memberService.login(member);
-		if(target == null) return "redirect:/";
+		if(target == null) return "redirect:/noid";
 		
 		session.setAttribute("gm_id", target.getGm_id());
 		session.setAttribute("gm_name", target.getGm_name());
 		session.setAttribute("gm_level", target.getGm_level());
+		session.setAttribute("login", true);
 		
-		return "member/test-in";
+		return "member/NewFile";
+		//return "dashboard/dash";
 	}
 	
 	@PostMapping("/member-profile")
@@ -93,6 +110,26 @@ public class MemberController {
 			@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("member") String member) {
 		return memberService.profileUpdate(file, member);
+	}
+	
+	/* 비밀번호 찾기 페이지 */
+	@GetMapping("/profile-findV")
+	public String profileFindView() {
+		return "member/find";
+	}
+	
+	/* 비밀번호 찾기 전 아이디, 이메일 검증 */
+	@PostMapping("/profile-find-call")
+	@ResponseBody
+	public ResponseEntity<String> profileFindCall(@RequestBody String target) {
+		return memberService.profileFindCall(target);
+	}
+	
+	/* 비밀번호 찾기 - 변경 */
+	@PostMapping("/profile-find")
+	@ResponseBody
+	public ResponseEntity<String> profileFind(@RequestBody String target) {
+		return memberService.profileFind(target);
 	}
 	
 }

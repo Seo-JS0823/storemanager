@@ -44,4 +44,25 @@
 		WHERE
 			GM_ID = #{gm_id}
 	</update>
+	
+	<!-- profileFindCall -->
+	<select id="profileFindCall" resultType="com.storemanager.member.MemberDTO">
+		SELECT
+			*
+		FROM
+			GE_MEMBER
+		WHERE
+			GM_ID = #{gm_id} AND
+			GM_EMAIL = #{gm_email}
+	</select>
+	
+	<!-- profileFind -->
+	<update id="profileFind">
+		UPDATE GE_MEMBER SET
+			GM_PWD = #{gm_pwd}
+		WHERE
+			GM_ID = #{gm_id} AND
+			GM_EMAIL = #{gm_email}
+	</update>
+	
 </mapper>

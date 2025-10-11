@@ -222,10 +222,6 @@
     text-align: center;
     font-size: 1.1rem;
 }
-.paging > div:nth-of-type(5) {
-    background-color: #00AA00;
-    color: white;
-}
 .paging > div:active {
     transform: scale(1.05);
     box-shadow:

@@ -28,8 +28,8 @@
 				<div>
 					<div>
 						<div class="m-state orange"></div><span>상세보기</span>
-						<div class="m-state green"></div><span>입고수정</span>
-						<div class="m-state red"></div><span>출고생성</span>
+						<div class="m-state green"></div><span>업데이트</span>
+						<div class="m-state red"></div><span>삭제</span>
 					</div>
 					<div class="green" id="show-item-form-btn">품목등록</div>
 				</div>
@@ -73,7 +73,7 @@
 							<div></div>
 							<div class="btns-box">
 								<button class="detail-btn" data-gicode="${item.giCode}">상세</button>
-								<button class="update-btn" data-gicode="${item.giCode}">수정</button>
+								<button class="update-btn" data-gicode="${item.giCode}">업데이트</button>
 								<button class="delete-btn" data-gicode="${item.giCode}">삭제</button>
 							</div>
 						</div>
@@ -84,199 +84,197 @@
 		  <div id="right-modal-container"></div>
 	</div>
 </div>
-	<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const showFormBtn = document.getElementById('show-item-form-btn');
-        const sidebar = document.getElementById('right-modal-container');
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const modalContainer = document.getElementById('right-modal-container');
 
-        // '품목등록' 버튼 모달창 
+    // --- 신규 품목 등록 버튼 ---
+    const showFormBtn = document.getElementById('show-item-form-btn');
+    if (showFormBtn) {
         showFormBtn.addEventListener('click', showRegistrationModal);
+    }
+    
+    // --- 상세보기 버튼 ---
+    document.querySelectorAll('.detail-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const giCode = this.getAttribute('data-gicode');
+            if (!giCode) return alert("오류: 품목 코드를 찾을 수 없습니다.");
 
-        // '상세보기' 버튼들
-        document.querySelectorAll('.detail-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                const giCode = this.dataset.gicode;
-
-                try {
-                    const response = await fetch('/items/' + giCode);
-                    if (!response.ok) throw new Error('데이터 로딩 실패');
-                    
-                    const item = await response.json();
-
-                    const contentHtml = `
-                        <div class="right-modal-wrap">
-                            <div class="modal-header">
-                                <div>
-                                    <span class="material-symbols-outlined">description</span>
-                                    <span>품목 상세보기</span>
-                                </div>
-                                <span class="material-symbols-outlined" id="modal-clear">close</span>
+            fetch('/items/detail/' + giCode)
+                .then(response => response.json())
+                .then(item => {
+                    const detailHtml = `
+                        <div class="form-container">
+                            <div class="form-header">
+                                <h2><span class="material-symbols-outlined">apps</span><span>품목 상세 정보</span></h2>
+                                <button class="close-btn modal-close-btn">&times;</button>
                             </div>
-                            <div class="modal-content">
-                                <div class="modal-item">
+                            <div class="form-body">
+                                <div class="form-group">
                                     <label>품목 코드</label>
-                                    <input type="text" value="${item.giCode || ''}" readonly>
+                                    <span>${item.giCode}</span>
                                 </div>
-                                <div class="modal-item">
+                                <div class="form-group">
                                     <label>품목명</label>
-                                    <input type="text" value="${item.giName || ''}" readonly>
+                                    <span>${item.giName}</span>
                                 </div>
-                                <div class="modal-item">
+                                <div class="form-group">
                                     <label>거래처</label>
-                                    <input type="text" value="${item.gcmName || ''} (${item.gcmCode || ''})" readonly>
-                                </div>
-                                <div class="modal-btn-box">
-                                    <button type="button" class="btn gray" id="modal-close-btn">닫기</button>
+                                    <span>${item.gcmName}</span>
                                 </div>
                             </div>
-                        </div>
-                    `;
-
-                    sidebar.innerHTML = contentHtml;
-                    sidebar.style.transform = 'translateX(0)';
-
-                    sidebar.querySelector('#modal-clear').addEventListener('click', hideModal);
-                    sidebar.querySelector('#modal-close-btn').addEventListener('click', hideModal);
-
-                } catch (error) {
-                    console.error('상세보기 오류:', error);
-                    alert('상세 정보를 불러오는 데 실패했습니다.');
-                }
-            });
+                        </div>`;
+                    openModal(detailHtml);
+                });
         });
-        
-        //업데이트 버튼 기능
-        document.querySelectorAll('.update-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                const giCode = this.dataset.gicode;
-                try {
-                    const response = await fetch('/items/updateform/' + giCode);
-                    if (!response.ok) throw new Error('수정 폼 로딩 실패');
-                    const formHtml = await response.text();
-                    sidebar.innerHTML = formHtml;
-                    sidebar.style.transform = 'translateX(0)';
-                } catch (error) {
-                    console.error('수정 폼 로딩 오류:', error);
-                    alert('수정 폼을 불러오는 데 실패했습니다.');
-                }
-            });
+    });
+    
+    // --- 업데이트 버튼 ---
+    document.querySelectorAll('.update-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const giCode = this.getAttribute('data-gicode');
+            if (!giCode) return alert("오류: 품목 코드를 찾을 수 없습니다.");
+
+            fetch('/items/updateData/' + giCode)
+                .then(response => response.json())
+                .then(item => {
+                    const updateFormHtml = `
+                        <div class="form-container">
+                            <div class="form-header">
+                                <h2><span class="material-symbols-outlined">apps</span><span>품목 정보 수정</span></h2>
+                                <button class="close-btn modal-close-btn">&times;</button>
+                            </div>
+                            <form id="item-update-form" action="/items/update" method="post">
+                                <div class="form-body">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>품목 코드</label>
+                                            <input type="text" value="${item.giCode}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>품목명</label>
+                                            <input type="text" name="giName" value="${item.giName}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn-secondary modal-close-btn">취소</button>
+                                    <button type="submit" class="btn-primary">수정</button>
+                                </div>
+                            </form>
+                        </div>`;
+                    openModal(updateFormHtml);
+                });
         });
-        
-        // --- 삭제 버튼 기능 ---
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const giCodeToDelete = this.dataset.gicode;
-                
-                if (confirm(`'${giCodeToDelete}' 품목을 정말로 삭제하시겠습니까?`)) {
-                    
-                    fetch('/items/' + giCodeToDelete, {
-                        method: 'DELETE'
-                    })
+    });
+
+    // --- 삭제 버튼 ---
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const giCodeToDelete = this.getAttribute('data-gicode');
+            if (!giCodeToDelete) return alert("오류: 품목 코드를 찾을 수 없습니다.");
+
+            if (confirm(`'${giCodeToDelete}' 품목을 정말로 삭제하시겠습니까?`)) {
+                fetch('/items/delete/' + giCodeToDelete, { method: 'DELETE' })
                     .then(response => {
-                        if (!response.ok) {
-                            return response.json().then(error => { throw new Error(error.message || '삭제에 실패했습니다.') });
-                        }
-                        return response.json(); 
+                        if (!response.ok) return response.json().then(err => { throw new Error(err.message || '삭제 실패') });
+                        return response.json();
                     })
                     .then(data => {
                         alert(data.message);
                         location.reload();
                     })
-                    .catch(error => {
-                        console.error('삭제 중 오류 발생:', error);
-                        alert('삭제 실패: ' + error.message);
-                    });
-                }
-            });
+                    .catch(error => alert('삭제 실패: ' + error.message));
+            }
         });
+    });
 
-        // 품목 등록 기능
-        async function showRegistrationModal() {
-            const formUrl = '/items/new-form';
-            const suppliersUrl = '/api/com-members';
+    // --- 공통 모달 함수 ---
+    function openModal(htmlContent) {
+        modalContainer.innerHTML = htmlContent;
+        modalContainer.style.transform = 'translateX(0)';
+        modalContainer.querySelectorAll('.modal-close-btn').forEach(btn => {
+            btn.addEventListener('click', closeModal);
+        });
+    }
 
-            try {
-                const [formResponse, suppliersResponse] = await Promise.all([
-                    fetch(formUrl),
-                    fetch(suppliersUrl)
-                ]);
+    function closeModal() {
+        modalContainer.style.transform = 'translateX(100%)';
+    }
 
-                if (!formResponse.ok || !suppliersResponse.ok) {
-                    throw new Error('API 호출에 실패했습니다.');
-                }
+    // --- 품목 등록 관련 함수들 ---
+	async function showRegistrationModal() {
+	    try {
+	        const formHtml = await fetch('/items/new-form').then(res => res.text());
+	
+	        modalContainer.innerHTML = formHtml;
+	        modalContainer.style.transform = 'translateX(0)';
+	
+	        const imageInput = modalContainer.querySelector('#itemImageFile');
+	        const imagePreview = modalContainer.querySelector('#imagePreview');
+	        if (imageInput && imagePreview) {
+	            imageInput.addEventListener('change', function() {
+	                const file = this.files[0];
+	                if (file) {
+	                    const reader = new FileReader();
+	                    reader.onload = function(e) {
+	                    	console.log("파일 읽기 결과:", e.target.result);
+	                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Image preview">`;
+	                    }
+	                    reader.readAsDataURL(file);
+	                } else {
+	                    imagePreview.innerHTML = '<span>이미지 추가</span>';
+	                }
+	            });
+	        }
+	        
+	        modalContainer.querySelectorAll('.modal-close-btn').forEach(btn => {
+	            btn.addEventListener('click', closeModal);
+	        });
+	
+	        const suppliers = await fetch('/api/com-members').then(res => res.json());
+	        const supplierSelect = modalContainer.querySelector('#gcmCode');
+	        suppliers.forEach(supplier => {
+	            const option = document.createElement('option');
+	            option.value = supplier.gcmCode;
+	            option.textContent = supplier.gcmName;
+	            supplierSelect.appendChild(option);
+	        });
+	        
+	        const form = modalContainer.querySelector('#item-register-form');
+	        if(form) {
+	            form.addEventListener('submit', handleFormSubmit);
+	        }
+	
+	    } catch (error) {
+	        alert('폼을 불러오는 데 실패했습니다.');
+	        console.error('Registration modal error:', error);
+	    }
+	}
 
-                const formHtml = await formResponse.text();
-                const suppliers = await suppliersResponse.json();
 
-                sidebar.innerHTML = formHtml;
-                
-                const supplierSelect = sidebar.querySelector('#gcmCode');
-                supplierSelect.innerHTML = '<option value="" disabled selected>거래처를 선택하세요</option>';
-                suppliers.forEach(supplier => {
-                    const option = document.createElement('option');
-                    option.value = supplier.gcmCode;
-                    option.textContent = supplier.gcmName;
-                    supplierSelect.appendChild(option);
-                });
-
-                sidebar.style.transform = 'translateX(0)';
-                addModalEventListeners();
-
-            } catch (error) {
-                console.error('모달을 준비하는 중 오류 발생:', error);
-                alert('폼을 불러오는 데 실패했습니다.');
-            }
+    async function handleFormSubmit(event) {
+        event.preventDefault(); 
+        const form = event.target;
+        const bodyData = new URLSearchParams(new FormData(form)).toString();
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: bodyData
+            });
+            if (!response.ok) throw new Error('서버 응답 실패');
+            const result = await response.json();
+            alert(result.message);
+            if (response.ok) location.reload(); 
+        } catch (error) {
+            alert('등록 중 오류가 발생했습니다.');
         }
-
-        function addModalEventListeners() {
-            const form = sidebar.querySelector('#item-register-form');
-            if (!form) return;
-
-            const closeBtn = sidebar.querySelector('#modal-clear');
-            const cancelBtn = sidebar.querySelector('#modal-close-btn');
-
-            form.addEventListener('submit', handleFormSubmit);
-            if(closeBtn) closeBtn.addEventListener('click', hideModal);
-            if(cancelBtn) cancelBtn.addEventListener('click', hideModal);
-        }
-
-        async function handleFormSubmit(event) {
-            event.preventDefault(); 
-            const form = event.target;
-            
-            // FormData를 URL-encoded string으로 변환
-            const formData = new FormData(form);
-            const bodyData = new URLSearchParams(formData).toString();
-
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: bodyData
-                });
-
-                if (!response.ok) {
-                    throw new Error('서버 응답에 실패했습니다.');
-                }
-
-                const result = await response.json();
-                
-                alert(result.message);
-                if (response.ok) {
-                    location.reload(); 
-                }
-            } catch (error) {
-                console.error('폼 제출 중 오류 발생:', error);
-                alert('등록 중 오류가 발생했습니다.');
-            }
-        }
-
-        function hideModal() {
-            sidebar.style.transform = 'translateX(100%)';
-        }
-    });    
+    }
+});
 </script>
+<script src="/js/render.js"></script>
+<script src="/js/member.js"></script>
 </body>
-</html>
+</html>	

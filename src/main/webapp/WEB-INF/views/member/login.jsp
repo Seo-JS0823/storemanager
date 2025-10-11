@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols"/>
-    <title>Welcome</title>
+    <title>Store Manager</title>
     <style>
     * { box-sizing: border-box; }
     html, body{
@@ -85,6 +85,8 @@
     }
     .right-container > div:last-child {
         font-size: 1.3rem;
+        width: 100%;
+        text-align: center;
     }
     .input-style {
         width: 30rem;
@@ -113,6 +115,7 @@
     </style>
 </head>
 <body>
+	<c:if test="${not empty message}"><input type="hidden" id="loginFalse" value="${message}"></c:if>
     <div class="wrap">
         <!--Left side -->
         <div>
@@ -142,12 +145,15 @@
                 <div>
                     <button id="member-login">로 그 인</button>
                 </div>
-                <div>회원 가입 전이신가요?&nbsp;&nbsp;<a href="/joinV">회원가입</a></div>
+                <div>
+                	회원 가입 전이신가요?&nbsp;&nbsp;<a href="/joinV">회원가입</a><br>
+                	비밀번호를 잊으셨나요?&nbsp;&nbsp;<a href="/profile-findV">비밀번호 찾기</a>
+                </div>
             </div>
         </div>
     </div>
-<script src="/js/member.js">
-</script>
+<script src="/js/render.js"></script>
+<script src="/js/member.js"></script>
 <script>
 	const login = document.getElementById('member-login');
 	login.addEventListener('click', (event) => {
@@ -171,6 +177,13 @@
 		formEl.method = 'POST';
 		formEl.submit();
 	});
+	
+	const loginFalse = document.getElementById('loginFalse');
+	setTimeout(() => {
+	if(loginFalse !== null) {
+		alert(loginFalse.value);
+	}
+	}, 100);
 </script>
 </body>
 </html>

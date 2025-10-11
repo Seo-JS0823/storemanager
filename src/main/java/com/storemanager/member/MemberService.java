@@ -135,7 +135,29 @@ public class MemberService {
 				             .body(response);
 	}
 	
+	public ResponseEntity<String> profileFindCall(String target) {
+		MemberDTO member = jsonToDTO(target);
+		if(member == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+		MemberDTO memberValidate = memberMapper.profileFindCall(member);
+		if(memberValidate == null) return ResponseEntity.ok("NO");
+		
+		return ResponseEntity.ok("OK");
+	}
 	
+	// 비밀번호 찾기 - 변경
+	public ResponseEntity<String> profileFind(String target) {
+		MemberDTO member = jsonToDTO(target);
+		if(member == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		member.setGm_pwd(BCryptPasswordEncoder.encode(member));
+		
+		int profileUpdated = memberMapper.profileFind(member);
+		if(profileUpdated == 0) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NO");
+		}
+		
+		return ResponseEntity.ok("OK");
+	}
 	
 	// join Id Validation 로직
 	public boolean joinIdValidation(String gm_id) {

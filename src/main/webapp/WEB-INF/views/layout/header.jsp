@@ -7,7 +7,7 @@
 %>
 <div>
 	<div class="header">
-		<div>(주)싱싱유통</div>
+		<div>(주) 부성</div>
 		<div>
 			<div id="gm_name"></div>
 			<input id="profile-id" type="hidden" value="<%=id %>"/>
@@ -18,18 +18,3 @@
 </div>
 <!-- member infomation modal -->
 <div id="gm_infomation"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,14 +1,3 @@
-// 현재 페이지 객체
-const currentPage = {
-  _nowPage:1,
-  get nowPage() {
-    return this._nowPage;
-  },
-  set nowPage(nowPage) {
-    this._nowPage = nowPage;
-  }
-}
-
 class PagingManager {
   constructor() {
     this.components = {};
