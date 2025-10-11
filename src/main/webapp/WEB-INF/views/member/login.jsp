@@ -30,13 +30,8 @@
     /* ===== wrap ===== */
     .wrap{
         display: flex;
-<<<<<<< HEAD
         width: 120rem; 
         height: 60rem;
-=======
-        width: 90rem; 
-        height: 45rem;
->>>>>>> fe880323677131d19633a252e168557fc548128b
         border-radius: 1rem; 
         box-shadow: 0.7rem 0.7rem 1rem #b3b3b3;
         overflow: hidden;
@@ -151,21 +146,15 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 <script src="/js/member.js">
 </script>
-=======
->>>>>>> fe880323677131d19633a252e168557fc548128b
 <script>
 	const login = document.getElementById('member-login');
 	login.addEventListener('click', (event) => {
 		const id = document.getElementById('id').value;
 		const pwd = document.getElementById('pwd').value;
-<<<<<<< HEAD
 		memberProfileData.id = id;
 		
-=======
->>>>>>> fe880323677131d19633a252e168557fc548128b
 		if(id === '') {
 			event.preventDefault();
 			alert('아이디를 입력하세요.');

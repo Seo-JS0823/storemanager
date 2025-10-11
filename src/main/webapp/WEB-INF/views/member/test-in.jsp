@@ -180,10 +180,7 @@
 	</div>
 </div>
 </form>
-<<<<<<< HEAD
 <script src="/js/render.js"></script>
-=======
->>>>>>> fe880323677131d19633a252e168557fc548128b
 <script src="/js/member.js"></script>
 </body>
 </html>

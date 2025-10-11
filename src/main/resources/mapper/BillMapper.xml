@@ -6,10 +6,6 @@
 		SELECT
 			ROW_NUMBER() OVER ( ORDER BY GIH.GIH_REGDATE DESC) NUM,
 			GIH.GIH_IDX,
-<<<<<<< HEAD
-=======
-			GIH.GI_CODE,
->>>>>>> fe880323677131d19633a252e168557fc548128b
 			GIH.GI_NAME, 
 			GCM.GCM_NAME, 
 			FORMAT(GIH.GIH_QTY,0) GIH_QTY, 
@@ -93,7 +89,6 @@
 			${param3}
 		ORDER BY GIH.GIH_REGDATE DESC
 	</select>
-<<<<<<< HEAD
 	<!--
 	<insert id="insertBoard" parameterType="map">
  		INSERT INTO BOARD
@@ -169,57 +164,4 @@
 		WHERE MENU_ID = #{menu_id} 
 	</update>
 	-->
-=======
-	
-	<select id="chkBillNumber">
-		SELECT COUNT(GBC_IDX)+1 GBC_IDX_CHK 
-		FROM GE_BILL_CHK
-		WHERE GBC_NUMBER LIKE #{param1}
-	</select>
-	
-	<insert id="createBill">
- 		INSERT INTO GE_BILL_CHK
- 				( GBC_NUMBER, GBC_GIS_LIST, GBC_GI_NAME, GBC_GCM_NAME, GBC_INOUT )
- 		VALUES (#{param1}, #{param2}, #{param3}, #{param4}, #{param5})
- 	</insert>
- 	
- 	<select id="getBillListALL" resultType="com.storemanager.bill.BillDTO">
-		SELECT
-			ROW_NUMBER() OVER ( ORDER BY GBC_IDX DESC) NUM, 
-			GBC_IDX, 
-			GBC_NUMBER, 
-			GBC_GIS_LIST, 
-			GBC_GI_NAME, 
-			GBC_GCM_NAME, 
-			IF(GBC_INOUT = 'IN','입고명세서', IF(GBC_INOUT = 'OUT','출고명세서','')) GBC_INOUT, 
-			DATE_FORMAT(GBC_REGDATE,'%Y-%m-%d') GBC_REGDATE
-		FROM 
-			GE_BILL_CHK
-		WHERE 
-			DATE_FORMAT(GBC_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
-			${param3}
-	</select>
- 	
- 	<select id="getGcmChk">
-		SELECT GBC_NUMBER, GBC_GCM_NAME FROM GE_BILL_CHK WHERE GBC_GIS_LIST = #{param1}
-	</select>
-	<select id="getGcmChk1">
-		SELECT 
-			GI_NAME, FORMAT(IF(GIH_QTY &lt; 0, (GIH_QTY*-1),GIH_QTY),0) GIH_QTY, FORMAT(GIH_PRICE,0) GIH_PRICE, FORMAT(if((GIH_QTY*GIH_PRICE) &lt; 0,(GIH_QTY*GIH_PRICE)*-1,(GIH_QTY*GIH_PRICE)) ,0) AMOUNT 
-		FROM 
-			GE_ITEMS_HIST 
-		WHERE 
-			GIH_IDX in (#{param1}) 
-	</select>
-	<select id="getGcmChk2">
-		SELECT
-			FORMAT(SUM(IF((GIH_QTY*GIH_PRICE) &lt; 0,(GIH_QTY*GIH_PRICE)*-1,(GIH_QTY*GIH_PRICE))) ,0) AMOUNT
-		FROM 
-			GE_ITEMS_HIST
-		WHERE
-			GIH_IDX IN (${param1})
- 
-	</select>
-	
->>>>>>> fe880323677131d19633a252e168557fc548128b
 </mapper>

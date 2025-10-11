@@ -192,11 +192,7 @@
 			<div class="m-items" id="m-items">
 			<c:forEach var="billList" items="${billList}">
 				<div>
-<<<<<<< HEAD
 					<input type="hidden" id="gih_input" value="${ billList.gih_inout }" />
-=======
-					<input type="hidden" id="gih_inout" value="${ billList.gih_inout }" />
->>>>>>> fe880323677131d19633a252e168557fc548128b
 	               	<div id="gih_idx"><input type="checkbox" id="chkBillId" value="${ billList.gih_idx }" />&nbsp;&nbsp;${ billList.num }</div>
 	               	<div id="gi_name">${ billList.gi_name }</div>
 	               	<div id="gcm_name">${ billList.gcm_name }</div>
@@ -308,11 +304,7 @@
 	Render.setComponent('HYY-bill-billout', (item) => {
 		const list = document.createElement('div');
 		list.innerHTML = `
-<<<<<<< HEAD
 		<input type="hidden" id="gih_input" value='\${item.gih_inout}'>
-=======
-		<input type="hidden" id="gih_inout" value='\${item.gih_inout}'>
->>>>>>> fe880323677131d19633a252e168557fc548128b
 		<div id="gih_idx"><input type="checkbox" id="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>
 		<div id='gi_name'>\${item.gi_name}</div>
 		<div id="gcm_name">\${ item.gcm_name }</div>
