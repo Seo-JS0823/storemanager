@@ -37,7 +37,7 @@
 			<div class="m-search">
 				<div>
 				<form action="/items" method="get" class="m-search line">
-                	<div class="m-search-line">
+                	<div class="m-search-line"> 
                     	<div class="m-search-date"> <input type="date" name="startdate">
                             <p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
                             <input type="date" name="enddate">
