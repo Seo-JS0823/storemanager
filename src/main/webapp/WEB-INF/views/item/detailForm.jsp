@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%-- 이 페이지 전용 스타일 --%>
 <style>
@@ -132,39 +133,45 @@
 
 <div class="form-container">
     <div class="form-header">
-        <div class="state-circle"></div>
-        <h2>품목 등록</h2>
+        <div class="state-circle" style="background-color: #FFA500;"></div>
+        <h2>상세 정보</h2>
+        <button type="button" class="btn-cancel modal-close-btn" style="margin-left: auto; background: none; color: #333; font-size: 2rem; width: auto; height: auto;">&times;</button>
     </div>
 
-	<form id="item-register-form" action="/items/register" method="post" enctype="multipart/form-data">
+	<div>
 		<div class="image-area">
-			<label for="itemImageFile" class="image-preview" id="imagePreview">
-				<img id="previewImageElement" src="" alt="Image preview" style="display: none;"> 
-				<span id="initialTextSpan">이미지 추가</span>
-			</label> 
-			<input type="file" id="itemImageFile" name="file" accept="image/*">
-			<button type="button" id="deleteImageBtn" style="display: none;">X</button>
+            <c:choose>
+                <c:when test="${not empty item.giImg}">
+                    <img src="/item-images/${item.giImg}" alt="품목 이미지" style="cursor: default;">
+                </c:when>
+                <c:otherwise>
+                    <div class="image-preview" style="cursor: default;"><span>이미지 없음</span></div>
+                </c:otherwise>
+            </c:choose>
 		</div>
 		
 		<div class="input-grid">
 			<div class="form-group">
-				<label for="gcmCode">거래처 선택</label>
-				<select id="gcmCode" name="gcmCode" required></select>
+				<label>품목 코드</label>
+				<input type="text" value="${item.giCode}" readonly>
 			</div>
 			<div class="form-group">
-				<label for="giName">품목명</label>
-				<input type="text" id="giName" name="giName" required>
+				<label>품목명</label>
+				<input type="text" value="${item.giName}" readonly>
+			</div>
+			<div class="form-group">
+				<label>거래처</label>
+				<input type="text" value="${item.gcmName}" readonly>
 			</div>
 		</div>
 
 		<div class="remark-area">
 			<label for="remark">REMARK</label>
-			<textarea id="remark" name="remark" placeholder="Memo"></textarea>
+			<textarea id="remark" readonly>${item.remark}</textarea>
 		</div>
 
-		<div class="form-actions">
-			<button type="submit" class="btn-save">저 장</button>
-			<button type="button" class="btn-cancel modal-close-btn">취 소</button>
+		<div class="form-actions">>
+            <button type="button" class="btn-cancel modal-close-btn">닫 기</button>
 		</div>
-	</form>
+	</div>
 </div>

@@ -23,7 +23,10 @@
             i.GI_CODE    AS giCode,
             i.GI_NAME    AS giName,
             i.GCM_CODE   AS gcmCode,
-            c.GCM_NAME   AS gcmName
+            c.GCM_NAME   AS gcmName,
+            i.GI_IMG     AS giImg,
+            i.REMARK     AS remark
+
         FROM
             GE_ITEMS i
         LEFT JOIN
@@ -47,12 +50,7 @@
     SET GI_DEL_FLAG = 'Y'
     WHERE GI_CODE =  #{giCode}
     </update>
-    
-    <update id="restoreItem" parameterType="string">
-    UPDATE GE_ITEMS
-    SET GI_DEL_FLAG = 'N'
-    WHERE GI_CODE = #{giCode}
-    </update>
+    	
 
 	<select id="findItems" parameterType="map" resultType="com.storemanager.item.ItemDTO">
 		SELECT
@@ -76,4 +74,12 @@
 		ORDER BY
 		i.GI_CODE DESC
 	</select>
+	
+	<!-- 삭제품목 복구 -->
+	<update id="restoreItem" parameterType="string">
+		UPDATE GE_ITEMS 
+		SET GI_DEL_FLAG = 'N'
+		WHERE GI_CODE = #{giCode}
+	</update>
+
 </mapper>
