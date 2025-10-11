@@ -85,6 +85,14 @@ public class DashController {
 		return ResponseEntity.ok(outList);
 	}
 	
+	// 최신 명세서 TOP 5
+	@GetMapping("/bill-top-five")
+	@ResponseBody
+	public ResponseEntity<List<DashDTO>> billTopFive() {
+		List<DashDTO> billList = service.billTopFive();
+		return ResponseEntity.ok(billList);
+	}
+	
 	// 1,000,000 형식으로 포맷해서 문자열 반환
 	private String priceFormat(Integer price) {
 		NumberFormat format = NumberFormat.getCurrencyInstance(Locale.KOREA);

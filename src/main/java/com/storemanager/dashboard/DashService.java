@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DashService {
@@ -40,29 +41,29 @@ public class DashService {
 		List<DashDTO> totalIn = dashMapper.stickTotalNowIn(date.getNowFirstDate(), date.getNowEndDate());
 		List<DashDTO> totalOut = dashMapper.stickTotalNowOut(date.getNowFirstDate(), date.getNowEndDate());
 		
-		List<Integer> totalInQty = totalIn.stream().map(DashDTO::getOrders).collect(Collectors.toList());
-		List<Integer> totalOutQty = totalOut.stream().map(DashDTO::getOrders).collect(Collectors.toList());
+		List<Integer> totalInPrice = totalIn.stream().map(DashDTO::getOrders).collect(Collectors.toList());
+		List<Integer> totalOutPrice = totalOut.stream().map(DashDTO::getOrders).collect(Collectors.toList());
 		
-		Integer totalInSum = totalInQty.stream().mapToInt(Integer::intValue).sum();
-		Integer totalOutSum = totalOutQty.stream().mapToInt(Integer::intValue).sum();
+		Integer totalInSum = totalInPrice.stream().mapToInt(Integer::intValue).sum();
+		Integer totalOutSum = totalOutPrice.stream().mapToInt(Integer::intValue).sum();
 		
 		List<Double> totalInPer
-		= totalInQty.stream()
+		= totalInPrice.stream()
 		            .map(num -> ((double) num / totalInSum) * 100.0)
 		            .map(per -> Math.floor(per * 100.0) / 100.0)
 		            .collect(Collectors.toList());
 		
 		List<Double> totalOutPer
-		= totalOutQty.stream()
+		= totalOutPrice.stream()
 		             .map(num -> ((double) num / totalOutSum) * 100.0)
 		             .map(per -> Math.floor(per * 100.0) / 100.0)
 		             .collect(Collectors.toList());
 		
 		Map<String, Object> response = Map.of(
-			"total_in", totalIn, "total_in_qty", totalInQty,
+			"total_in", totalIn, "total_in_qty", totalInPrice,
 			"total_in_sum", totalInSum, "total_in_per", totalInPer,
 			
-			"total_out", totalOut, "total_out_qty", totalOutQty,
+			"total_out", totalOut, "total_out_qty", totalOutPrice,
 			"total_out_sum", totalOutSum, "total_out_per", totalOutPer
 		);
 		
@@ -79,6 +80,16 @@ public class DashService {
 	public List<DashDTO> outTopFive() {
 		List<DashDTO> outList = dashMapper.outTopFive();
 		return outList;
+	}
+	
+	// 명세서 리스트 가져오기
+	@Transactional
+	public List<DashDTO> billTopFive() {
+		List<DashDTO> billList = dashMapper.billTopFiveMeta();
+		billList.forEach(bill -> {
+			bill.setGbc_amount(dashMapper.billTopFiveAmount(bill.getGbc_gis_list()));
+		});
+		return billList;
 	}
 	
 }

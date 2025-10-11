@@ -14,4 +14,7 @@ public interface DashMapper {
 	
 	public List<DashDTO> inTopFive();
 	public List<DashDTO> outTopFive();
+	
+	public List<DashDTO> billTopFiveMeta();
+	public String billTopFiveAmount(String gisList);
 }

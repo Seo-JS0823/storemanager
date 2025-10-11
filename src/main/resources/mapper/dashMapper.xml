@@ -101,4 +101,29 @@
 		limit 0,5
 	</select>
 	
+	<!-- 명세서 가져오기 -->
+	<select id="billTopFiveMeta" resultType="com.storemanager.dashboard.DashDTO">
+		SELECT
+		   DATE_FORMAT(GBC_REGDATE,'%Y-%m-%d %H시 %i분') as GBC_REGDATE,
+		   GBC_GIS_LIST,
+		   GBC_NUMBER,
+		   GBC_GCM_NAME,
+		   GBC_GI_NAME,
+		   IF(GBC_INOUT='IN','입고','출고') as GBC_INOUT
+		FROM
+			GE_BILL_CHK
+		ORDER BY GBC_REGDATE DESC
+		LIMIT 5
+	</select>
+	
+	<!-- 명세서 총 금액 가져오기 -->
+	<select id="billTopFiveAmount" resultType="String">
+		SELECT
+		   FORMAT(SUM(IF((GIH_QTY*GIH_PRICE) <![CDATA[<]]> 0,(GIH_QTY*GIH_PRICE)*-1,(GIH_QTY*GIH_PRICE))) ,0) GBC_AMOUNT
+		FROM 
+		   GE_ITEMS_HIST
+		WHERE
+		   GIH_IDX IN (#{gislist})
+	</select>
+	
 </mapper>

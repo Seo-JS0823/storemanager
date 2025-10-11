@@ -229,14 +229,32 @@ WHERE
 </div>
 
 
+SELECT
+   DATE_FORMAT(GBC_REGDATE,'%Y-%m-%d %H:%i:%S') as GBC_REGDATE,
+   GBC_GIS_LIST,
+   GBC_NUMBER,
+   GBC_GCM_NAME,
+   GBC_GI_NAME,
+   IF(GBC_INOUT='IN','입고','출고') as GBC_INOUT
+FROM GE_BILL_CHK
+ORDER BY GBC_REGDATE DESC
+LIMIT 5
+
+SELECT
+   FORMAT(SUM(IF((GIH_QTY*GIH_PRICE) < 0,(GIH_QTY*GIH_PRICE)*-1,(GIH_QTY*GIH_PRICE))) ,0) GBC_AMOUNT
+FROM 
+   GE_ITEMS_HIST
+WHERE
+   GIH_IDX IN (GBC_GIS_LIST)
 
 
-
-
-
-
-
-
+billTopFive();
+outTopFive();
+inTopFive();
+stickTotalNowIn();
+befSales();
+nowOutPrice();
+nowInPrice();
 
 
 
