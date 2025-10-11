@@ -1,6 +1,7 @@
 package com.storemanager.dashboard;
 
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class DashController {
 		return ResponseEntity.ok(nowOutPrice);		
 	}
 	
-	// 전월 매출액
+	// 당월 매출 총이익
 	@GetMapping("/bef-sales")
 	@ResponseBody
 	public ResponseEntity<Map<String, String>> befSales() {
@@ -54,14 +55,13 @@ public class DashController {
 		} else {
 			response = Map.of(
 				"color", "#DC3545",
-				"sales", "▲"+ this.priceFormat(befSales)
+				"sales", "▲" + this.priceFormat(befSales)
 			);
 		}
 		
 		return ResponseEntity.ok(response);
 	}
 	
-<<<<<<< HEAD
 	// 당월 총 입고 TOP 5
 	@GetMapping("/stick-total-now")
 	@ResponseBody
@@ -94,8 +94,6 @@ public class DashController {
 	}
 	
 	// 1,000,000 형식으로 포맷해서 문자열 반환
-=======
->>>>>>> item
 	private String priceFormat(Integer price) {
 		NumberFormat format = NumberFormat.getCurrencyInstance(Locale.KOREA);
 		return format.format(price).replaceAll("₩", "") + " 원";

@@ -4,7 +4,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface ItemMapper {
@@ -18,8 +17,4 @@ public interface ItemMapper {
     int updateItem(ItemDTO item);
 
     int deleteItem(@Param("giCode") String giCode);
-
-	List<ItemDTO> findItems(Map<String, Object> params);
-	 
-	int restoreItem(@Param("giCode") String giCode);
 }

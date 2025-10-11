@@ -13,8 +13,5 @@ public class ItemDTO {
     private String gcmCode;   
     private String giDelFlag;
     private String gcmName;
-    
-    private String giImg;   
-    private String remark;   
 }
  

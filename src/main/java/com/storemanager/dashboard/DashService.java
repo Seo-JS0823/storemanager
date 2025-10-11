@@ -1,5 +1,9 @@
 package com.storemanager.dashboard;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +29,8 @@ public class DashService {
 		return dashMapper.nowOutPrice(date.getNowFirstDate(), date.getNowEndDate());
 	}
 	
-	// 전월 매출액
+	// 당월 매출액
 	public Integer befSales() {
-<<<<<<< HEAD
 		Integer in = dashMapper.nowInPrice(date.getNowFirstDate(), date.getNowEndDate());
 		Integer out = dashMapper.nowOutPrice(date.getNowFirstDate(), date.getNowEndDate());
 		return out - in;
@@ -77,10 +80,6 @@ public class DashService {
 	public List<DashDTO> outTopFive() {
 		List<DashDTO> outList = dashMapper.outTopFive();
 		return outList;
-=======
-		// 전월 매출액 구하기
-		return dashMapper.befSales(date.getBeforeFirstDate(), date.getBeforeEndDate());
->>>>>>> item
 	}
 	
 	// 명세서 리스트 가져오기

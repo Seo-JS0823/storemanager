@@ -36,15 +36,12 @@
 			</div>
 			<div class="m-search">
 				<div>
-				<form action="/items" method="get"> <div class="m-search-line"> 
+				<form action="/items" method="get" class="m-search line">
+                	<div class="m-search-line">
                     	<div class="m-search-date"> <input type="date" name="startdate">
                             <p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-                            <input type ="date" name="enddate">
+                            <input type="date" name="enddate">
                         </div>
-                        <div class="m-search-option">
-                            <input type="checkbox" id="includeDeleted" name="includeDeleted" value="true">
-                            <label for="includeDeleted">삭제된 품목 보기</label>
-                        </div>                        
                         <div class="m-search-option">
                             <div><input type="radio" id="searchEvent1" name="searchoption"><p>상품명</p></div>
                             <div><input type="radio" id="searchEvent2" name="searchoption"><p>매입처명</p></div>
@@ -57,32 +54,27 @@
                </div>
 			</div>
 			<div class="m-search-sort">
-						<div>번호</div>
-						<div>품목</div>
-						<div>품목코드</div>
-						<div>거래처</div>
-						<div>거래처코드</div>
-						<div></div>
-						<div>관리</div>
+					<div>번호</div>
+					<div>품목코드</div>
+					<div>상품명</div>
+					<div>매입처명</div>
+					<div></div>
+					<div></div>
+					<div></div>
 				</div>
 				<div class="m-items">
 					<c:forEach var="item" items="${items}" varStatus="loop">
-						<div class="${item.giDelFlag == 'Y' ? 'deleted-item' : ''}">
+						<div>
 							<div>${loop.count}</div>
-							<div>${item.giName}</div>
 							<div>${item.giCode}</div>
+							<div>${item.giName}</div>
 							<div>${item.gcmName}</div>
-							<div>${item.gcmCode}</div>
+							<div></div>
 							<div></div>
 							<div class="btns-box">
-								<c:if test="${item.giDelFlag == 'N'}">
-									<button class="detail-btn" data-gicode="${item.giCode}">상세</button>
-									<button class="update-btn" data-gicode="${item.giCode}">업데이트</button>
-									<button class="delete-btn" data-gicode="${item.giCode}">삭제</button>
-								</c:if>
-								<c:if test="${item.giDelFlag == 'Y'}">
-									<button class="restore-btn" data-gicode="${item.giCode}">복구</button>
-								</c:if>
+								<button class="detail-btn" data-gicode="${item.giCode}">상세</button>
+								<button class="update-btn" data-gicode="${item.giCode}">업데이트</button>
+								<button class="delete-btn" data-gicode="${item.giCode}">삭제</button>
 							</div>
 						</div>
 					</c:forEach>
@@ -107,50 +99,76 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.detail-btn').forEach(button => {
         button.addEventListener('click', function() {
             const giCode = this.getAttribute('data-gicode');
-            fetch('/items/detail-form/' + giCode)
-                .then(res => res.text())
-                .then(formHtml => {
-                    openModal(formHtml); 
+            if (!giCode) return alert("오류: 품목 코드를 찾을 수 없습니다.");
+
+            fetch('/items/detail/' + giCode)
+                .then(response => response.json())
+                .then(item => {
+                    const detailHtml = `
+                        <div class="form-container">
+                            <div class="form-header">
+                                <h2><span class="material-symbols-outlined">apps</span><span>품목 상세 정보</span></h2>
+                                <button class="close-btn modal-close-btn">&times;</button>
+                            </div>
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label>품목 코드</label>
+                                    <span>${item.giCode}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>품목명</label>
+                                    <span>${item.giName}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>거래처</label>
+                                    <span>${item.gcmName}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    openModal(detailHtml);
                 });
         });
     });
     
     // --- 업데이트 버튼 ---
-	document.querySelectorAll('.update-btn').forEach(button => {
-	    button.addEventListener('click', function() {
-	        const giCode = this.getAttribute('data-gicode');
-	
-	        fetch('/items/update-form/' + giCode)
-	            .then(res => res.text())
-	            .then(formHtml => {
-	                openModal(formHtml);
-	                
-	                const updateForm = document.getElementById('item-update-form');
-	                if (updateForm) {
-	                    updateForm.addEventListener('submit', function(event) {
-	                        event.preventDefault();
-	
-	                        const formData = new FormData(this);
-	
-	                        fetch(this.action, {
-	                            method: 'POST',
-	                            body: formData
-	                        })
-	                        .then(response => response.json())
-	                        .then(data => {
-	                            alert(data.message || '성공적으로 수정되었습니다.');
-	                            closeModal();
-	                            location.reload();
-	                        })
-	                        .catch(error => {
-	                            console.error('Update Error:', error);
-	                            alert('수정 중 오류가 발생했습니다.');
-	                        });
-	                    });
-	                }
-	            });
-	    });
-	});
+    document.querySelectorAll('.update-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const giCode = this.getAttribute('data-gicode');
+            if (!giCode) return alert("오류: 품목 코드를 찾을 수 없습니다.");
+
+            fetch('/items/updateData/' + giCode)
+                .then(response => response.json())
+                .then(item => {
+                    const updateFormHtml = `
+                        <div class="form-container">
+                            <div class="form-header">
+                                <h2><span class="material-symbols-outlined">apps</span><span>품목 정보 수정</span></h2>
+                                <button class="close-btn modal-close-btn">&times;</button>
+                            </div>
+                            <form id="item-update-form" action="/items/update" method="post">
+                                <div class="form-body">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>품목 코드</label>
+                                            <input type="text" value="${item.giCode}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>품목명</label>
+                                            <input type="text" name="giName" value="${item.giName}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn-secondary modal-close-btn">취소</button>
+                                    <button type="submit" class="btn-primary">수정</button>
+                                </div>
+                            </form>
+                        </div>`;
+                    openModal(updateFormHtml);
+                });
+        });
+    });
+
     // --- 삭제 버튼 ---
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', function() {
@@ -168,27 +186,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         location.reload();
                     })
                     .catch(error => alert('삭제 실패: ' + error.message));
-            }
-        });
-    });
-    
-    // --- 복구 버튼 ---
-    document.querySelectorAll('.restore-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const giCodeToRestore = this.getAttribute('data-gicode');
-            if (!giCodeToRestore) return alert("오류: 품목 코드를 찾을 수 없습니다.");
-
-            if (confirm(`'${giCodeToRestore}' 품목을 정말로 복구하시겠습니까?`)) {
-                fetch('/items/restore/' + giCodeToRestore, { method: 'POST' }) 
-                    .then(response => {
-                        if (!response.ok) return response.json().then(err => { throw new Error(err.message || '복구 실패') });
-                        return response.json();
-                    })
-                    .then(data => {
-                        alert(data.message);
-                        location.reload();
-                    })
-                    .catch(error => alert('복구 실패: ' + error.message));
             }
         });
     });
@@ -215,6 +212,69 @@ document.addEventListener('DOMContentLoaded', function() {
 	        modalContainer.style.transform = 'translateX(0)';
 	
 	        const imageInput = modalContainer.querySelector('#itemImageFile');
-	        const imgElement = modalContainer.querySelector('#previewImageElement');
-	        const initialTextSpan = modalContainer.querySelector('#initialTextSpan');
-	        const
+	        const imagePreview = modalContainer.querySelector('#imagePreview');
+	        if (imageInput && imagePreview) {
+	            imageInput.addEventListener('change', function() {
+	                const file = this.files[0];
+	                if (file) {
+	                    const reader = new FileReader();
+	                    reader.onload = function(e) {
+	                    	console.log("파일 읽기 결과:", e.target.result);
+	                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Image preview">`;
+	                    }
+	                    reader.readAsDataURL(file);
+	                } else {
+	                    imagePreview.innerHTML = '<span>이미지 추가</span>';
+	                }
+	            });
+	        }
+	        
+	        modalContainer.querySelectorAll('.modal-close-btn').forEach(btn => {
+	            btn.addEventListener('click', closeModal);
+	        });
+	
+	        const suppliers = await fetch('/api/com-members').then(res => res.json());
+	        const supplierSelect = modalContainer.querySelector('#gcmCode');
+	        suppliers.forEach(supplier => {
+	            const option = document.createElement('option');
+	            option.value = supplier.gcmCode;
+	            option.textContent = supplier.gcmName;
+	            supplierSelect.appendChild(option);
+	        });
+	        
+	        const form = modalContainer.querySelector('#item-register-form');
+	        if(form) {
+	            form.addEventListener('submit', handleFormSubmit);
+	        }
+	
+	    } catch (error) {
+	        alert('폼을 불러오는 데 실패했습니다.');
+	        console.error('Registration modal error:', error);
+	    }
+	}
+
+
+    async function handleFormSubmit(event) {
+        event.preventDefault(); 
+        const form = event.target;
+        const bodyData = new URLSearchParams(new FormData(form)).toString();
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: bodyData
+            });
+            if (!response.ok) throw new Error('서버 응답 실패');
+            const result = await response.json();
+            alert(result.message);
+            if (response.ok) location.reload(); 
+        } catch (error) {
+            alert('등록 중 오류가 발생했습니다.');
+        }
+    }
+});
+</script>
+<script src="/js/render.js"></script>
+<script src="/js/member.js"></script>
+</body>
+</html>	
