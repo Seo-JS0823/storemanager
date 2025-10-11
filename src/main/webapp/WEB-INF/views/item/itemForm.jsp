@@ -161,6 +161,28 @@
 			<label for="remark">REMARK</label>
 			<textarea id="remark" name="remark" placeholder="Memo"></textarea>
 		</div>
+		<form id="item-register-form" action="/items/register" method="post" enctype="multipart/form-data">
+		    <div class="image-area">
+		        <label for="itemImageFile" class="image-preview" id="imagePreview">
+		            <img id="previewImageElement" src="" alt="Image preview" style="display: none;"> 
+		            <span id="initialTextSpan">이미지 추가</span>
+		        </label> 
+		        <input type="file" id="itemImageFile" name="file" accept="image/*">
+		        
+		        <button type="button" id="deleteImageBtn" style="display: none;" onclick="deleteImage();">X</button>
+		    </div>
+		</form>
+		
+		<div class="input-grid">
+            <div class="form-group">
+                <label for="gcmCode">거래처 선택</label>
+                <select id="gcmCode" name="gcmCode" required></select>
+            </div>
+            <div class="form-group">
+                <label for="giName">품목명</label>
+                <input type="text" id="giName" name="giName" required>
+            </div>
+        </div>
 
 		<div class="form-actions">
 			<button type="submit" class="btn-save">저 장</button>

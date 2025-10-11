@@ -82,4 +82,26 @@
 		WHERE GI_CODE = #{giCode}
 	</update>
 
+	<select id="findItems" parameterType="map" resultType="com.storemanager.item.ItemDTO">
+		SELECT
+		i.GI_CODE AS giCode,
+		i.GI_NAME AS giName,
+		i.GCM_CODE AS gcmCode,
+		c.GCM_NAME AS gcmName,
+		i.GI_DEL_FLAG AS giDelFlag
+		FROM
+		GE_ITEMS i
+		LEFT JOIN
+		GE_COM_MEMBER c ON i.GCM_CODE = c.GCM_CODE
+		<where>
+			<if test="includeDeleted == false">
+				AND i.GI_DEL_FLAG = 'N'
+			</if>
+			<if test="search != null and search != ''">
+				AND i.GI_NAME LIKE '%' || #{search} || '%'
+			</if>
+		</where>
+		ORDER BY
+		i.GI_CODE DESC
+	</select>
 </mapper>

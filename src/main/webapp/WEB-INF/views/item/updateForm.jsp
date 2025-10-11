@@ -163,7 +163,6 @@
 				<label for="gcmCode">거래처 선택</label>
 				<select id="gcmCode" name="gcmCode" required>
 				    <c:forEach var="supplier" items="${suppliers}">
-                       <%-- 💡 ACTION: == 를 eq 로 수정 --%>
                        <option value="${supplier.gcmCode}" ${supplier.gcmCode eq item.gcmCode ? 'selected' : ''}>
                             ${supplier.gcmName}
                        </option>
@@ -194,7 +193,6 @@
 	</form>
 </div>
 
-<%-- 💡 ACTION: 스크립트 블록을 div 밖으로 이동 --%>
 <script>
     const imageInput = document.getElementById('itemImageFile');
     const imagePreview = document.getElementById('imagePreview');
