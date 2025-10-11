@@ -115,6 +115,7 @@
     </style>
 </head>
 <body>
+	<c:if test="${not empty message}"><input type="hidden" id="loginFalse" value="${message}"></c:if>
     <div class="wrap">
         <!--Left side -->
         <div>
@@ -151,8 +152,8 @@
             </div>
         </div>
     </div>
-<script src="/js/member.js">
-</script>
+<script src="/js/render.js"></script>
+<script src="/js/member.js"></script>
 <script>
 	const login = document.getElementById('member-login');
 	login.addEventListener('click', (event) => {
@@ -176,6 +177,13 @@
 		formEl.method = 'POST';
 		formEl.submit();
 	});
+	
+	const loginFalse = document.getElementById('loginFalse');
+	setTimeout(() => {
+	if(loginFalse !== null) {
+		alert(loginFalse.value);
+	}
+	}, 100);
 </script>
 </body>
 </html>
