@@ -36,8 +36,7 @@
 			</div>
 			<div class="m-search">
 				<div>
-				<form action="/items" method="get" class="m-search line">
-                	<div class="m-search-line"> 
+				<form action="/items" method="get"> <div class="m-search-line"> 
                     	<div class="m-search-date"> <input type="date" name="startdate">
                             <p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
                             <input type ="date" name="enddate">
@@ -57,7 +56,7 @@
                   </form>
                </div>
 			</div>
-				<div class="m-search-sort">
+			<div class="m-search-sort">
 						<div>번호</div>
 						<div>품목</div>
 						<div>품목코드</div>
@@ -218,90 +217,4 @@ document.addEventListener('DOMContentLoaded', function() {
 	        const imageInput = modalContainer.querySelector('#itemImageFile');
 	        const imgElement = modalContainer.querySelector('#previewImageElement');
 	        const initialTextSpan = modalContainer.querySelector('#initialTextSpan');
-	        const deleteBtn = modalContainer.querySelector('#deleteImageBtn');
-	
-	        if (imageInput && imgElement && initialTextSpan && deleteBtn) {
-	            
-	            imageInput.addEventListener('change', function() {
-	                const file = this.files[0];
-	                if (file) {
-	                    const reader = new FileReader();
-	                    reader.onload = function(e) {
-	                        imgElement.src = e.target.result;
-	                        imgElement.style.display = 'block';
-	                        initialTextSpan.style.display = 'none';
-	                        deleteBtn.style.display = 'inline-block';
-	                    }
-	                    reader.readAsDataURL(file);
-	                } else {
-	                    imgElement.src = '';
-	                    imgElement.style.display = 'none';
-	                    initialTextSpan.style.display = 'block';
-	                    deleteBtn.style.display = 'none';
-	                }
-	            });
-	
-	            deleteBtn.addEventListener('click', function() {
-	                imageInput.value = ''; 
-	                imgElement.src = '';
-	                imgElement.style.display = 'none';
-	                initialTextSpan.style.display = 'block';
-	                deleteBtn.style.display = 'none';
-	            });
-	        }
-	        
-	        modalContainer.querySelectorAll('.modal-close-btn').forEach(btn => {
-	            btn.addEventListener('click', closeModal);
-	        });
-	
-	        const suppliers = await fetch('/api/suppliers').then(res => res.json());
-	        const supplierSelect = modalContainer.querySelector('#gcmCode');
-	        suppliers.forEach(supplier => {
-	            const option = document.createElement('option');
-	            option.value = supplier.gcmCode;
-	            option.textContent = supplier.gcmName;
-	            supplierSelect.appendChild(option);
-	        });
-	        
-	        const form = modalContainer.querySelector('#item-register-form');
-	        if(form) {
-	            form.addEventListener('submit', handleFormSubmit);
-	        }
-	
-	    } catch (error) {
-	        alert('폼을 불러오는 데 실패했습니다.');
-	        console.error('Registration modal error:', error);
-	    }
-	}
-
-
-	async function handleFormSubmit(event) {
-	    event.preventDefault(); 
-	    const form = event.target;
-	    const formData = new FormData(form);
-	
-	    try {
-	        const response = await fetch(form.action, {
-	            method: 'POST',
-	            body: formData
-	        });
-
-	        if (!response.ok) {
-	            const errorText = await response.text(); 
-	            throw new Error(`서버 응답 실패: ${errorText}`);
-	        }
-	
-	        const result = await response.json();
-	        alert(result.message);
-	        location.reload(); 
-	    } catch (error) {
-	        console.error('등록 오류:', error);
-	        alert('등록 중 오류가 발생했습니다. 개발자 콘솔을 확인하세요.');
-	    }
-	}
-});
-</script>
-<script src="/js/render.js"></script>
-<script src="/js/member.js"></script>
-</body>
-</html>	
+	        const
