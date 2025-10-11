@@ -3,6 +3,7 @@
 
 <mapper namespace="com.storemanager.item.ItemMapper">
 
+<<<<<<< HEAD
     <select id="selectItemList" resultType="com.storemanager.item.ItemDTO">
         SELECT
             i.GI_CODE,
@@ -57,6 +58,7 @@
 		GI_CODE = #{giCode}
 	</update>
 
+<<<<<<< HEAD
      <!-- 삭제 버튼 -->
 	<delete id="deleteItem" parameterType="string">
 		DELETE FROM GE_ITEMS
@@ -64,3 +66,51 @@
 	</delete>
 </mapper>
  
+=======
+    <insert id="insertItem" parameterType="com.storemanager.item.ItemDTO">
+        INSERT INTO GE_ITEMS (GI_CODE, GI_NAME, GCM_CODE, GI_DEL_FLAG) 
+        VALUES (#{giCode}, #{giName}, #{gcmCode}, 'N')
+    </insert>
+
+    <update id="updateItem" parameterType="com.storemanager.item.ItemDTO">
+        UPDATE GE_ITEMS SET GI_NAME = #{giName}, GCM_CODE = #{gcmCode}
+        WHERE GI_CODE = #{giCode}
+    </update>
+
+    <delete id="deleteItem" parameterType="string">
+        DELETE FROM GE_ITEMS
+        WHERE GI_CODE =  #{giCode, jdbcType=VARCHAR}
+    </delete>
+
+=======
+    <select id="findAllItems" resultType="com.storemanager.item.ItemDTO">
+        SELECT
+            gi.GI_CODE      AS giCode,
+            gi.GI_NAME      AS giName,
+            gcm.GCM_CODE    AS gcmCode,
+            gcm.GCM_NAME    AS gcmName,
+            gis.GIS_TOT_QTY AS gisTotQty
+        FROM
+            GE_ITEMS gi
+        LEFT JOIN
+            GE_COM_MEMBER gcm ON gi.GCM_CODE = gcm.GCM_CODE
+        LEFT JOIN
+            GE_ITEMS_STOCK gis ON gi.GI_CODE = gis.GI_CODE
+        ORDER BY
+            gi.GI_CODE DESC
+    </select>
+    
+    <!-- 새 품목 등록 -->
+    <insert id="saveNewItem" parameterType="com.storemanager.item.ItemDTO">
+        INSERT INTO GE_ITEMS (
+            GI_NAME, 
+            GCM_CODE
+        ) VALUES (
+            #{giName},   -- DTO의 giName 필드 값을 여기에 넣음
+            #{gcmCode}   -- DTO의 gcmCode 필드 값을 여기에 넣음
+        )
+    </insert>
+    
+>>>>>>> fe880323677131d19633a252e168557fc548128b
+</mapper>
+>>>>>>> 572019dda4063d7322e8bbf76248b50931f85505

@@ -14,7 +14,10 @@ build/
 .springBeans
 .sts4-cache
 bin/
+<<<<<<< HEAD
 src/main/resources/static/js/juso.js
+=======
+>>>>>>> fe880323677131d19633a252e168557fc548128b
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
