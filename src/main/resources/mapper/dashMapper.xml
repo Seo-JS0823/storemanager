@@ -3,69 +3,40 @@
 <mapper namespace="com.storemanager.dashboard.DashMapper">
 	<!-- 당월 입고가 총계 -->
 	<select id="nowInPrice" resultType="int">
-		select SUM(T.TOTALS) from(
 		select
-			SUM(GIH_QTY) * AVG(GIH_PRICE) AS TOTALS
+			SUM(GIH_PRICE)
 		from
 			GE_ITEMS_HIST
 		where
 			GIH_INOUT = 'IN' AND
 			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
 			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
-		group by GI_NAME) AS T
 	</select>
 	
 	<!-- 당월 출고가 총계 -->
 	<select id="nowOutPrice" resultType="int">
-		select SUM(T.TOTALS) from(
 		select
-			SUM(ABS(GIH_QTY)) * AVG(GIH_PRICE) AS TOTALS
+			SUM(GIH_PRICE)
 		from
 			GE_ITEMS_HIST
 		where
 			GIH_INOUT = 'OUT' AND
 			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
 			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
-		group by GI_NAME) AS T
 	</select>
 	
-	<!-- 당월 총 입고 TOP 5 -->
-	<select id="stickTotalNowIn" resultType="com.storemanager.dashboard.DashDTO">
+	<!-- 전월 매출액 계산 -->
+	<select id="befSales" resultType="int">
 		select
-			GI_NAME,
-			SUM(GIH_QTY) as GIH_QTY,
-			AVG(GIH_PRICE) as GIH_PRICE,
-			SUM(GIH_QTY) * AVG(GIH_PRICE) as ORDERS
+			SUM(GIH_PRICE)
 		from
 			GE_ITEMS_HIST
-		WHERE
-			GIH_INOUT = 'IN' AND
-			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
-			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
-		group by
-			GI_NAME
-		order by ORDERS DESC
-		limit 5
-	</select>
-	
-	<!-- 당월 총 출고 TOP 5 -->
-	<select id="stickTotalNowOut" resultType="com.storemanager.dashboard.DashDTO">
-		select
-			GI_NAME,
-			SUM(GIH_QTY) as GIH_QTY,
-			AVG(GIH_PRICE) as GIH_PRICE,
-			SUM(ABS(GIH_QTY)) * AVG(GIH_PRICE) as ORDERS
-		from
-			GE_ITEMS_HIST
-		WHERE
+		where
 			GIH_INOUT = 'OUT' AND
 			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
 			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
-		group by
-			GI_NAME
-		order by ORDERS DESC		
-		limit 5
 	</select>
+<<<<<<< HEAD
 	
 	<!-- 최신 입고 내역 TOP 5 -->
 	<select id="inTopFive" resultType="com.storemanager.dashboard.DashDTO">
@@ -126,4 +97,6 @@
 		   GIH_IDX IN (${param1})
 	</select>
 	
+=======
+>>>>>>> item
 </mapper>
