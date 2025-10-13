@@ -5,15 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MemberMapper {
 	
-	MemberDTO login(String gm_id);
+	MemberDTO login(MemberDTO member);
 	
 	int join(MemberDTO member);
 	
 	int joinIdValidation(String gm_id);
-	
-	int profileUpdate(MemberDTO member);
-	
-	MemberDTO profileFindCall(MemberDTO member);
-	
-	int profileFind(MemberDTO member);
 }

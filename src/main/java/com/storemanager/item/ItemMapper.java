@@ -1,20 +1,14 @@
 package com.storemanager.item;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
+import com.storemanager.item.ItemDTO; 
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface ItemMapper {
 
-    List<ItemDTO> selectItemList();
+     List<ItemDTO> findAllItems();
 
-    ItemDTO selectItemById(@Param("giCode") String giCode);
-
-    int insertItem(ItemDTO item);
-
-    int updateItem(ItemDTO item);
-
-    int deleteItem(@Param("giCode") String giCode);
+	 public void saveNewItem(ItemDTO newItem);
+    
 }

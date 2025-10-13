@@ -31,8 +31,7 @@ public class StoreManagerConfig implements WebMvcConfigurer {
 		registry.addInterceptor(interceptor)
 		        .addPathPatterns("/**")
 		        .excludePathPatterns(
-		        "/", "/api/", "/css/**", "/img/**", "/js/**", "/out/**", "/no",
-		        "/login"
+		        "/", "/api/", "/css/**", "/img/**", "/js/**"
 		        );
 	}
 	

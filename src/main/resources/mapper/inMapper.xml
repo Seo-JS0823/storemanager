@@ -21,40 +21,19 @@
 	
 	<select id="getItemsName" resultType="com.storemanager.in.InDTO">
 		SELECT
-			DISTINCT(gi_name) gi_name,
-			gi_code
+			DISTINCT(gi_name) gi_name
 		FROM
 			GE_ITEMS
 	</select>
 	
 	<select id="getCompanysName" resultType="com.storemanager.in.InDTO">
 		SELECT
-			DISTINCT(a.gcm_name),
-			a.gcm_code
+			gcm_name
 		FROM GE_COM_MEMBER a JOIN GE_ITEMS b
 		ON a.gcm_code = b.gcm_code
 		WHERE gi_name = #{gi_name}			
 	</select>
 	
-	<insert id="insertIn" >
-		INSERT INTO GE_ITEMS_HIST(
-			gcm_code,
-			gi_code,
-			gi_name,
-			gih_inout,
-			gih_qty,
-			gih_price,
-			gih_remark
-		)
-		VALUES(
-			#{gcm_code},
-			#{gi_code},
-			#{gi_name},
-			'IN',
-			#{gih_qty},
-			#{gih_price},
-			#{gih_remark}
-		)
-	</insert>
+		
 	
 </mapper>  
