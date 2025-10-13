@@ -186,14 +186,12 @@
 <script src="/js/render.js"></script>
 
 <!-- 태그 보관소 -->
-<template id="items-select" > <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
+<template id="items-select"> <!-- template : 순전 태크 보관용(화면에 안뿌려짐) -->
 	<div>
 	<label for="items"></label>
 		<input id="item-name" list="items-list"  name="gi_name"/>
 		<datalist id="items-list">
-			<c:forEach var="itemsName" items="${itemsName}">
-				<option class="item-options" data-gi_code="${itemsName.gi_code}" value="${itemsName.gi_name}">
-			</c:forEach>
+		
 		</datalist>
 	</div>
 </template>
@@ -274,8 +272,6 @@
 						<div>
 							<div class="m-state orange"></div>
 							<span>상세보기</span>
-							<div class="m-state green"></div>
-							<span>입고수정</span>
 					<!-- 		<div class="m-state red"></div>
 							<span>출고생성</span> -->
 						</div>
@@ -410,12 +406,28 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 			overlay.remove();
 	})
 	
-	const itemsNameEl     = document.querySelector('#item-name')    // 선택칸에 최종 입력된 상품명
-	const companysNameEl  = document.querySelector('#company-name') // 선택칸에 최종 입력된 거래처명
-
+	
+	const itemsNameEl     = document.querySelector('#item-name')    // 선택칸에 최종 입력된 상품명 테그
+	const companysNameEl  = document.querySelector('#company-name') // 선택칸에 최종 입력된 거래처명 테그
+	const itemListEl      = document.querySelector('#items-list')   // 선택option 들을 담고있는 아이(dataList 테그)
+	
+ 	fetch('/in/getItemsName')
+		.then( response => response.json() )
+		.then( data => {
+			console.log('제발?? :',data)
+			data.forEach( items => {
+			    let option = document.createElement("option"); 
+			    option.className = 'item-options';
+			    option.value = items.gi_name;
+			    option.setAttribute("data-gi_code", items.gi_code);
+			    option.textContent = items.gi_name;
+			    itemListEl.appendChild(option);
+			} )
+		})
+		
 	itemsNameEl.addEventListener('change', () => { // 거래처 선택은 물품 선택한거에 따라 보여주는 리스트가 달라져서 JS로 처리
 		const companyListEl = document.querySelector('#companys-list') // 거래처명 선택 리스트들
-				
+					
 		let itemsName = itemsNameEl.value
 		fetch('/in/items/' + itemsName) // 거래처명 갖고오기
 			.then( response => response.json() )
@@ -423,7 +435,7 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 				companyListEl.innerHTML = '';
 				
 				data.forEach( companys => {
-				    const option = document.createElement("option"); 
+				    option = document.createElement("option"); 
 				    option.className = 'company-options';
 				    option.value = companys.gcm_name;
 				    option.setAttribute("data-gcm_code", companys.gcm_code);
@@ -441,13 +453,11 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 		const rightItemNameEl = document.querySelector('#right-item-name');       // 오른쪽 모달 상품명
 		const rightCompanyNameEl = document.querySelector('#right-company-name'); // 오른쪽 모달 거래처명
 		
-		const itemOptionEl 		= [...overlay.querySelectorAll('.item-options')]
-														  .find(opt => opt.value === itemsNameEl.value); // 최종선택란에 있는 이름과 일치하는걸 option에서 찾기
 		const CompanyOptionEl = [...overlay.querySelectorAll('.company-options')]
-		 													.find(opt => opt.value === companysNameEl.value);
-													   
-		document.querySelector('#right-gi_code').value  = itemOptionEl?.dataset.gi_code
-		document.querySelector('#right-gcm_code').value = CompanyOptionEl?.dataset.gcm_code
+		 													.find(opt => opt.value === companysNameEl.value); // 최종선택란에 있는 이름과 일치하는걸 option에서 찾기
+		
+		document.querySelector('#right-gi_code').value  =     // 오른쪽 모달 상품 코드
+		document.querySelector('#right-gcm_code').value = CompanyOptionEl?.dataset.gcm_code // 오른쪽 모달 거래처 코드
 		rightItemNameEl.value													  = itemsNameEl.value;
 		rightCompanyNameEl.value 												= companysNameEl.value;
 	
@@ -571,7 +581,6 @@ const endDateEl = document.querySelector('#enddate'); 		// 검색 마지막일�
 				<div id="list-regdate">\${item.gih_regdate}</div>
 				<div class="btns-box">
 					<div class="items-btn orange"></div>
-					<div class="items-btn green"></div>
 				</div>
 				`;
 				itemHistoryArea.appendChild(div);

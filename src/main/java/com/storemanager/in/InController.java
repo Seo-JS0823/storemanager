@@ -36,9 +36,6 @@ public class InController {
 		// 히스토리 데이터 갖고오기
 		List<InDTO> inList = inMapper.getInList();
 		
-		// 물품 선택(입고 클릭시 뜨는 첫모달창에 넘겨줄 값)  
-		List<InDTO> itemsName = inMapper.getItemsName();
-		
 		int size = inList.size();
 		Paging<InDTO> pg = new Paging<>(size);
 		int offset = pg.getLimit(nowPage);

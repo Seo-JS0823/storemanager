@@ -46,8 +46,7 @@
 	
 	<select id="getItemsName" resultType="com.storemanager.in.InDTO">
 		SELECT
-			DISTINCT(gi_name) gi_name,
-			gi_code
+			DISTINCT(gi_name) gi_name
 		FROM
 			GE_ITEMS
 	</select>

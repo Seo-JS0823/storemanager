@@ -21,6 +21,21 @@ public class InRestController {
 		this.inMapper = inMapper;
 	}
 	
+	// 첫 모달창에 선택 가능한 물품 리스트 뿌려주기
+	@GetMapping("/in/getItemsName")
+	public List<InDTO> getItem() {
+		// 물품 선택(입고 클릭시 뜨는 첫모달창에 넘겨줄 값)  
+		List<InDTO> itemsName = inMapper.getItemsName();
+		System.out.println("어째서 이름이 중복돼지??? : "+ itemsName.size());
+		return itemsName;
+	}
+	
+	// 오른쪽 모달창에서 gi_code 가져오기()
+	@GetMapping("/in/getItemCode")
+	public Integer getItemCode() {
+		return null;
+	}
+	
 	// 해당 물품을 갖고있는 거래처 가져오기
 	@GetMapping("/in/items/{itemsName}")
 	public List<InDTO> sendItemName(
