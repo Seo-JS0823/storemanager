@@ -120,15 +120,11 @@
       <div></div>
       <div>
         <div>
-          <div class="m-state orange"></div><span>상세보기</span>
-          <div class="m-state green"></div><span>입고수정</span>
-          <div class="m-state red"></div><span>출고생성</span>
+          <div class="m-state red"></div><span>거래중지</span>
         </div>
-   
+        <!-- ✅ id 중복 제거 -->
         <div class="green" id="btn-create">거래처등록</div>
       </div>
-    </div>
-
     <!-- ===== 검색 ===== -->
     <div class="m-search">
       <div class="m-search-line">
@@ -138,9 +134,6 @@
           <input type="date" name="enddate">
         </div>
         <div class="m-search-option">
-          <div><input type="radio" id="searchEvent1" name="searchoption"><p>상품명</p></div>
-          <div><input type="radio" id="searchEvent2" name="searchoption"><p>매입처명</p></div>
-          <div><input type="radio" id="searchEvent3" name="searchoption"><p>거래단가</p></div>
         </div>
         <div class="m-search-text">
           <input type="text" name="search" placeholder="검색어를 입력하세요."><div>검색</div>
@@ -168,10 +161,14 @@
           <div><c:out value="${c.gcm_Addr}"/></div>
           <div><c:out value="${c.gcm_Regdate}"/></div>
           <div></div>
-         
+          <div class="btns-box">
+            <div class="items-btn red" onclick="softDelete(${c.gcm_Idx})"></div>
+          </div>
         </div>
       </c:forEach>
     </div>
+    </div>
+
   </div>
 </div>
 
@@ -267,8 +264,6 @@ async function doSearch(){
         <div>\${c.gcm_Regdate?c.gcm_Regdate.replace('T',' '):''}</div>
         <div></div>
         <div class="btns-box">
-          <div class="items-btn orange" onclick="openDetail(\${c.gcm_Idx})"></div>
-          <div class="items-btn green" onclick="openEdit(\${c.gcm_Idx})"></div>
           <div class="items-btn red" onclick="softDelete(\${c.gcm_Idx})"></div>
         </div>
       </div>`).join('');
@@ -277,6 +272,22 @@ async function doSearch(){
 
 function escapeHtml(s){
   return String(s).replace(/[&<>"'`=\/]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'}[c]));
+}
+
+function softDelete(idx) {
+	if(confirm('해당 거래처를 삭제하시겠습니까?')) {
+		fetch('/api/customer/' + idx, {
+			method: 'delete'
+		})
+		.catch(error => console.log(error))
+		.then(response => response.text())
+		.then(text => {
+			alert(text);
+			doSearch();
+		})
+	} else {
+		return;
+	}
 }
 </script>
 </body>
