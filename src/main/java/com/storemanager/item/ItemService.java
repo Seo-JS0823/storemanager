@@ -25,7 +25,7 @@ public class ItemService {
     @Autowired
     private ItemMapper itemMapper;
 
-    private final String uploadDir = "C:/Users/GGG/Desktop/secondproject/storemanager/uploads/"; 
+    private final String uploadDir = "uploads"; 
 
     public List<ItemDTO> selectItemList() {
         return itemMapper.selectItemList();
@@ -102,7 +102,7 @@ public class ItemService {
             Files.createDirectories(uploadPath);
         }
 
-        Path destPath = uploadPath.resolve(savedFileName);
+        Path destPath = uploadPath.toAbsolutePath().normalize().resolve(savedFileName);
         file.transferTo(destPath.toFile());
         
         return savedFileName;
@@ -119,7 +119,7 @@ public class ItemService {
     }
 
     public ResponseEntity<byte[]> getImage(String filename) {
-        Path filePath = Paths.get(uploadDir + filename);
+        Path filePath = Paths.get(uploadDir + "/" + filename);
         try {
             byte[] data = Files.readAllBytes(filePath);
             String contentType = Files.probeContentType(filePath);
