@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface CustomerMapper {
 
-    // 🔹 전체 목록 조회 (삭제되지 않은 고객)
+    //  전체 목록 조회 (삭제되지 않은 고객)
     @Select("""
         SELECT
             GCM_IDX         AS gcm_Idx,
@@ -29,7 +29,7 @@ public interface CustomerMapper {
     List<CustomerDTO> findAll();
 
 
-    // 🔹 단일 조회 (상세보기)
+    //  단일 조회 (상세보기)
     @Select("""
         SELECT
             GCM_IDX         AS gcm_Idx,
@@ -46,7 +46,7 @@ public interface CustomerMapper {
     CustomerDTO findOne(@Param("idx") Long idx);
 
 
-    // 🔹 키워드 검색 (단일)
+    //  키워드 검색 (단일)
     @Select("""
         <script>
         SELECT
@@ -75,7 +75,7 @@ public interface CustomerMapper {
     List<CustomerDTO> search(@Param("keyword") String keyword);
 
 
-    // 🔹 키워드 + 날짜 검색 (날짜 구간 + 키워드 둘 다 가능)
+    //  키워드 + 날짜 검색 (날짜 구간 + 키워드 둘 다 가능)
     @Select("""
         <script>
         SELECT
@@ -118,7 +118,7 @@ public interface CustomerMapper {
     );
 
 
-    // 🔹 신규 등록
+    //  신규 등록
     @Insert("""
         INSERT INTO GE_COM_MEMBER (
             GCM_CODE, GCM_NAME, GCM_EMAIL, GCM_TEL, GCM_ADDR, GCM_REGDATE, GCM_DEL_FLAG
@@ -129,7 +129,7 @@ public interface CustomerMapper {
     int insert(CustomerDTO dto);
 
 
-    // 🔹 수정
+    //  수정
     @Update("""
         UPDATE GE_COM_MEMBER
         SET 
@@ -142,7 +142,7 @@ public interface CustomerMapper {
     int update(CustomerDTO dto);
 
 
-    // 🔹 삭제 대신 플래그 변경 (soft delete)
+    //  삭제 대신 플래그 변경 (soft delete)
     @Update("""
         UPDATE GE_COM_MEMBER
         SET GCM_DEL_FLAG = 'Y'
