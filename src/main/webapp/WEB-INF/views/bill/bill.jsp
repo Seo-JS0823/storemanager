@@ -325,25 +325,26 @@
 	          	</div>
 			</c:forEach>
 			</div>
-			<div class="paging">
-                <div>◀◀</div>
-                <div>◀</div>
-                <!-- c:forEach start -->
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-                <div>4</div>
-                <div>5</div>
-                <!-- c:forEach End -->
-                <div>▶</div>
-                <div>▶▶</div>
-            </div>
+			<div class="paging" id="pagingArea">
+			    <div>◀◀</div>
+			    <div>◀</div>
+			    <div>1</div>
+			    <div>2</div>
+			    <div>3</div>
+			    <div>4</div>
+			    <div>5</div>
+			    <div>▶</div>
+			    <div>▶▶</div>
+			</div>
 		</div>
 		
 		<!-- 아이템 리스트 뿌려주기 -->
 	</div>
 </div>
 <!-- <script src="js/modal.js"></script> -->
+<script src="/js/render.js"></script>
+<script src="/js/member.js"></script>
+<script src="/js/paging.js"></script>
 <script src="/js/render.js"></script>
 <script>
 	// 검색바 달력 현재 날짜-7 ~ 현재날짜
@@ -432,55 +433,145 @@
 	
 	// 입고 확인서 라디오 버튼 클릭 시
 	function searchInBill(){
+		ipgoRender(1);
+	}
+	
+	// 출고 확인서 라디오 버튼 클릭 시
+	function searchOutBill(){
+		chulgoRender(1);
+	}
+	
+	//명세서 라디오 버튼 리스트
+	function searchAllBill(){
+		myeongseRender(1);
+	}
+	// 검색 버튼 클릭 이벤트 끝.
+	// ============================================
+	// bill/bill 에서 접속 -> 기본 모달창 생성	
+	let itemsDetailEl = document.querySelectorAll('[id=itemsDetail]');
+	for(let i = 0; i< itemsDetailEl.length; i++){
+		itemsDetailEl[i].addEventListener('click',(e) => {
+			//alert(i);
+			e.stopPropagation();
+			let modalContainerEl = document.getElementById('modal-container');
+			modalContainerEl.style.transform='translateX(0%)';
+			
+			let itemsIdx = itemsDetailEl[i].getAttribute('value');
+
+			fetch('/bill/onebill/'+itemsIdx)
+			.then( response => response.json() )
+			.then( data     => {
+				//console.log(data)
+				data.forEach(item => {
+					giCodeEl.value = item.gi_code;
+					giNameEl.value = item.gi_name;
+					gcmCodeEl.value = item.gcm_code;
+					gcmNameEl.value = item.gcm_name;
+					gihPriceEl.value = item.gih_price;
+					gihQty.value = item.gih_qty;
+					aMountEl.textContent = item.amount;
+					
+				})
+			})
+			.then(error => console.log(error) )
+		})
+	}
+	// 모달창 생성 끝.	
+	// ============================================
+	// 모달창 닫기
+	let wrapEl = document.querySelector('.right-wrap');
+	wrapEl.addEventListener('click',(e)=>{
+		let modalContainerEl = document.getElementById('modal-container');
+		let modalContainer1El = document.getElementById('modal-container-1');
+		modalContainerEl.style.transform='translateX(100%)';
+		modalContainer1El.style.transform='translateX(100%)';
+	});
+	// 모달창 생성 및 닫기 끝.
+	// ============================================
+	// 출고확인서 라디오 버튼 이벤트 리스너
+	//let searchOutBillEl = document.getElementById('searchOutBill');
+	searchOutBillEl.addEventListener('click',(e)=>{
+		searchOutBill();
+	});
+	// 출고확인서 라디오 버튼 이벤트 리스너 끝.
+	// ============================================
+	// 입고확인서 라디오 버튼 이벤트 리스너
+	searchInBillEl.addEventListener('click',(e)=>{
+		searchInBill();
+	});
+	// 입고확인서 라디오 버튼 이벤트 리스너 끝.
+	// ============================================
+	// 명세서 라디오 버튼 이벤트 리스너
+	searchAllBillEl.addEventListener('click',(e)=>{
+		searchAllBill();
+	});
+	// 명세서 라디오 버튼 이벤트 리스너 끝.
+	// ============================================
+	
+	// ----- 페이징 -----
+	/*
+	let searchInBillEl = document.getElementById('searchInBill');			// 입고 확인서 라디오버튼
+	let searchOutBillEl = document.getElementById('searchOutBill');			// 출고 확인서 라디오버튼
+	let searchAllBillEl = document.getElementById('searchAllBill');			// 명세서 라디오버튼
+	*/
+	
+	const paging = new PagingManager();
+	
+	// 초기 입고명세서 렌더링 - 주성
+	ipgoRender(1);
+	
+	function ipgoRender(page) {
+		let ipgoURL = '/bill/billin/';
+		paging.nowPage = page;
+		
 		billCreateEl.style.display = 'flex';
-		//alert('a');
-		let fetchUrl = '';
-		//let searchStr = '';
+		
 		if(searchStrEl.value != ''){
 			//searchStr = searchStrEl.value;
-			fetchUrl = '/bill/billin/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/'+searchStrEl.value;
-		}else{
-			fetchUrl = '/bill/billin/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/null';
+			ipgoURL += startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/'+searchStrEl.value;
+		} else {
+			ipgoURL += startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/null';
 		}
 		
-		fetch(fetchUrl)
-		.then( response => response.json() )
-		.then( data     => {
-			//console.log(data)
-			let m_search_sortEl = document.getElementById("m-search-sort");
-			m_search_sortEl.innerHTML = `
-				<div></div>
-                <div>상품명</div>
-                <div>거래처명</div>
-                <div>거래단가</div>
-                <div>수량</div>
-                <div>거래금액</div>
-                <div>거래일자</div>
-                <div></div>
-			`;
-			
+		const m_search_sortEl = document.getElementById('m-search-sort');
+		m_search_sortEl.innerHTML = `
+		<div></div>
+		<div>상품명</div>
+        <div>거래처명</div>
+        <div>거래단가</div>
+        <div>수량</div>
+        <div>거래금액</div>
+        <div>거래일자</div>
+        <div></div>
+		`;
+		
+		Render.callJSON(
+		ipgoURL + `/\${paging.nowPage}`,
+		{},
+		'm-items',
+		(json) => {
 			let m_itemsEl = document.getElementById("m-items");
 			m_itemsEl.innerHTML='';
 			
-			data.forEach(item => {
-				const list = document.createElement("div");
-				list.innerHTML =  `
-					<input type="hidden" id="gih_inout" name="gih_inout" value=\${item.gih_inout} />
-					<div id="gih_idx"><input type="checkbox" id="chkBillId" name="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>
-					<div id="gi_name" data-name="gi_name" value="\${item.gi_name}">\${item.gi_name}</div>
-					<div id="gcm_name" data-name="gcm_name" value="\${ item.gcm_name }">\${ item.gcm_name }</div>
-					<div id="gih_price">\${ item.gih_price }</div>
-					<div id="gih_qty">\${ item.gih_qty } EA</div>
-					<div id="all_amount">총 \${ item.amount } 원</div>
-					<div id="gih_regdate">\${ item.gih_regdate }</div>
+			json.list.forEach(item => {
+				const list = document.createElement('div');
+				list.innerHTML = `
+				<input type="hidden" id="gih_inout" name="gih_inout" value=\${item.gih_inout} />
+				<div id="gih_idx"><input type="checkbox" id="chkBillId" name="chkBillId" value='\${item.gih_idx}' >&nbsp;&nbsp;\${item.num}</div>
+				<div id="gi_name" data-name="gi_name" value="\${item.gi_name}">\${item.gi_name}</div>
+				<div id="gcm_name" data-name="gcm_name" value="\${ item.gcm_name }">\${ item.gcm_name }</div>
+				<div id="gih_price">\${ item.gih_price }</div>
+				<div id="gih_qty">\${ item.gih_qty } EA</div>
+				<div id="all_amount">총 \${ item.amount } 원</div>
+				<div id="gih_regdate">\${ item.gih_regdate }</div>
 				`;
-					
+				
 				const itemsDetailsDiv = document.createElement('div');
 				itemsDetailsDiv.className = 'items-btn orange';
 				itemsDetailsDiv.id = 'itemsDetail';
 				itemsDetailsDiv.name = 'itemsDetail';
 				itemsDetailsDiv.setAttribute('value', `\${item.gih_idx}`);
-					
+				
 				itemsDetailsDiv.addEventListener('click', (e) => {
 					e.stopPropagation();
 					let modalContainerEl = document.getElementById('modal-container');
@@ -501,45 +592,55 @@
 				btnsBox.appendChild(itemsDetailsDiv);
 				
 				list.appendChild(btnsBox);
-           	    m_itemsEl.appendChild(list);
+				m_itemsEl.appendChild(list);
+				
+           	    // 페이징 렌더링
+           	    const totalPage = json.pg.totalPage;
+          	    paging.renderer({
+          	    	start  : 'bill-ipgo-start',
+          	    	middle : 'bill-ipgo-middle',
+          	    	end    : 'bill-ipgo-end'
+          	    },
+          	    'pagingArea',
+          	    totalPage,
+          	    5);
+           	    
 			})
-		})
-		.then(error => console.log(error) )
+		},
+		);
+		
 	}
-	
-	// 출고 확인서 라디오 버튼 클릭 시
-	function searchOutBill(){
-		billCreateEl.style.display = 'flex';
-		//alert('b');
-		let fetchUrl = '';
-		//let searchStr = '';
+	function chulgoRender(page) {
+		let chulgoURL = '/bill/billout/';
+		paging.nowPage = page;
+		
 		if(searchStrEl.value != ''){
 			//searchStr = searchStrEl.value;
-			fetchUrl = '/bill/billout/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/'+searchStrEl.value;
+			chulgoURL += startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/'+searchStrEl.value;
 		}else{
-			fetchUrl = '/bill/billout/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/null';
+			chulgoURL += startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/null';
 		}
 		
-		fetch(fetchUrl)
-		.then( response => response.json() )
-		.then( data     => {
-			//console.log(data)
-			let m_search_sortEl = document.getElementById("m-search-sort");
-			m_search_sortEl.innerHTML = `
-				<div></div>
-                <div>상품명</div>
-                <div>거래처명</div>
-                <div>거래단가</div>
-                <div>수량</div>
-                <div>거래금액</div>
-                <div>거래일자</div>
-                <div></div>
-			`;
-			
+		const m_search_sortEl = document.getElementById("m-search-sort");
+		m_search_sortEl.innerHTML = `
+			<div></div>
+            <div>상품명</div>
+            <div>거래처명</div>
+            <div>거래단가</div>
+            <div>수량</div>
+            <div>거래금액</div>
+            <div>거래일자</div>
+            <div></div>
+		`;
+		
+		Render.callJSON(
+		chulgoURL + `/\${paging.nowPage}`,
+		{},
+		'm-items',
+		(json) => {
 			let m_itemsEl = document.getElementById("m-items");
 			m_itemsEl.innerHTML='';
-			
-			data.forEach(item => {
+			json.list.forEach(item => {
 				const list = document.createElement("div");
 				list.innerHTML =  `
 					<input type="hidden" id="gih_inout" name="gih_inout" value=\${item.gih_inout} />
@@ -579,44 +680,52 @@
 				
 				list.appendChild(btnsBox);
            	    m_itemsEl.appendChild(list);
-			})
-		})
-		.then(error => console.log(error) )
+           	    
+           	    const totalPage = json.pg.totalPage;
+           	    paging.renderer({
+           	    	start  : 'bill-chul-start',
+           	    	middle : 'bill-chul-middle',
+           	    	end    : 'bill-chul-end'
+           	    },
+           	    'pagingArea',
+           	    totalPage,
+           	    5)
+			});
+		}
+		);
 	}
-	
-	//명세서 라디오 버튼 리스트
-	function searchAllBill(){
-		billCreateEl.style.display = 'none';
-		//alert('c');
-		let fetchUrl = '';
-		//let searchStr = '';
+	function myeongseRender(page) {
+		let url = '/bill/billall/'
+		paging.nowPage = page;
+		
 		if(searchStrEl.value != ''){
 			//searchStr = searchStrEl.value;
-			fetchUrl = '/bill/billall/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/'+searchStrEl.value;
-		}else{
-			fetchUrl = '/bill/billall/'+startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/null';
+			url += startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/'+searchStrEl.value;
+		} else {
+			url += startDateEl.value+'/'+endDateEl.value+'/'+radiosEl[0].checked+'/'+radiosEl[1].checked+'/null';
 		}
 		
-		fetch(fetchUrl)
-		.then( response => response.json() )
-		.then( data     => {
-			//console.log(data)
-			let m_search_sortEl = document.getElementById("m-search-sort");
-			m_search_sortEl.innerHTML = `
-				<div></div>
-                <div>명세서번호</div>
-                <div>상품명</div>
-                <div>거래처명</div>
-                <div>명세종류</div>
-                <div></div>
-                <div>생성일자</div>
-                <div></div>
-			`;
-			
+		const m_search_sortEl = document.getElementById("m-search-sort");
+		m_search_sortEl.innerHTML = `
+			<div></div>
+            <div>명세서번호</div>
+            <div>상품명</div>
+            <div>거래처명</div>
+            <div>명세종류</div>
+            <div></div>
+            <div>생성일자</div>
+            <div></div>
+		`;
+		
+		Render.callJSON(
+		url + `/\${paging.nowPage}`,
+		{},
+		'm-items',
+		(json) => {
 			let m_itemsEl = document.getElementById("m-items");
 			m_itemsEl.innerHTML='';
 			
-			data.forEach(item => {
+			json.list.forEach(item => {
 				const list = document.createElement("div");
 				list.innerHTML =  `
 					<div id="gih_idx">\${item.num}</div>
@@ -735,74 +844,174 @@
 				
 				list.appendChild(btnsBox);
            	    m_itemsEl.appendChild(list);
-			})
-		})
-		.then(error => console.log(error) )
+           	    
+           	 	const totalPage = json.pg.totalPage;
+        	    paging.renderer({
+        	    	start  : 'bill-bill-start',
+        	    	middle : 'bill-bill-middle',
+        	    	end    : 'bill-bill-end'
+        	    },
+        	    'pagingArea',
+        	    totalPage,
+        	    5)
+			});
+		}
+		);
 	}
-	// 검색 버튼 클릭 이벤트 끝.
-	// ============================================
-	// bill/bill 에서 접속 -> 기본 모달창 생성	
-	let itemsDetailEl = document.querySelectorAll('[id=itemsDetail]');
-	for(let i = 0; i< itemsDetailEl.length; i++){
-		itemsDetailEl[i].addEventListener('click',(e) => {
-			//alert(i);
-			e.stopPropagation();
-			let modalContainerEl = document.getElementById('modal-container');
-			modalContainerEl.style.transform='translateX(0%)';
-			
-			let itemsIdx = itemsDetailEl[i].getAttribute('value');
+	
+	// 입고 페이징 렌더링 컴포넌트들
+	paging.setComponent('bill-ipgo-start', (data) => {
+		const div = document.createElement('div');
+		div.textContent = '◀';
+		
+		const backPage = data.start - data.pageSize;
+		
+		if (data.start <= 1) {
+			div.style.opacity = '0.3';
+			div.style.cursor = 'default';
+			return div;
+		}
+		
+		div.addEventListener('click', () => {
+			ipgoRender(backPage);
+		});
+	});
+	paging.setComponent('bill-ipgo-middle', (data) => {
+		const div = document.createElement('div');
+		div.textContent = `\${data.currentPage}`;
+		
+		if (data.currentPage === data.activePage) {
+			div.style.fontWeight = 'bold';
+			div.style.color = '#00AA00';
+			div.style.fontSize = '1.5rem';
+	    }
 
-			fetch('/bill/onebill/'+itemsIdx)
-			.then( response => response.json() )
-			.then( data     => {
-				//console.log(data)
-				data.forEach(item => {
-					giCodeEl.value = item.gi_code;
-					giNameEl.value = item.gi_name;
-					gcmCodeEl.value = item.gcm_code;
-					gcmNameEl.value = item.gcm_name;
-					gihPriceEl.value = item.gih_price;
-					gihQty.value = item.gih_qty;
-					aMountEl.textContent = item.amount;
-					
-				})
-			})
-			.then(error => console.log(error) )
-		})
-	}
-	// 모달창 생성 끝.	
-	// ============================================
-	// 모달창 닫기
-	let wrapEl = document.querySelector('.right-wrap');
-	wrapEl.addEventListener('click',(e)=>{
-		let modalContainerEl = document.getElementById('modal-container');
-		let modalContainer1El = document.getElementById('modal-container-1');
-		modalContainerEl.style.transform='translateX(100%)';
-		modalContainer1El.style.transform='translateX(100%)';
+	    div.addEventListener('click', () => {
+	    	ipgoRender(data.currentPage);
+	    });
+		return div;
 	});
-	// 모달창 생성 및 닫기 끝.
-	// ============================================
-	// 출고확인서 라디오 버튼 이벤트 리스너
-	//let searchOutBillEl = document.getElementById('searchOutBill');
-	searchOutBillEl.addEventListener('click',(e)=>{
-		searchOutBill();
+	paging.setComponent('bill-ipgo-end', (data) => {
+		const div = document.createElement('div');
+		div.textContent = '▶';
+		
+		const nextPage = data.end + 1;
+		
+		if(nextPage > data.totalPage) {
+			div.style.opacity = '0.3';
+			div.style.cursor = 'default';
+			return div;
+		}
+		
+		div.addEventListener('click', () => {
+			ipgoRender(nextPage);
+		});
+		
+		return div;
 	});
-	// 출고확인서 라디오 버튼 이벤트 리스너 끝.
-	// ============================================
-	// 입고확인서 라디오 버튼 이벤트 리스너
-	searchInBillEl.addEventListener('click',(e)=>{
-		searchInBill();
+	
+	// 출고 페이징 렌더링 컴포넌트들
+	paging.setComponent('bill-chul-start', (data) => {
+		const div = document.createElement('div');
+		div.textContent = '◀';
+		
+		const backPage = data.start - data.pageSize;
+		
+		if (data.start <= 1) {
+			div.style.opacity = '0.3';
+			div.style.cursor = 'default';
+			return div;
+		}
+		
+		div.addEventListener('click', () => {
+			chulgoRender(backPage);
+		});
 	});
-	// 입고확인서 라디오 버튼 이벤트 리스너 끝.
-	// ============================================
-	// 명세서 라디오 버튼 이벤트 리스너
-	searchAllBillEl.addEventListener('click',(e)=>{
-		searchAllBill();
+	paging.setComponent('bill-chul-middle', (data) => {
+		const div = document.createElement('div');
+		div.textContent = `\${data.currentPage}`;
+		
+		if (data.currentPage === data.activePage) {
+			div.style.fontWeight = 'bold';
+			div.style.color = '#00AA00';
+			div.style.fontSize = '1.5rem';
+	    }
+
+	    div.addEventListener('click', () => {
+	    	chulgoRender(data.currentPage);
+	    });
+		return div;
 	});
-	// 명세서 라디오 버튼 이벤트 리스너 끝.
-	// ============================================
+	paging.setComponent('bill-chul-end', (data) => {
+		const div = document.createElement('div');
+		div.textContent = '▶';
+		
+		const nextPage = data.end + 1;
+		
+		if(nextPage > data.totalPage) {
+			div.style.opacity = '0.3';
+			div.style.cursor = 'default';
+			return div;
+		}
+		
+		div.addEventListener('click', () => {
+			chulgoRender(nextPage);
+		});
+		
+		return div;
+	});
+	
+	// 명세서 페이징 렌더링 컴포넌트들
+	paging.setComponent('bill-bill-start', (data) => {
+		const div = document.createElement('div');
+		div.textContent = '◀';
+		
+		const backPage = data.start - data.pageSize;
+		
+		if (data.start <= 1) {
+			div.style.opacity = '0.3';
+			div.style.cursor = 'default';
+			return div;
+		}
+		
+		div.addEventListener('click', () => {
+			myeongseRender(backPage);
+		});
+	});
+	paging.setComponent('bill-bill-middle', (data) => {
+		const div = document.createElement('div');
+		div.textContent = `\${data.currentPage}`;
+		
+		if (data.currentPage === data.activePage) {
+			div.style.fontWeight = 'bold';
+			div.style.color = '#00AA00';
+			div.style.fontSize = '1.5rem';
+	    }
+
+	    div.addEventListener('click', () => {
+	    	myeongseRender(data.currentPage);
+	    });
+		return div;
+	});
+	paging.setComponent('bill-bill-end', (data) => {
+		const div = document.createElement('div');
+		div.textContent = '▶';
+		
+		const nextPage = data.end + 1;
+		
+		if(nextPage > data.totalPage) {
+			div.style.opacity = '0.3';
+			div.style.cursor = 'default';
+			return div;
+		}
+		
+		div.addEventListener('click', () => {
+			myeongseRender(nextPage);
+		});
+		
+		return div;
+	});
 </script>
-
 <script>
 
 	// 명세서 생성 버튼 이벤트 리스너

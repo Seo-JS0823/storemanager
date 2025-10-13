@@ -288,9 +288,9 @@
 						<div class="m-search-line">
 							<div class="m-search-date">
 								<!-- 날짜 구간 -->
-								<input type="date" name="startdate">
+								<input type="date" id="startdate">
 								<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-								<input type="date" name="enddate">
+								<input type="date" id="enddate">
 							</div>
 							<div class="m-search-option">
 								<div>
@@ -299,7 +299,7 @@
 								</div>
 								<div>
 									<input type="radio" id="searchEvent2" name="searchoption">
-									<p>매입처명</p>
+									<p>거래처명</p>
 								</div>
 								<div>
 									<input type="radio" id="searchEvent3" name="searchoption">
@@ -308,8 +308,8 @@
 							</div>
 							<div class="m-search-text">
 								<!-- TEXT 검색 구간 -->
-								<input type="text" name="search" placeholder="검색어를 입력하세요.">
-								<div>검색</div>
+								<input id="search-text" type="text" name="search" placeholder="검색어를 입력하세요.">
+								<div id="search-btn">검색</div>
 							</div>
 						</div>
 					</div>
@@ -319,7 +319,7 @@
 				<div class="m-search-sort">
 					<div></div>
 					<div>상품명</div>
-					<div>매입처명</div>
+					<div>거래처명</div>
 					<div>매입단가</div>
 					<div>수량</div>
 					<div>총합</div>
@@ -327,16 +327,16 @@
 					<div></div>
 				</div>
 				
-				<div class="m-items"> <!-- 입고 리스트 -->
+				<div class="m-items" id="item-history-list"> <!-- 입고 리스트 -->
 				<c:forEach var="list" items="${list}" varStatus="status">
 					<div>
 						<div>${status.index + 1}</div>
-						<div>${list.gi_name}</div>
-						<div>동서식품</div>
-						<div>${list.gih_price}원</div>
+						<div class="list-item_name">${list.gi_name}</div>
+						<div class="list-company_name">${list.gcm_name}</div>
+						<div class="list-price">${list.gih_price}원</div>
 						<div>${list.gih_qty} EA</div> 
 						<div>총 ${list.tot_price}원</div>
-						<div>${list.gih_regdate}</div>
+						<div class="list-regdate">${list.gih_regdate}</div>
 						<div class="btns-box">
 							<!-- Ball -->
 							<div class="items-btn orange"></div>
@@ -345,7 +345,6 @@
 						</div>
 				  </div>
 				</c:forEach> 
-					<div></div>
 				</div>
 				<div class="paging">
 	                <div>◀◀</div>
@@ -368,18 +367,17 @@
 <!-- </form> -->
 <script>
 
-const inCreateEl = document.querySelector('#in-create');
+const inCreateEl = document.querySelector('#in-create');  // 입고 버튼
 
-inCreateEl.addEventListener('click', (e) => {
+inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 	
+	const overlay         = document.createElement('div');  // 클릭할때 나온는 회색배경
+	const SelectModalEl   = document.createElement('div');  // 입고생성 처음 뜨는 모달창
 	
-	const overlay         = document.createElement('div');   // 클릭할때 나온는 회색배경
-	const SelectModalEl   = document.createElement('div');   // 입고생성 처음 뜨는 모달창
-	
-	const itemsMessage    = document.createElement('h2');   
+	const itemsMessage    = document.createElement('h2');   // 입고할 물품 선택 :
 	const itemsSelect 	  = document.querySelector('#items-select').content.cloneNode(true); // 위에 template 갖고올때 쓰는문법
 	
-	const companysMessage = document.createElement('h2');
+	const companysMessage = document.createElement('h2');   // 거래처 선택 :
 	const companysSelect  = document.querySelector('#companys-select').content.cloneNode(true);
 	
 	const selectBtn       = document.createElement('button'); // 물품,거래처 확인 버튼
@@ -432,7 +430,7 @@ inCreateEl.addEventListener('click', (e) => {
 			} )
 	}) // change End
 	
-	selectBtn.addEventListener('click', (e) => {
+	selectBtn.addEventListener('click', (e) => { // 물품,거래처 확인 클릭 이벤트
 		e.stopPropagation();
 		overlay.remove();
 		
@@ -458,11 +456,11 @@ inCreateEl.addEventListener('click', (e) => {
 			}
 		})
 		
-		const inBtnEl       = document.querySelector('#save');
-		const rightQtyEl    = document.querySelector('#right-qty');
-		const rightPriceEl  = document.querySelector('#right-price');
-		const rightRemarkEl = document.querySelector('#right-remark');
-		inBtnEl.addEventListener('click',() => {
+		const inBtnEl       = document.querySelector('#save');         // 오른쪽 모달 저장 버튼
+		const rightQtyEl    = document.querySelector('#right-qty');    // 오른쪽 모달 수량
+		const rightPriceEl  = document.querySelector('#right-price');  // 오른쪽 모달 단가
+		const rightRemarkEl = document.querySelector('#right-remark'); // 오른쪽 모달 비고
+		inBtnEl.addEventListener('click',() => { // 저장 클릭 이벤트
 			alert('ㅇㅇ')
 			let inHistory = {
 					gcm_code   : document.querySelector('#right-gcm_code').value,
@@ -482,12 +480,175 @@ inCreateEl.addEventListener('click', (e) => {
 			fetch(url,params)
 				.then(response => response.json())
 			
-		}) // 저장 누른후 끝
+		}) // 저장 클릭 이벤트 끝
 		
-	}) // 확인 누른후 끝
+	}) // 확인 클릭 이벤트 끝
 	
-}) // 입고 누른후 끝
+}) // 입고 클릭 이벤트 끝
 
+const itemHistoryListEL = document.querySelector('#item-history-list');   // 입고 물품 리스트 컨테이너
+const searchEvent1El 		= document.querySelector('#searchEvent1'); 				// 상품명   radio
+const searchEvent2El	  = document.querySelector('#searchEvent2'); 				// 거래처명 radio
+const searchEvent3El	  = document.querySelector('#searchEvent3'); 				// 거래단가 radio
+const searchTextEl 	 		= document.querySelector('#search-text'); 		   	// 검색내용칸
+const searchBtn 		 		= document.querySelector('#search-btn');  			  // 검색 버튼
+
+const	listItemName 		=	document.querySelector('.list-item_name');       // 상품명
+const	listCompanyName =	document.querySelector('.list-company_name');    // 거래처명
+const	listPrice			  =	document.querySelector('.list-price');           // 단가
+const	listRegdate 		=	document.querySelector('.list-regdate') ;        // 입고일
+
+const startDateEl = document.querySelector('#startdate'); // 검색 시작일칸
+const endDateEl = document.querySelector('#enddate'); 		// 검색 마지막일칸
+
+
+
+	searchBtn.addEventListener('click', () => {
+		let keyword = searchTextEl.value.trim(); // 검색 내용물값
+		let startDate = startDateEl.value; // 검색 시작일
+		let endDate = endDateEl.value; 		 // 검색 마지막일
+		let html = '';
+		let url = '';	
+		
+		if(startDate && endDate) {
+			url += `/In/list?start=\${startDate}&end=\${endDate}`;
+				fetch(url)
+				.then( response => response.json() )
+				.then( data => {
+					console.log(data)
+				itemHistoryListEL.innerHTML = '';
+/* 			  if(data.length === 0) {
+				  alert('검색 결과가 없습니다')
+			    return;
+			  } */
+			  
+			  data.forEach( (list1,index) => {
+				  html += `<div>
+								  	<div>\${index + 1}</div>
+										<div id="list-item_name">\${list1.gi_name}</div>
+										<div id="list-company_name">\${list1.gcm_name}</div>
+										<div id="list-price">\${list1.gih_price}원</div>
+										<div>\${list1.gih_qty} EA</div> 
+										<div>총 \${list1.tot_price}원</div>
+										<div id="list-regdate">\${list1.gih_regdate}</div>
+										<div class="btns-box">
+											<div class="items-btn orange"></div>
+											<div class="items-btn green"></div>
+										</div>
+				 				  </div>`;
+									
+			  })
+			  itemHistoryListEL.innerHTML = html;
+			}) 
+			
+		} else if (!keyword) {
+		    alert('검색어를 입력하세요!');
+		    return;
+		  }
+		
+		if(searchEvent1El.checked) {
+		url = '/in/searchItem/' + keyword;
+			if(startDate && endDate) {
+				url += `?start=\${startDate}&end=\${endDate}`;
+			}
+		fetch(url)
+			.then( response => response.json() )
+			.then( data => {
+				itemHistoryListEL.innerHTML = '';
+			  if(data.length === 0) {
+				  alert('검색 결과가 없습니다')
+			    return;
+			  }
+			  
+			  data.forEach( (list1,index) => {
+				  html += `<div>
+								  	<div>\${index + 1}</div>
+										<div id="list-item_name">\${list1.gi_name}</div>
+										<div id="list-company_name">\${list1.gcm_name}</div>
+										<div id="list-price">\${list1.gih_price}원</div>
+										<div>\${list1.gih_qty} EA</div> 
+										<div>총 \${list1.tot_price}원</div>
+										<div id="list-regdate">\${list1.gih_regdate}</div>
+										<div class="btns-box">
+											<div class="items-btn orange"></div>
+											<div class="items-btn green"></div>
+										</div>
+				 				  </div>`;
+									
+			  })
+			  itemHistoryListEL.innerHTML = html;
+			}) // 1번째 data 끝
+			
+		} else if(searchEvent2El.checked) {
+			url = '/in/searchCompany/' + keyword;
+				if(startDate && endDate) {
+					url += `?start=\${startDate}&end=\${endDate}`;
+				}
+			fetch(url)
+			.then( response => response.json() )
+			.then( data => {
+				
+			  if(data.length === 0) {
+				  alert('검색 결과가 없습니다')
+			    return;
+			  }
+				itemHistoryListEL.innerHTML = '';
+			  
+			  data.forEach( (list1,index) => {
+				  html += `<div>
+								  	<div>\${index + 1}</div>
+										<div id="list-item_name">\${list1.gi_name}</div>
+										<div id="list-company_name">\${list1.gcm_name}</div>
+										<div id="list-price">\${list1.gih_price}원</div>
+										<div>\${list1.gih_qty} EA</div> 
+										<div>총 \${list1.tot_price}원</div>
+										<div id="list-regdate">\${list1.gih_regdate}</div>
+										<div class="btns-box">
+											<div class="items-btn orange"></div>
+											<div class="items-btn green"></div>
+										</div>
+				 				  </div>`;
+									
+			  })
+			  itemHistoryListEL.innerHTML = html;
+			}) // 2번째 data 끝
+			
+		} else if(searchEvent3El.checked) {
+			url = '/in/searchPrice/' + keyword;
+				if(startDate && endDate) {
+					url += `?start=\${startDate}&end=\${endDate}`;
+				}
+			fetch(url)
+			.then( response => response.json() )
+			.then( data => {
+				itemHistoryListEL.innerHTML = '';
+				
+			  if(data.length === 0) {
+				  alert('검색 결과가 없습니다')
+			    return;
+			  }
+			  
+			  data.forEach( (list1,index) => {
+				  html += `<div>
+								  	<div>\${index + 1}</div>
+										<div id="list-item_name">\${list1.gi_name}</div>
+										<div id="list-company_name">\${list1.gcm_name}</div>
+										<div id="list-price">\${list1.gih_price}원</div>
+										<div>\${list1.gih_qty} EA</div> 
+										<div>총 \${list1.tot_price}원</div>
+										<div id="list-regdate">\${list1.gih_regdate}</div>
+										<div class="btns-box">
+											<div class="items-btn orange"></div>
+											<div class="items-btn green"></div>
+										</div>
+				 				  </div>`;
+									
+			  })
+			  itemHistoryListEL.innerHTML = html;
+			}) // 3번째 data 끝
+		}
+	}) // 검색 클릭 이벤트 끝
+	
 </script>
 
 <script src="/js/member.js"></script>

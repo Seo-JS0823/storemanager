@@ -4,19 +4,22 @@
 	<!-- WHERE 에  gi_code 필요 -->
 	<select id="getInList" resultType="com.storemanager.in.InDTO">
 		SELECT 
-			gih_idx, 
-			gcm_code, 
-			gi_code, 
-			gi_name, 
-			gih_inout, 
-			gih_qty, 
-			gih_price, 
-			gih_remark,
-			TO_CHAR(gih_regdate,'YYYY-MM-DD') gih_regdate,
-			gih_confirm, 
-			(gih_qty * gih_price) tot_price
-	  FROM GE_ITEMS_HIST
-		WHERE gih_inout = 'IN' 
+			b.gcm_name,
+			a.gih_idx, 
+			a.gcm_code, 
+			a.gi_code, 
+			a.gi_name, 
+			a.gih_inout, 
+			a.gih_qty, 
+			a.gih_price, 
+			a.gih_remark,
+			TO_CHAR(a.gih_regdate,'YYYY-MM-DD') gih_regdate,
+			a.gih_confirm, 
+			(a.gih_qty * a.gih_price) tot_price
+	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
+	  ON a.gcm_code = b.gcm_code
+		WHERE a.gih_qty > 0 
+		ORDER BY a.gih_regdate DESC
 	</select>
 	
 	<select id="getItemsName" resultType="com.storemanager.in.InDTO">
@@ -56,5 +59,95 @@
 			#{gih_remark}
 		)
 	</insert>
+	
+	<select id="searchByRegdate" resultType="com.storemanager.in.InDTO">
+		SELECT 
+			b.gcm_name,
+			a.gih_idx, 
+			a.gcm_code, 
+			a.gi_code, 
+			a.gi_name, 
+			a.gih_inout, 
+			a.gih_qty, 
+			a.gih_price, 
+			a.gih_remark,
+			TO_CHAR(a.gih_regdate,'YYYY-MM-DD') gih_regdate,
+			a.gih_confirm, 
+			(a.gih_qty * a.gih_price) tot_price
+	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
+	  ON a.gcm_code = b.gcm_code
+		WHERE a.gih_qty > 0 
+		AND gih_regdate BETWEEN #{start} AND #{end}
+		ORDER BY a.gih_regdate DESC
+	</select>
+	
+	<select id="searchByGi_name" resultType="com.storemanager.in.InDTO">
+		SELECT 
+			b.gcm_name,
+			a.gih_idx, 
+			a.gcm_code, 
+			a.gi_code, 
+			a.gi_name, 
+			a.gih_inout, 
+			a.gih_qty, 
+			a.gih_price, 
+			a.gih_remark,
+			TO_CHAR(a.gih_regdate,'YYYY-MM-DD') gih_regdate,
+			a.gih_confirm, 
+			(a.gih_qty * a.gih_price) tot_price
+	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
+	  ON a.gcm_code = b.gcm_code
+		WHERE a.gih_qty > 0 AND a.gi_name = #{gi_name}
+		<if test="start != null and end!= null">
+		  AND gih_regdate BETWEEN #{start} AND #{end}
+		</if>
+		ORDER BY b.gcm_name, a.gih_price 
+	</select>
+	
+	<select id="searchByGcm_name" resultType="com.storemanager.in.InDTO">
+		SELECT 
+			b.gcm_name,
+			a.gih_idx, 
+			a.gcm_code, 
+			a.gi_code, 
+			a.gi_name, 
+			a.gih_inout, 
+			a.gih_qty, 
+			a.gih_price, 
+			a.gih_remark,
+			TO_CHAR(a.gih_regdate,'YYYY-MM-DD') gih_regdate,
+			a.gih_confirm, 
+			(a.gih_qty * a.gih_price) tot_price
+	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
+	  ON a.gcm_code = b.gcm_code
+		WHERE a.gih_qty > 0 AND b.gcm_name = #{gcm_name}
+		<if test="start != null and end != null">
+			AND gih_regdate BETWEEN #{start} AND #{end}
+		</if>
+		ORDER BY a.gi_name , a.gih_price
+	</select>
+	
+	<select id="searchByGih_price" resultType="com.storemanager.in.InDTO">
+		SELECT 
+			b.gcm_name,
+			a.gih_idx, 
+			a.gcm_code, 
+			a.gi_code, 
+			a.gi_name, 
+			a.gih_inout, 
+			a.gih_qty, 
+			a.gih_price, 
+			a.gih_remark,
+			TO_CHAR(a.gih_regdate,'YYYY-MM-DD') gih_regdate,
+			a.gih_confirm, 
+			(a.gih_qty * a.gih_price) tot_price
+	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
+	  ON a.gcm_code = b.gcm_code
+		WHERE a.gih_qty > 0 AND a.gih_price = #{gih_price}
+		<if test="start != null and end != null">
+			AND gih_regdate BETWEEN #{start} AND #{end}
+		</if>
+		ORDER BY a.gi_name
+	</select>
 	
 </mapper>  
