@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +24,14 @@ public class ItemController {
     //품목 목록 페이지 조회
     @GetMapping("")
     public String itemList(Model model,
-            @RequestParam(name = "includeDeleted", required = false, defaultValue = "false") boolean includeDeleted,
-            @RequestParam(name = "search", required = false) String search) {	
-        List<ItemDTO> itemList = itemService.findItems(includeDeleted, search);
+        @RequestParam(name = "includeDeleted", required = false, defaultValue = "false") boolean includeDeleted,
+        @RequestParam(name = "search", required = false) String search,
+        // 💡 [필수 추가] searchoption 파라미터 추가
+        @RequestParam(name = "searchoption", required = false) String searchOption) { 
+        
+        // 💡 [필수 수정] Service 호출 시 searchOption 전달
+        List<ItemDTO> itemList = itemService.findItems(includeDeleted, search, searchOption); 
+        
         model.addAttribute("items", itemList);
         return "item/item";
     }
@@ -39,9 +45,9 @@ public class ItemController {
     //품목 등록 기능 (데이터 처리)
     @PostMapping("/register")
     @ResponseBody
-    public ResponseEntity<?> registerItem(ItemDTO itemDTO) {
+    public ResponseEntity<?> registerItem(ItemDTO itemDTO, @RequestParam("file") MultipartFile file) {
         try {
-            itemService.insertItem(itemDTO);
+            itemService.insertItem(itemDTO, file);
             Map<String, String> response = new HashMap<>();
             response.put("message", "품목이 성공적으로 등록되었습니다.");
             return ResponseEntity.ok(response);
@@ -50,6 +56,18 @@ public class ItemController {
             Map<String, String> response = new HashMap<>();
             response.put("message", "품목 등록 중 오류가 발생했습니다: " + e.getMessage());
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+ // --- 거래처 목록 API (JSON) ---
+    @GetMapping("/api/com-members")
+    @ResponseBody
+    public ResponseEntity<?> getAllSuppliers() {
+        try {
+            List<SupplierDTO> suppliers = supplierService.findAll();
+            return ResponseEntity.ok(suppliers);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("거래처 목록 조회 중 오류 발생");
         }
     }
     
@@ -86,9 +104,15 @@ public class ItemController {
     //품목 업데이트 기능
     @PostMapping("/update")
     @ResponseBody
-    public ResponseEntity<?> updateItem(ItemDTO itemDTO) {
+    public ResponseEntity<?> updateItem(
+    		ItemDTO itemDTO,
+    		@RequestParam("file") MultipartFile file,
+    	    @RequestParam(name = "imageDeleted", required = false, defaultValue = "false") boolean imageDeleted,
+    	    @RequestParam(name = "originalGiImg", required = false) String originalGiImg) {
+    		 {
         try {
-            itemService.updateItem(itemDTO);
+        	itemDTO.setGiImg(originalGiImg);
+            itemService.updateItem(itemDTO, file, imageDeleted);
             Map<String, String> response = new HashMap<>();
             response.put("message", "품목이 성공적으로 수정되었습니다.");
             return ResponseEntity.ok(response);
@@ -98,6 +122,7 @@ public class ItemController {
             response.put("message", "품목 수정 중 오류가 발생했습니다.");
             return ResponseEntity.badRequest().body(response);
         }
+      }
     }
     
     //품목 삭제 기능
