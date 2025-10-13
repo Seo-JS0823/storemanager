@@ -38,6 +38,15 @@ public class ItemService {
         params.put("searchOption", searchOption);
         return itemMapper.findItems(params);
     }
+    
+    public List<ItemDTO> findItemsPaging(boolean includeDeleted, String search, String searchOption, Integer nowPage) {
+    	Map<String, Object> params = new HashMap<>();
+    	params.put("includeDeleted", includeDeleted);
+    	params.put("search", search);
+    	params.put("searchOption", searchOption);
+    	params.put("nowPage", nowPage);
+    	return itemMapper.findItemsPaging(params);
+    }
 
     @Transactional
     public int insertItem(ItemDTO item, MultipartFile file) throws IOException {

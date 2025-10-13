@@ -36,7 +36,7 @@
 			</div>
 			<div class="m-search">
 				<div>
-		<form action="/items" method="get"> 
+		<form action="/items" method="get" id="searchFormEl"> 
 		    <div class="m-search-line"> 
 		        <div class="m-search-date"> 
 		            <input type="date" name="startdate" value="${param.startdate}">
@@ -49,7 +49,6 @@
 				    <label for="includeDeleted">삭제된 품목 보기</label>
 				</div>                        
 				<div class="m-search-option">
-				    
 				    <div><input type="radio" id="searchEvent0" name="searchoption" value="item_code"
 				                <c:if test="${param.searchoption == 'item_code'}">checked</c:if>>
 				         <p>품목코드</p></div> 
@@ -100,17 +99,83 @@
 							</div>
 						</div>
 					</c:forEach>
-					<div></div>
 				</div>
-					<div class="m-paging-container">
-						</div>
+					<div class="paging">
+					    <div data-page="${start - 1}" onclick="render(${start - 1})" id="pgS" class="paging-btn">◀</div>
+					
+					    <c:forEach var="paging" items="${blocks}">
+					        <c:choose>
+					            <c:when test="${paging == nowPage}">
+					                <div data-page="${paging}" class="current-page">${paging}</div>
+					            </c:when>
+					            <c:otherwise>
+					                <div data-page="${paging}" onclick="render(${paging})" class="paging-btn">${paging}</div>
+					            </c:otherwise>
+					        </c:choose>
+					    </c:forEach>
+					
+					    
+					    <div data-page="${end + 1}" onclick="render(${end + 1})" id="pgE" class="paging-btn">▶</div>
+					    
+					</div>
 			</div>
-		  <div id="right-modal-container"></div>
+			<input type="hidden" id="totalPage" value="${totalPage}">
+		<div id="right-modal-container"></div>
 	</div>
 </div>
 <script>
+function render(page) {
+	let totalPage = document.getElementById('totalPage').value;
+	
+	let pgS2 = document.getElementById('pgS')
+	if(pgS2) {
+		pgS2 = pgS2.getAttribute('data-click');
+	}
+	let pgE2 = document.getElementById('pgE');
+	if(pgE2) {
+		pgE2 = pgE2.getAttribute('data-click');
+	}
+	
+	if(page < 1) page = 1;
+	if(page >= totalPage) page = totalPage;
+	
+	const formEl = document.getElementById('searchFormEl');
+	const inputPage = document.createElement('input');
+	inputPage.type = 'hidden';
+	inputPage.name = 'nowPage';
+	inputPage.value = page;
+	formEl.appendChild(inputPage);
+	formEl.submit();
+}
+
+const pgS = document.getElementById('pgS');
+
+if(pgS) {
+	let startPG = pgS.getAttribute('data-page');
+	if(startPG < 1) {
+		pgS.style.opacity = '0.3';
+		pgS.style.cursor = 'default';
+		pgS.setAttribute('data-click', false);
+	}
+}
+
+const pgE = document.getElementById('pgE');
+
+if(pgE) {
+	let endPG = pgE.getAttribute('data-page');
+	let totalPage = document.getElementById('totalPage').value;
+	if(endPG > totalPage) {
+		pgE.style.opacity = '0.3';
+		pgE.style.cursor = 'default';
+		pgE.setAttribute('data-click', false);
+	}
+}
+
+</script>
+
+<script>
 document.addEventListener('DOMContentLoaded', function() {
-    
+	
     const modalContainer = document.getElementById('right-modal-container');
 
     // --- 신규 품목 등록 버튼 ---

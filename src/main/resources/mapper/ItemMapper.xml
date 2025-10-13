@@ -96,6 +96,42 @@
 	        i.GI_CODE DESC
 	</select>
 	
+	<!-- 주성 추가 -->
+	<select id="findItemsPaging" parameterType="map" resultType="com.storemanager.item.ItemDTO">
+	    SELECT
+	        i.GI_CODE     AS giCode,
+	        i.GI_NAME     AS giName,
+	        i.GCM_CODE    AS gcmCode,
+	        c.GCM_NAME    AS gcmName,
+	        i.GI_DEL_FLAG AS giDelFlag
+	    FROM
+	        GE_ITEMS i
+	    LEFT JOIN
+	        GE_COM_MEMBER c ON i.GCM_CODE = c.GCM_CODE
+	    <where>
+	        <if test="includeDeleted == false">
+	            AND i.GI_DEL_FLAG = 'N'
+	        </if>
+	        
+	        <if test="search != null and search != ''">
+	            <choose>
+	                <when test="searchOption == 'item_name'">
+	                    AND i.GI_NAME LIKE CONCAT('%', #{search}, '%')
+	                </when>
+	                <when test="searchOption == 'supplier_name'">
+	                    AND c.GCM_NAME LIKE CONCAT('%', #{search}, '%')
+	                </when>
+	                <otherwise>
+	                    AND i.GI_CODE LIKE CONCAT('%', #{search}, '%')
+	                </otherwise>
+	            </choose>
+	        </if>
+	    </where>
+	    ORDER BY
+	        i.GI_CODE DESC
+	    LIMIT ${nowPage},10
+	</select>
+	
 	<update id="restoreItem" parameterType="string">
 		UPDATE GE_ITEMS 
 		SET GI_DEL_FLAG = 'N'

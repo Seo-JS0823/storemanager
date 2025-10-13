@@ -1,20 +1,27 @@
 package com.storemanager.item;
 
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.storemanager.test.Paging;
 
 @Controller
 @RequestMapping("/items")
@@ -36,11 +43,37 @@ public class ItemController {
     public String itemList(Model model,
         @RequestParam(name = "includeDeleted", required = false, defaultValue = "false") boolean includeDeleted,
         @RequestParam(name = "search", required = false) String search,
-        @RequestParam(name = "searchoption", required = false) String searchOption) { 
+        @RequestParam(name = "searchoption", required = false) String searchOption,
+        @RequestParam(name = "nowPage", required = false) Integer nowPage) {
+        List<ItemDTO> itemList = itemService.findItems(includeDeleted, search, searchOption);
+        if(nowPage == null) {
+        	nowPage = 1;
+        }
         
-        List<ItemDTO> itemList = itemService.findItems(includeDeleted, search, searchOption); 
-        
-        model.addAttribute("items", itemList);
+        int size = itemList.size();
+		Paging<ItemDTO> pg = new Paging<>(size);
+		int offset = pg.getLimit(nowPage);
+		
+		List<ItemDTO> list = itemService.findItemsPaging(includeDeleted, search, searchOption, offset);
+		
+		int totalPage = pg.getTotalPage();
+		
+		int start = ((nowPage - 1) / 5) * 5 + 1;
+		int end = Math.min(start + 5 - 1, totalPage);
+		
+		System.out.println("start : " + start + "/ totalPage : " + totalPage);
+		
+		List<Integer> paging = new ArrayList<>();
+		for(int i = start; i <= end; i++) {
+			paging.add(i);
+		}
+		
+		model.addAttribute("start", start);
+		model.addAttribute("end", end);
+        model.addAttribute("items", list);
+        model.addAttribute("blocks", paging);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("nowPage", nowPage);
         return "item/item";
     }
      
