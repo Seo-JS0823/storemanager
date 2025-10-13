@@ -54,19 +54,22 @@ public interface CustomerMapper {
 		CustomerDTO findOne(@Param("idx")Long idx);
 
 	@Insert("""
-			INSERT INTO GE_COM_MEMBER(GCM_IDX, GCM_CODE, GCM_NAME, GCM_EMAIL, GCM_TEL, GCM_ADDR, GCM_REGDATE, GCM_DEL_FLAG)
-			VALUES (#{GCM_IDX}, #{GCM_CODE}, #{GCM_NAME}, #{GCM_EMAIL}, #{GCM_TEL}, #{GCM_ADDR}, #{GCM_REGDATE}, #{GCM_DEL_FLAG})
-			""")
-	int insert(CustomerDTO dto);
-	@Update("""
-			UPDATE GE_COM_MEMBER
-			SET
-				GCM_NAME = #{gcmName},
-				GCM_EMAIL = #{gcmEmail},
-				GCM_TEL = #{gcmTel}
-			WHERE	GCM_idx = #{gcmIdx}
-			""")
+		    INSERT INTO GE_COM_MEMBER(
+		        GCM_CODE, GCM_NAME, GCM_EMAIL, GCM_TEL, GCM_ADDR, GCM_REGDATE, GCM_DEL_FLAG
+		    ) VALUES (
+		        #{gcm_Code}, #{gcm_Name}, #{gcm_Email}, #{gcm_Tel}, #{gcm_Addr}, NOW(), 'N'
+		    )
+		""")
+		int insert(CustomerDTO dto);
+
+
 	int update(CustomerDTO dto);
+
+
+	int softDelete(Long idx);
+
+
+	List<CustomerDTO> search(String keyword);
 	
 	/*
 	 * // keyword 있으면 매칭
