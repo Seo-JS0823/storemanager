@@ -15,14 +15,9 @@ public interface BillMapper {
 
 	//출고확인서 라디오 버튼 리스트 - 출고 확인서
 	List<BillDTO> getBillListOUT(String startDay, String endDay, String whereStr);
-	//위와 똑같이 페이징 적용
-	List<BillDTO> getBillListOUTPaging(String startDay, String endDay, String whereStr, Integer offset);
 
 	//입고확인서 라디오 버튼 리스트 - 입고 확인서
 	List<BillDTO> getBillListIn(String startDay, String endDay, String whereStr);
-	//위와 똑같이 페이징 적용
-	List<BillDTO> getBillListInPaging(String startDay, String endDay, String whereStr, Integer offset);
-	
 
 	//명세서 GBC_NUMBER 체크
 	int chkBillNumber(String day);
@@ -32,9 +27,6 @@ public interface BillMapper {
 
 	//명세서 라디오 버튼 리스트 - 명세서
 	List<BillDTO> getBillListALL(String startDay, String endDay, String whereStr);
-	//위와 똑같이 페이징 적용
-	List<BillDTO> getBillListALLPaging(String startDay, String endDay, String whereStr, Integer offset);
-	
 
 	//명세서 데이터
 	List<BillDTO> getGcmChk(String GbcGisList);

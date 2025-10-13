@@ -3,19 +3,14 @@ package com.storemanager.bill;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.storemanager.test.Paging;
 
 @Controller
 public class BillController {
@@ -46,13 +41,12 @@ public class BillController {
 		return oneBill;
 	}
 	
-	@GetMapping("/bill/billout/{startDate}/{endDate}/{itemChk}/{comChk}/{searchStr}/{nowPage}")
+	@GetMapping("/bill/billout/{startDate}/{endDate}/{itemChk}/{comChk}/{searchStr}")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> billOutList(ModelAndView mv, BillDTO billDto,
+	public List<BillDTO> billOutList(ModelAndView mv, BillDTO billDto,
 			@PathVariable("startDate") String startDate,@PathVariable("endDate") String endDate,
 			@PathVariable("itemChk") String itemChk, @PathVariable("comChk") String comChk,
-			@PathVariable("searchStr") String searchStr,
-			@PathVariable("nowPage") Integer nowPage) {
+			@PathVariable("searchStr") String searchStr) {
 		
 		if(searchStr.equals("null")) {
 			searchStr = "";
@@ -72,23 +66,15 @@ public class BillController {
 		// List
 		List<BillDTO> billOutList = billMapper.getBillListOUT(startDay, endDay, whereStr);
 
-		int size = billOutList.size();
-		Paging<BillDTO> pg = new Paging<>(size);
-		int offset = pg.getLimit(nowPage);
-		List<BillDTO> list = billMapper.getBillListOUTPaging(startDay, endDay, whereStr, offset);
-		pg.setResponseList(list);
-		Map<String, Object> response = pg.getResponseData();
-		
-		return ResponseEntity.ok(response);
+		return billOutList;
 	}
 	
-	@GetMapping("/bill/billin/{startDate}/{endDate}/{itemChk}/{comChk}/{searchStr}/{nowPage}")
+	@GetMapping("/bill/billin/{startDate}/{endDate}/{itemChk}/{comChk}/{searchStr}")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> billInList(ModelAndView mv, BillDTO billDto,
+	public List<BillDTO> billInList(ModelAndView mv, BillDTO billDto,
 			@PathVariable("startDate") String startDate,@PathVariable("endDate") String endDate,
 			@PathVariable("itemChk") String itemChk, @PathVariable("comChk") String comChk,
-			@PathVariable("searchStr") String searchStr,
-			@PathVariable("nowPage") Integer nowPage) {
+			@PathVariable("searchStr") String searchStr) {
 
 		if(searchStr.equals("null")) {
 			searchStr = "";
@@ -107,16 +93,8 @@ public class BillController {
 		
 		// List
 		List<BillDTO> billInList = billMapper.getBillListIn(startDay, endDay, whereStr);
-		
-		int size = billInList.size();
-		Paging<BillDTO> pg = new Paging<>(size);
-		int offset = pg.getLimit(nowPage);
-		List<BillDTO> list = billMapper.getBillListInPaging(startDay, endDay, whereStr, offset);
-		pg.setResponseList(list);
-		Map<String, Object> response = pg.getResponseData();
-		
-		return ResponseEntity.ok(response);
-		// return billInList;
+
+		return billInList;
 	}
 	
 	@GetMapping("/bill/createbill/{idxs}/{gcmNames}/{giNames}/{inout}")
@@ -151,13 +129,12 @@ public class BillController {
 		return "OK";
 	}
 	
-	@GetMapping("/bill/billall/{startDate}/{endDate}/{itemChk}/{comChk}/{searchStr}/{nowPage}")
+	@GetMapping("/bill/billall/{startDate}/{endDate}/{itemChk}/{comChk}/{searchStr}")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> billAllList(ModelAndView mv, BillDTO billDto,
+	public List<BillDTO> billAllList(ModelAndView mv, BillDTO billDto,
 			@PathVariable("startDate") String startDate,@PathVariable("endDate") String endDate,
 			@PathVariable("itemChk") String itemChk, @PathVariable("comChk") String comChk,
-			@PathVariable("searchStr") String searchStr,
-			@PathVariable("nowPage") Integer nowPage) {
+			@PathVariable("searchStr") String searchStr) {
 		
 		if(searchStr.equals("null")) {
 			searchStr = "";
@@ -177,14 +154,7 @@ public class BillController {
 		// List
 		List<BillDTO> billOutList = billMapper.getBillListALL(startDay, endDay, whereStr);
 
-		int size = billOutList.size();
-		Paging<BillDTO> pg = new Paging<>(size);
-		int offset = pg.getLimit(nowPage);
-		List<BillDTO> list = billMapper.getBillListALLPaging(startDay, endDay, whereStr, offset);
-		pg.setResponseList(list);
-		Map<String, Object> response = pg.getResponseData();
-		
-		return ResponseEntity.ok(response);
+		return billOutList;
 	}
 	
 	@GetMapping("/bill/gcmchk/{GbcGisList}")

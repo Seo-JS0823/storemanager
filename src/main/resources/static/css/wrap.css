@@ -22,6 +22,7 @@
 }
 .right-wrap {
 	display: flex;
+	min-height: 100rem;
 	flex-direction: column;
 	overflow: auto;
 }
