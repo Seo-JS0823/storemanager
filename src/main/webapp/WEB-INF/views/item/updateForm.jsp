@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- 이 페이지 전용 스타일 --%>
 <style>
     .form-container {
         padding: 2rem;
@@ -16,7 +15,7 @@
         align-items: center;
         padding-bottom: 1rem;
         margin-bottom: 1rem;
-        border-bottom: 0.2rem solid #666;
+        /*border-bottom: 0.2rem solid #666;*/
     }
     .form-header .state-circle {
         width: 3rem;
@@ -35,6 +34,7 @@
     .image-area {
         margin-bottom: 1.5rem;
         text-align: center;
+        position: relative;
     }
     .image-preview {
         width: 15rem;
@@ -50,6 +50,7 @@
         background-color: white;
         cursor: pointer;
         overflow: hidden; 
+        position: relative;
     }
     .image-preview img {
         width: 100%;
@@ -58,6 +59,39 @@
     }
     #itemImageFile {
         display: none; 
+    }
+    
+    .btn-change-image {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #007bff;
+        color: white;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        border: none;
+        font-size: 1rem;
+    }
+    
+    #deleteImageBtn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background-color: rgba(220, 53, 69, 0.8);
+        color: white;
+        border: none;
+        border-radius: 50%; 
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+        font-weight: bold;
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10; 
+        padding: 0; 
+        line-height: 1;
     }
     
     /* 입력 필드 그리드 */
@@ -108,6 +142,7 @@
         border: 1px solid rgba(33, 33, 33, 0.3);
         border-radius: 0.5rem;
         font-size: 1rem;
+        background-color: white;
     }
 
     /* 하단 버튼 영역 */
@@ -134,16 +169,15 @@
 <div class="form-container">
     <div class="form-header">
         <div class="state-circle" style="background-color: #00AA00;"></div>
-        <h2>품목 수정</h2>
-        <button type="button" class="btn-cancel modal-close-btn" style="margin-left: auto; background: none; color: #333; font-size: 2rem; width: auto; height: auto;">&times;</button>
+        <h2>품목 수정</h2>        
     </div>
 
 	<form id="item-update-form" action="/items/update" method="post" enctype="multipart/form-data">
 		<div class="image-area">
-			<label for="itemImageFile" class="image-preview" id="imagePreview">
+			<div class="image-preview" id="imagePreview">
                 <c:choose>
                     <c:when test="${not empty item.giImg}">
-                        <img id="previewImageElement" src="/item-images/${item.giImg}" alt="Image preview">
+                        <img id="previewImageElement" src="/items/image/${item.giImg}" alt="Image preview">
                     </c:when>
                     <c:otherwise>
                         <img id="previewImageElement" src="" alt="Image preview" style="display: none;">
@@ -151,16 +185,19 @@
                 </c:choose>
 				<span id="initialTextSpan" <c:if test="${not empty item.giImg}">style="display: none;"</c:if>>이미지 추가</span>
                 <button type="button" id="deleteImageBtn" <c:if test="${empty item.giImg}">style="display: none;"</c:if>>X</button>
-			</label> 
-			<input type="file" id="itemImageFile" name="file" accept="image/*">
+			</div> 
+            <label for="itemImageFile" class="btn-change-image">이미지 변경</label>
+			<input type="file" id="itemImageFile" name="file" accept="image/*" style="display: none;">
 		</div>
 		
+		<%-- 💡 ACTION: input-grid 구조를 수정하여 품목명과 거래처를 한 줄에 배치 --%>
 		<div class="input-grid">
 		    <input type="hidden" name="giCode" value="${item.giCode}">
             <input type="hidden" name="originalGiImg" value="${item.giImg}">
+            <input type="hidden" id="imageDeleted" name="imageDeleted" value="false">
 		  
-			<div class="form-group">
-				<label for="gcmCode">거래처 선택</label>
+            <div class="form-group">
+				<label for="gcmCode">거래처</label>
 				<select id="gcmCode" name="gcmCode" required>
 				    <c:forEach var="supplier" items="${suppliers}">
                        <option value="${supplier.gcmCode}" ${supplier.gcmCode eq item.gcmCode ? 'selected' : ''}>
@@ -170,20 +207,14 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="gcmCode">거래처 선택</label>
-				<select id="gcmCode" name="gcmCode" required>
-				    <c:forEach var="supplier" items="${suppliers}">
-                       <option value="${supplier.gcmCode}" <c:if test="${supplier.gcmCode eq item.gcmCode}">selected</c:if>>
-                            ${supplier.gcmName}
-                       </option>
-                    </c:forEach>
-				</select>
-			</div> 
+				<label for="giName">품목명</label>
+				<input type="text" id="giName" name="giName" value="${item.giName}" required>
+			</div>
 		</div>
 
 		<div class="remark-area">
-			<label for="remark">REMARK</label>
-			<textarea id="remark" name="remark" placeholder="Memo">${item.remark}</textarea>
+			<label for="giRemark">REMARK</label>
+			<textarea id="giRemark" name="giRemark" placeholder="메모를 입력하세요">${item.giRemark}</textarea>
 		</div>
 
 		<div class="form-actions">
@@ -192,45 +223,3 @@
 		</div>
 	</form>
 </div>
-
-<script>
-    const imageInput = document.getElementById('itemImageFile');
-    const imagePreview = document.getElementById('imagePreview');
-    const imgElement = document.getElementById('previewImageElement');
-    const initialTextSpan = document.getElementById('initialTextSpan');
-    const deleteBtn = document.getElementById('deleteImageBtn');
-
-    imageInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imgElement.src = e.target.result;
-                imgElement.style.display = 'block';
-                initialTextSpan.style.display = 'none';
-                deleteBtn.style.display = 'flex';
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-
-    deleteBtn.addEventListener('click', function(event) {
-        event.preventDefault(); 
-        event.stopPropagation();
-
-        imageInput.value = '';
-        imgElement.src = '';
-        imgElement.style.display = 'none';
-        initialTextSpan.style.display = 'block';
-        deleteBtn.style.display = 'none';
-        
-        let imageDeletedInput = document.querySelector('input[name="imageDeleted"]');
-        if (!imageDeletedInput) {
-            imageDeletedInput = document.createElement('input');
-            imageDeletedInput.type = 'hidden';
-            imageDeletedInput.name = 'imageDeleted';
-            document.getElementById('item-update-form').appendChild(imageDeletedInput);
-        }
-        imageDeletedInput.value = 'true';
-    });
-</script>

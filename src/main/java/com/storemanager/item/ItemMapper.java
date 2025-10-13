@@ -22,4 +22,8 @@ public interface ItemMapper {
 	List<ItemDTO> findItems(Map<String, Object> params);
 	 
 	int restoreItem(@Param("giCode") String giCode);
+	
+	int countItems(Map<String, Object> params);
+	
+	List<ItemDTO> findItemsWithPaging(Map<String, Object> params);
 }
