@@ -1,18 +1,15 @@
-<<<<<<< HEAD
  <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-=======
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
->>>>>>> edd0af4572442d2de9b4ca0b709f7328a36b019f
 
-<%-- 데이터를 전송할 수 있도록 form 태그로 전체를 감싸고 ID를 부여합니다. --%>
-<form id="item-register-form">
-	<div>
-		<div id="state"></div>
-		<div id="state-text">품목 등록</div>
-	</div>
+<%-- 이 페이지 전용 스타일 --%>
+<style>
+    .form-container {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background-color: #F5F5F5;
+    }
 
-<<<<<<< HEAD
     .form-header {
         display: flex;
         align-items: center;
@@ -127,47 +124,28 @@
         background-color: white;
         height: 100%;
     }
-=======
-	<div>
-		<div>
-			<img class="modal-image" src="/images/image003.jpg">
-		</div>
-	</div>
 
-	<div>
-		<div>
-			<p>품목코드</p>
-			<input type="text" id="giCode">
-		</div>
-		<div>
-			<p>품목명</p>
-			<input type="text" id="giName">
-		</div>
-		<div>
-			<p>매입처코드</p>
-			<input type="text" id="gcmCode">
-		</div>
-		<div>
-			<p>매입처명</p>
-			<input type="text" id="gcmName">
-		</div>
-		<div>
-			<p>매입단가</p>
-			<input type="text" id="gihPrice" name="gihPrice">
-		</div>
-		<div>
-			<p>수량</p>
-			<input type="text" id="gihQry" name="gihQry">
-		</div>
-	</div>
->>>>>>> edd0af4572442d2de9b4ca0b709f7328a36b019f
+    /* REMARK 영역 */
+    .remark-area {
+        margin-bottom: 2rem;
+    }
+    .remark-area label {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .remark-area textarea {
+        width: 100%;
+        height: 6rem; 
+        resize: none;
+        outline: none;
+        padding: 0.5rem;
+        border: 1px solid rgba(33, 33, 33, 0.3);
+        border-radius: 0.5rem;
+        font-size: 1rem;
+    }
 
-	<div>
-		<div>REMARK</div>
-		<textarea name="memo" id="memo" placeholder="Memo"></textarea>
-	</div>
-
-<<<<<<< HEAD
     /* 하단 버튼 영역 */
     .form-actions {
         display: flex;
@@ -228,11 +206,3 @@
 		</div>
 	</form>
 </div>
-=======
-	<div>
-		<button type="button" id="modal-items-search">아이템 목록</button>
-		<button type="button" id="modal-save">저 장</button>
-		<button type="button" id="modal-clear">취 소</button>
-	</div>
-</form>
->>>>>>> edd0af4572442d2de9b4ca0b709f7328a36b019f

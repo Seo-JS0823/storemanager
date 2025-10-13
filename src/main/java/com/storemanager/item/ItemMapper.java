@@ -1,19 +1,16 @@
 package com.storemanager.item;
 
-import com.storemanager.item.ItemDTO; 
-import java.util.List;
-<<<<<<< HEAD
-import java.util.Map;
-=======
 import org.apache.ibatis.annotations.Mapper;
->>>>>>> edd0af4572442d2de9b4ca0b709f7328a36b019f
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ItemMapper {
 
-     List<ItemDTO> findAllItems();
+    List<ItemDTO> selectItemList();
 
-<<<<<<< HEAD
     ItemDTO selectItemById(@Param("giCode") String giCode);
 
     int insertItem(ItemDTO item);
@@ -29,8 +26,4 @@ public interface ItemMapper {
 	int countItems(Map<String, Object> params);
 	
 	List<ItemDTO> findItemsWithPaging(Map<String, Object> params);
-=======
-	 public void saveNewItem(ItemDTO newItem);
-    
->>>>>>> edd0af4572442d2de9b4ca0b709f7328a36b019f
 }

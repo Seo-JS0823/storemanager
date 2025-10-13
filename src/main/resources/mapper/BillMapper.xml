@@ -66,32 +66,6 @@
 			${param3}
 		ORDER BY GIH.GIH_REGDATE DESC
 	</select>
-	
-	<!-- 주성 추가 -->
-	<select id="getBillListOUTPaging" resultType="com.storemanager.bill.BillDTO">
-		SELECT
-			ROW_NUMBER() OVER ( ORDER BY GIH.GIH_REGDATE DESC) NUM,
-			GIH.GIH_IDX,
-			GIH.GI_CODE, 
-			GIH.GI_NAME, 
-			GCM.GCM_CODE, 
-			GCM.GCM_NAME,  
-			FORMAT(GIH.GIH_QTY*-1,0) GIH_QTY, 
-			FORMAT(GIH.GIH_PRICE,0) GIH_PRICE, 
-			FORMAT(((GIH.GIH_QTY*-1)*GIH.GIH_PRICE),0) AMOUNT, 
-			DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE, 
-			GIH.GIH_INOUT
-		FROM 
-			GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
-		WHERE 
-			GIH.GCM_CODE = GCM.GCM_CODE 
-			AND GIH.GIH_INOUT = 'OUT' 
-		<!-- 	AND GIH.GIH_CONFIRM='Y' -->
-			AND DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
-			${param3}
-		ORDER BY GIH.GIH_REGDATE DESC
-		LIMIT ${offset}, 10
-	</select>
 
 	<select id="getBillListIn" resultType="com.storemanager.bill.BillDTO">
 		SELECT
@@ -115,32 +89,6 @@
 			AND DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
 			${param3}
 		ORDER BY GIH.GIH_REGDATE DESC
-	</select>
-	
-	<!-- 주성 추가 -->
-	<select id="getBillListInPaging" resultType="com.storemanager.bill.BillDTO">
-		SELECT
-			ROW_NUMBER() OVER ( ORDER BY GIH.GIH_REGDATE DESC) NUM,
-			GIH.GIH_IDX,
-			GIH.GI_CODE, 
-			GIH.GI_NAME, 
-			GCM.GCM_CODE, 
-			GCM.GCM_NAME,  
-			FORMAT(GIH.GIH_QTY,0) GIH_QTY, 
-			FORMAT(GIH.GIH_PRICE,0) GIH_PRICE, 
-			FORMAT((GIH.GIH_QTY*GIH.GIH_PRICE),0) AMOUNT, 
-			DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE, 
-			GIH.GIH_INOUT
-		FROM 
-			GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
-		WHERE 
-			GIH.GCM_CODE = GCM.GCM_CODE 
-			AND GIH.GIH_INOUT = 'IN' 
-		<!-- 	AND GIH.GIH_CONFIRM='Y' -->
-			AND DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
-			${param3}
-		ORDER BY GIH.GIH_REGDATE DESC
-		LIMIT ${offset},10
 	</select>
 	
 	<select id="chkBillNumber">
@@ -170,25 +118,6 @@
 		WHERE 
 			DATE_FORMAT(GBC_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
 			${param3}
-	</select>
-	
-	<!-- 주성 추가 -->
-	<select id="getBillListALLPaging" resultType="com.storemanager.bill.BillDTO">
-		SELECT
-			ROW_NUMBER() OVER ( ORDER BY GBC_IDX DESC) NUM, 
-			GBC_IDX, 
-			GBC_NUMBER, 
-			GBC_GIS_LIST, 
-			GBC_GI_NAME, 
-			GBC_GCM_NAME, 
-			IF(GBC_INOUT = 'IN','입고명세서', IF(GBC_INOUT = 'OUT','출고명세서','')) GBC_INOUT, 
-			DATE_FORMAT(GBC_REGDATE,'%Y-%m-%d') GBC_REGDATE
-		FROM 
-			GE_BILL_CHK
-		WHERE 
-			DATE_FORMAT(GBC_REGDATE,'%Y-%m-%d') BETWEEN #{param1} AND #{param2}
-			${param3}
-		LIMIT ${offset},10
 	</select>
  	
  	<select id="getGcmChk">
