@@ -7,6 +7,6 @@
 		<a href="/out/list"><span class="material-symbols-outlined">playlist_remove</span>출고</a>
 		<a href="/In/List"><span class="material-symbols-outlined">playlist_add</span>입고</a>
 		<a href="/bill/bill"><span class="material-symbols-outlined">receipt_long</span>명세서</a>
-		<a href="/customer/list"><span class="material-symbols-outlined">group</span>거래처</a>
+		<a href="/customer"><span class="material-symbols-outlined">group</span>거래처</a>
 	</div>
 </div>
