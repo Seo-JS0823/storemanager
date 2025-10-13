@@ -325,17 +325,7 @@
 	          	</div>
 			</c:forEach>
 			</div>
-			<div class="paging" id="pagingArea">
-			    <div>◀◀</div>
-			    <div>◀</div>
-			    <div>1</div>
-			    <div>2</div>
-			    <div>3</div>
-			    <div>4</div>
-			    <div>5</div>
-			    <div>▶</div>
-			    <div>▶▶</div>
-			</div>
+			<div class="paging" id="pagingArea"></div>
 		</div>
 		
 		<!-- 아이템 리스트 뿌려주기 -->
@@ -345,7 +335,6 @@
 <script src="/js/render.js"></script>
 <script src="/js/member.js"></script>
 <script src="/js/paging.js"></script>
-<script src="/js/render.js"></script>
 <script>
 	// 검색바 달력 현재 날짜-7 ~ 현재날짜
 	let dateStart = document.getElementById("startdate");
