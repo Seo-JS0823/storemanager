@@ -19,17 +19,12 @@ public class StoreManagerInterceptor implements HandlerInterceptor {
 		// 기존 Session 가져오기
 		HttpSession session = request.getSession(false);
 		
+		/* 다 만들면 주석 풀기
 		if(session == null) {
 			response.sendRedirect("/");
 			return false;
 		}
-		
-		boolean login = session.getAttribute("login") != null;
-		
-		if(!login) {
-			response.sendRedirect("/no");
-			return false;
-		}
+		*/
 		
 		return true;
 	}

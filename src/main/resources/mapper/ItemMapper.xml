@@ -3,6 +3,7 @@
 
 <mapper namespace="com.storemanager.item.ItemMapper">
 
+<<<<<<< HEAD
     <select id="selectItemList" resultType="com.storemanager.item.ItemDTO">
     SELECT
         i.GI_CODE    AS giCode,
@@ -27,13 +28,25 @@
             c.GCM_NAME   AS gcmName, 
             i.GI_IMG     AS giImg,
             i.GI_REMARK     AS giRemark
+=======
+    <select id="findAllItems" resultType="com.storemanager.item.ItemDTO">
+        SELECT
+            gi.GI_CODE      AS giCode,
+            gi.GI_NAME      AS giName,
+            gcm.GCM_CODE    AS gcmCode,
+            gcm.GCM_NAME    AS gcmName,
+            gis.GIS_TOT_QTY AS gisTotQty
+>>>>>>> edd0af4572442d2de9b4ca0b709f7328a36b019f
         FROM
-            GE_ITEMS i
+            GE_ITEMS gi
         LEFT JOIN
-            GE_COM_MEMBER c ON i.GCM_CODE = c.GCM_CODE
-        WHERE
-            i.GI_CODE =  #{giCode, jdbcType=VARCHAR}
+            GE_COM_MEMBER gcm ON gi.GCM_CODE = gcm.GCM_CODE
+        LEFT JOIN
+            GE_ITEMS_STOCK gis ON gi.GI_CODE = gis.GI_CODE
+        ORDER BY
+            gi.GI_CODE DESC
     </select>
+<<<<<<< HEAD
 
     <insert id="insertItem" parameterType="com.storemanager.item.ItemDTO">
         INSERT INTO GE_ITEMS (
@@ -106,4 +119,18 @@
 		WHERE GI_CODE = #{giCode}
 	</update>
 
+=======
+    
+    <!-- 새 품목 등록 -->
+    <insert id="saveNewItem" parameterType="com.storemanager.item.ItemDTO">
+        INSERT INTO GE_ITEMS (
+            GI_NAME, 
+            GCM_CODE
+        ) VALUES (
+            #{giName},   -- DTO의 giName 필드 값을 여기에 넣음
+            #{gcmCode}   -- DTO의 gcmCode 필드 값을 여기에 넣음
+        )
+    </insert>
+    
+>>>>>>> edd0af4572442d2de9b4ca0b709f7328a36b019f
 </mapper>

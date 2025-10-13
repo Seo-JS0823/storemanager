@@ -1,5 +1,6 @@
 package com.storemanager.item;
 
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+=======
+import java.util.List;
+import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+>>>>>>> edd0af4572442d2de9b4ca0b709f7328a36b019f
 
-@Service
+@Service 
+@RequiredArgsConstructor 
 public class ItemService {
 
-    @Autowired
-    private ItemMapper itemMapper;
+    private final ItemMapper itemMapper; 
 
+<<<<<<< HEAD
     @Value("${file.upload-dir}")
     private String uploadDir;
 
@@ -77,6 +84,15 @@ public class ItemService {
     @Transactional
     public int deleteItem(String giCode) {
         return itemMapper.deleteItem(giCode);
+=======
+    public List<ItemDTO> findAllItems() {
+      
+        return itemMapper.findAllItems();
+    }
+
+    public void saveNewItem(ItemDTO newItem) {
+        itemMapper.saveNewItem(newItem);
+>>>>>>> edd0af4572442d2de9b4ca0b709f7328a36b019f
     }
     
     @Transactional

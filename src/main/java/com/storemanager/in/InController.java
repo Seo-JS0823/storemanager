@@ -12,10 +12,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class InController {
 	
 	private InMapper inMapper; 
+	private InRestController inRestController;
 	public InController(
-			InMapper inMapper
+			InMapper inMapper,
+			InRestController inRestController
 			) {
 		this.inMapper = inMapper;
+		this.inRestController = inRestController;
 	}
 	
 	

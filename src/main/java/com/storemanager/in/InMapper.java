@@ -15,8 +15,6 @@ public interface InMapper {
 	public List<InDTO> getItemsName();
 	
 	public List<InDTO> getCompanysName(String gi_name);
-
-	public void insertIn(InDTO inDTO);
 	
 }
 
