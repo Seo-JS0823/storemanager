@@ -190,7 +190,6 @@
 			<input type="file" id="itemImageFile" name="file" accept="image/*" style="display: none;">
 		</div>
 		
-		<%-- 💡 ACTION: input-grid 구조를 수정하여 품목명과 거래처를 한 줄에 배치 --%>
 		<div class="input-grid">
 		    <input type="hidden" name="giCode" value="${item.giCode}">
             <input type="hidden" name="originalGiImg" value="${item.giImg}">

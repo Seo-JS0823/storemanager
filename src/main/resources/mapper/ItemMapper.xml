@@ -62,43 +62,39 @@
         WHERE GI_CODE =  #{giCode}
     </update>
     
-<select id="findItems" parameterType="map" resultType="com.storemanager.item.ItemDTO">
-    SELECT
-    i.GI_CODE AS giCode,
-    i.GI_NAME AS giName,
-    i.GCM_CODE AS gcmCode,
-    c.GCM_NAME AS gcmName,
-    i.GI_DEL_FLAG AS giDelFlag
-    FROM
-    GE_ITEMS i
-    LEFT JOIN
-    GE_COM_MEMBER c ON i.GCM_CODE = c.GCM_CODE
-    <where>
-        <if test="!includeDeleted">
-            AND i.GI_DEL_FLAG = 'N'
-        </if>
-        
-        <if test="search != null and search != '' and search.trim() != '' and searchOption != null">
-            AND 
-             <choose>
-                <when test="searchOption == 'item_code'">
-                    i.GI_CODE = #{search}
-                </when>
-                <when test="searchOption == 'item_name'">
-                    i.GI_NAME LIKE '%' || #{search} || '%'
-                </when>
-                <when test="searchOption == 'supplier_name'">
-                    c.GCM_NAME LIKE '%' || #{search} || '%'
-                </when>
-                <otherwise>
-                    i.GI_NAME LIKE '%' || #{search} || '%'
-                </otherwise>
-            </choose>
-        </if>
-    </where>
-    ORDER BY
-    i.GI_CODE DESC
-</select>
+	<select id="findItems" parameterType="map" resultType="com.storemanager.item.ItemDTO">
+	    SELECT
+	        i.GI_CODE     AS giCode,
+	        i.GI_NAME     AS giName,
+	        i.GCM_CODE    AS gcmCode,
+	        c.GCM_NAME    AS gcmName,
+	        i.GI_DEL_FLAG AS giDelFlag
+	    FROM
+	        GE_ITEMS i
+	    LEFT JOIN
+	        GE_COM_MEMBER c ON i.GCM_CODE = c.GCM_CODE
+	    <where>
+	        <if test="includeDeleted == false">
+	            AND i.GI_DEL_FLAG = 'N'
+	        </if>
+	        
+	        <if test="search != null and search != ''">
+	            <choose>
+	                <when test="searchOption == 'item_name'">
+	                    AND i.GI_NAME LIKE CONCAT('%', #{search}, '%')
+	                </when>
+	                <when test="searchOption == 'supplier_name'">
+	                    AND c.GCM_NAME LIKE CONCAT('%', #{search}, '%')
+	                </when>
+	                <otherwise>
+	                    AND i.GI_CODE LIKE CONCAT('%', #{search}, '%')
+	                </otherwise>
+	            </choose>
+	        </if>
+	    </where>
+	    ORDER BY
+	        i.GI_CODE DESC
+	</select>
 	
 	<update id="restoreItem" parameterType="string">
 		UPDATE GE_ITEMS 

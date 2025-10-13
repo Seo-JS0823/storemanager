@@ -43,12 +43,11 @@
 		            <p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
 		            <input type ="date" name="enddate" value="${param.enddate}">
 		        </div>
-		        <div class="m-search-option">
-		            <input type="hidden" name="includeDeleted" value="false" /> 
-		            <input type="checkbox" id="includeDeleted" name="includeDeleted" value="true"
-		                   <c:if test="${param.includeDeleted == 'true'}">checked</c:if>>
-		            <label for="includeDeleted">삭제된 품목 보기</label>
-		        </div>                        
+				<div class="m-search-option">
+				    <input type="checkbox" id="includeDeleted" name="includeDeleted" value="true"
+				           <c:if test="${param.includeDeleted == 'true'}">checked</c:if>>
+				    <label for="includeDeleted">삭제된 품목 보기</label>
+				</div>                        
 				<div class="m-search-option">
 				    
 				    <div><input type="radio" id="searchEvent0" name="searchoption" value="item_code"
@@ -148,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const deleteBtn = document.getElementById('deleteImageBtn');
                     const imageDeletedInput = document.getElementById('imageDeleted');
 
-                    if (imageInput) { // 요소들이 존재하는지 확인
+                    if (imageInput) {
                         imageInput.addEventListener('change', function() {
                             const file = this.files[0];
                             if (file) {
@@ -159,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     initialTextSpan.style.display = 'none';
                                     deleteBtn.style.display = 'flex';
                                     if(imageDeletedInput) imageDeletedInput.value = 'false';
-                                }
+                                };
                                 reader.readAsDataURL(file);
                             }
                         });
@@ -169,55 +168,72 @@ document.addEventListener('DOMContentLoaded', function() {
                         deleteBtn.addEventListener('click', function(event) {
                             event.preventDefault();
                             event.stopPropagation();
-
                             imageInput.value = '';
                             imgElement.src = '';
                             imgElement.style.display = 'none';
                             initialTextSpan.style.display = 'block';
                             deleteBtn.style.display = 'none';
-                            
                             if(imageDeletedInput) imageDeletedInput.value = 'true';
                         });
                     }	
 	                
-	                const updateForm = document.getElementById('item-update-form');
-	                if (updateForm) {
-	                    updateForm.addEventListener('submit', function(event) {
-	                        event.preventDefault();
-	
-	                        const formData = new FormData(this);
-	
-	                        fetch(this.action, {
-	                            method: 'POST',
-	                            body: formData
-	                        })
-	                        .then(response => response.json())
-	                        .then(data => {
-	                            alert(data.message || '성공적으로 수정되었습니다.');
-	                            closeModal();
-	                            location.reload();
-	                        })
-	                        .catch(error => {
-	                            console.error('Update Error:', error);
-	                            alert('수정 중 오류가 발생했습니다.');
-	                        });
-	                    });
+                    const updateForm = document.getElementById('item-update-form');
+                    if (updateForm) {
+                    	updateForm.addEventListener('submit', function(event) {
+                    	    event.preventDefault();
+
+                    	    const itemData = {
+                    	        giCode: this.querySelector('input[name="giCode"]').value,
+                    	        giName: this.querySelector('#giName').value,
+                    	        gcmCode: this.querySelector('#gcmCode').value,
+                    	        giRemark: this.querySelector('#giRemark').value
+                    	    };
+                    	    const formData = new FormData();
+                    	    const fileInput = this.querySelector('#itemImageFile');
+                    	    const imageDeletedInput = this.querySelector('#imageDeleted');
+
+                    	    // 💡 ACTION: 등록 로직과 동일하게 파일이 없을 때도 빈 데이터를 보내도록 수정
+                    	    if (fileInput.files.length > 0) {
+                    	        formData.append('file', fileInput.files[0]);
+                    	    } else {
+                    	        // 파일이 선택되지 않았을 때도 'file' 파트를 포함시킵니다.
+                    	        formData.append('file', new Blob(), '');
+                    	    }
+                    	    
+                    	    formData.append('itemData', JSON.stringify(itemData));
+                    	    
+                    	    const imageDeleted = imageDeletedInput ? imageDeletedInput.value : 'false';
+                    	    const actionUrl = this.action + '?imageDeleted=' + imageDeleted;
+
+                    	    fetch(actionUrl, { 
+                    	        method: 'POST',
+                    	        body: formData
+                    	    })
+                    	    .then(response => response.json())
+                    	    .then(data => {
+                    	        alert(data.message || '성공적으로 수정되었습니다.');
+                    	        closeModal();
+                    	        location.reload();
+                    	    })
+                    	    .catch(error => {
+                    	        console.error('Update Error:', error);
+                    	        alert('수정 중 오류가 발생했습니다.');
+                    	    });
+                    	});
 	                }
 	            });
 	    });
 	});
+    
     // --- 삭제 버튼 ---
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', function() {
             const giCodeToDelete = this.getAttribute('data-gicode');
             if (!giCodeToDelete) return alert("오류: 품목 코드를 찾을 수 없습니다.");
 
-            if (confirm(`'${giCodeToDelete}' 품목을 정말로 삭제하시겠습니까?`)) {
+            if (confirm("정말로 삭제하시겠습니까?")) {
                 fetch('/items/delete/' + giCodeToDelete, { method: 'DELETE' })
-                    .then(response => {
-                        if (!response.ok) return response.json().then(err => { throw new Error(err.message || '삭제 실패') });
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
                         alert(data.message);
                         location.reload();
@@ -233,18 +249,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const giCodeToRestore = this.getAttribute('data-gicode');
             if (!giCodeToRestore) return alert("오류: 품목 코드를 찾을 수 없습니다.");
 
-            if (confirm(`'${giCodeToRestore}' 품목을 정말로 복구하시겠습니까?`)) {
+            if (confirm("정말로 복구하시겠습니까?")) {
                 fetch('/items/restore/' + giCodeToRestore, { method: 'POST' }) 
-                    .then(response => {
-                        if (!response.ok) return response.json().then(err => { throw new Error(err.message || '복구 실패') });
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
                         alert(data.message);
                         location.reload();
                     })
                     .catch(error => alert('복구 실패: ' + error.message));
-                    
             }
         });
     });
@@ -266,13 +278,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	async function showRegistrationModal() {
 	    try {
 	        const response = await fetch('/items/new-form');
-
-	        if (!response.ok) {
-	            throw new Error('Server responded with status: ' + response.status);
-	        }
 	        const formHtml = await response.text();
-	        modalContainer.innerHTML = formHtml;
-	        modalContainer.style.transform = 'translateX(0)';
+	        openModal(formHtml);
 	
 	        const imageInput = modalContainer.querySelector('#itemImageFile');
 	        const imgElement = modalContainer.querySelector('#previewImageElement');
@@ -280,7 +287,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	        const deleteBtn = modalContainer.querySelector('#deleteImageBtn');
 	    	
 	        if (imageInput && imgElement && initialTextSpan && deleteBtn) {
-	            
 	            imageInput.addEventListener('change', function() {
 	                const file = this.files[0];
 	                if (file) {
@@ -290,27 +296,19 @@ document.addEventListener('DOMContentLoaded', function() {
 	                        imgElement.style.display = 'block';
 	                        initialTextSpan.style.display = 'none';
 	                        deleteBtn.style.display = 'inline-block';
-	                    }
+	                    };
 	                    reader.readAsDataURL(file);
-	                } else {
-	                    imgElement.src = '';
-	                    imgElement.style.display = 'none';
-	                    initialTextSpan.style.display = 'block';
-	                    deleteBtn.style.display = 'none';
 	                }
 	            });
 	
 	            deleteBtn.addEventListener('click', function() {
 	                imageInput.value = ''; 
 	                imgElement.src = '';
+                    imgElement.style.display = 'none';
 	                initialTextSpan.style.display = 'block';
 	                deleteBtn.style.display = 'none';
 	            });
 	        }
-	        
-	        modalContainer.querySelectorAll('.modal-close-btn').forEach(btn => {
-	            btn.addEventListener('click', closeModal);
-	        });
 	
 	        const suppliers = await fetch('/items/api/com-members').then(res => res.json());
 	        const supplierSelect = modalContainer.querySelector('#gcmCode');
@@ -332,25 +330,40 @@ document.addEventListener('DOMContentLoaded', function() {
 	    }
 	}
 
+	async function handleFormSubmit(event) {
+	    event.preventDefault();
+	    const form = event.target;
+	    const itemData = {
+	        giName: form.querySelector('#giName').value,
+	        gcmCode: form.querySelector('#gcmCode').value,
+	        giRemark: form.querySelector('#giRemark').value
+	    };
 
-    async function handleFormSubmit(event) {
-        event.preventDefault(); 
-        const form = event.target;
-        const formData = new FormData(form);
-    
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                body: formData 
-            });
-            if (!response.ok) throw new Error('서버 응답 실패');
-            const result = await response.json();
-            alert(result.message);
-            if (response.ok) location.reload(); 
-        } catch (error) {
-            alert('등록 중 오류가 발생했습니다.');
-        }
-    }
+	    const formData = new FormData();
+	    const fileInput = form.querySelector('#itemImageFile');
+
+	    if (fileInput.files.length > 0) {
+	        formData.append('file', fileInput.files[0]);
+	    } else {
+	        formData.append('file', new Blob(), ''); 
+	    }
+
+	    formData.append('itemData', JSON.stringify(itemData));
+
+	    try {
+	        const response = await fetch(form.action, {
+	            method: 'POST',
+	            body: formData
+	        });
+	        if (!response.ok) throw new Error('서버 응답 실패');
+	        const result = await response.json();
+	        alert(result.message);
+	        if (response.ok) location.reload();
+	    } catch (error) {
+	        alert('등록 중 오류가 발생했습니다.');
+	        console.error('Submit Error:', error);
+	    }
+	}
 });
 </script>	           
 <script src="/js/render.js"></script>    

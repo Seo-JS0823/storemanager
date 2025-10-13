@@ -2,6 +2,7 @@ package com.storemanager.item;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,12 +18,18 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/items")
-@RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
     private final SupplierService supplierService;
     private final ObjectMapper objectMapper;
+    
+    @Autowired
+    public ItemController(ItemService itemService, SupplierService supplierService, ObjectMapper objectMapper) {
+        this.itemService = itemService;
+        this.supplierService = supplierService;
+        this.objectMapper = objectMapper;
+    }
 
     //품목 목록 페이지 조회
     @GetMapping("")
@@ -47,7 +54,7 @@ public class ItemController {
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity<?> registerItem(
-            @RequestPart("file") MultipartFile file,
+    		@RequestPart(value = "file", required = false) MultipartFile file,
             @RequestPart("itemData") String itemData) { // JSON 문자열 받기
         try {
             ItemDTO itemDTO = objectMapper.readValue(itemData, ItemDTO.class);
@@ -165,7 +172,7 @@ public class ItemController {
     //이미지
     @GetMapping("/image/{filename}")
     @ResponseBody
-    public ResponseEntity<byte[]> displayImage(@PathVariable String filename) {
+    public ResponseEntity<byte[]> displayImage(@PathVariable("filename") String filename) {
         return itemService.getImage(filename);
     }
 

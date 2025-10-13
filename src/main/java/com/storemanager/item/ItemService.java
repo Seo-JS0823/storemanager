@@ -25,7 +25,7 @@ public class ItemService {
     @Autowired
     private ItemMapper itemMapper;
 
-    private final String uploadDir = "item-images/";
+    private final String uploadDir = "C:/Users/GGG/Desktop/secondproject/storemanager/uploads/"; 
 
     public List<ItemDTO> selectItemList() {
         return itemMapper.selectItemList();
