@@ -332,7 +332,7 @@
       <div>등록일</div>
     </div>
 
-    <div class="m-items">
+    <div class="m-items" id="m-items-cus">
       <c:forEach var="c" items="${customerList}">
         <div>
           <div><c:out value="${c.gcm_Code}"/></div>
@@ -348,6 +348,8 @@
         </div>
       </c:forEach>
     </div>
+    <!--  페이징  -->
+    <div class="paging" id="paging"></div>
     </div>
 
   </div>
@@ -415,10 +417,12 @@ const startEl=document.querySelector('input[name="startdate"]');
 const endEl=document.querySelector('input[name="enddate"]');
 const listWrap=document.querySelector('.m-items');
 
-searchBtn.addEventListener('click',doSearch);
-searchInput.addEventListener('keydown',(e)=>{if(e.key==='Enter')doSearch();});
-startEl.addEventListener('change',doSearch);
-endEl.addEventListener('change',doSearch);
+/*
+searchBtn.addEventListener('click', cusRender(1));
+searchInput.addEventListener('keydown',(e)=>{if(e.key==='Enter') cusRender(1);});
+startEl.addEventListener('change', cusRender(1));
+endEl.addEventListener('change', cusRender(1));
+*/
 
 async function doSearch(){
   const keyword=searchInput.value.trim();
@@ -473,6 +477,118 @@ function softDelete(idx) {
 		return;
 	}
 }
+
+// 페이징 부분
+
+const paging = new PagingManager();
+
+cusRender(1);
+
+function cusRender(page) {
+	if(typeof page === 'object') paging.nowPage = 1; 
+	else paging.nowPage = page;
+	
+	const keyword=searchInput.value.trim();
+	const start=startEl.value.trim();
+	const end=endEl.value.trim();
+	
+	const params=new URLSearchParams();
+	if(keyword)params.append('keyword',keyword);
+	if(start)params.append('startdate',start);
+	if(end)params.append('enddate',end);
+	if(paging.nowPage) params.append('nowPage', paging.nowPage);
+	
+	const listArea = document.querySelector('.m-items');
+	listArea.innerHTML = '';
+	
+	Render.callJSON(
+	'/api/customer/search?' + params.toString(),
+	{},
+	'm-items-cus',
+	(json) => {
+		json.list.forEach(item => {
+			const div = document.createElement('div');
+			div.innerHTML = `
+				<div>\${escapeHtml(item.gcm_Code||'')}</div>
+				<div>\${escapeHtml(item.gcm_Name||'')}</div>
+				<div>\${escapeHtml(item.gcm_Email||'')}</div>
+				<div>\${escapeHtml(item.gcm_Tel||'')}</div>
+				<div>\${escapeHtml(item.gcm_Addr||'')}</div>
+				<div>\${item.gcm_Regdate?item.gcm_Regdate.replace('T',' '):''}</div>
+				<div></div>
+				<div class="btns-box">
+				  <div class="items-btn red" onclick="softDelete(\${item.gcm_Idx})"></div>
+				</div>
+			`;
+			
+			listArea.appendChild(div);
+			
+			const totalPage = json.pg.totalPage;
+			paging.renderer({
+				start  : 'start',
+				middle : 'middle',
+				end    : 'end'
+			},
+			'paging',
+			totalPage,
+			5)
+		});
+	});
+}
+
+paging.setComponent('start', (data) => {
+	const div = document.createElement('div');
+	div.textContent = '◀';
+	
+	const backPage = data.start - data.pageSize;
+	
+	if (data.start <= 1) {
+		div.style.opacity = '0.3';
+		div.style.cursor = 'default';
+		return div;
+	}
+	
+	div.addEventListener('click', () => {
+		cusRender(backPage);
+	});
+});
+paging.setComponent('middle', (data) => {
+	const div = document.createElement('div');
+	div.textContent = `\${data.currentPage}`;
+	
+	if (data.currentPage === data.activePage) {
+		div.style.fontWeight = 'bold';
+		div.style.color = '#00AA00';
+		div.style.fontSize = '1.5rem';
+    }
+
+    div.addEventListener('click', () => {
+    	cusRender(data.currentPage);
+    });
+	return div;
+});
+paging.setComponent('end', (data) => {
+	const div = document.createElement('div');
+	div.textContent = '▶';
+	
+	const nextPage = data.end + 1;
+	
+	if(nextPage > data.totalPage) {
+		div.style.opacity = '0.3';
+		div.style.cursor = 'default';
+		return div;
+	}
+	
+	div.addEventListener('click', () => {
+		cusRender(nextPage);
+	});
+	
+	return div;
+});
+searchBtn.addEventListener('click', cusRender);
+searchInput.addEventListener('keydown',(e)=>{if(e.key==='Enter') cusRender(1);});
+startEl.addEventListener('change', cusRender);
+endEl.addEventListener('change', cusRender);
 </script>
 
 <script>

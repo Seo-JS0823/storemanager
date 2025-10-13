@@ -116,6 +116,49 @@ public interface CustomerMapper {
             @Param("startdate") LocalDate startdate,
             @Param("endExclusive") LocalDate endExclusive
     );
+    
+    @Select("""
+            <script>
+            SELECT
+                GCM_IDX         AS gcm_Idx,
+                GCM_CODE        AS gcm_Code,
+                GCM_NAME        AS gcm_Name,
+                GCM_EMAIL       AS gcm_Email,
+                GCM_TEL         AS gcm_Tel,
+                GCM_ADDR        AS gcm_Addr,
+                GCM_REGDATE     AS gcm_Regdate,
+                GCM_DEL_FLAG    AS gcm_Del_Flag
+            FROM GE_COM_MEMBER
+            WHERE GCM_DEL_FLAG = 'N'
+            
+            <if test="keyword != null and keyword != ''">
+                AND (
+                    GCM_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR GCM_EMAIL LIKE CONCAT('%', #{keyword}, '%')
+                    OR GCM_TEL LIKE CONCAT('%', #{keyword}, '%')
+                    OR GCM_ADDR LIKE CONCAT('%', #{keyword}, '%')
+                    OR GCM_CODE LIKE CONCAT('%', #{keyword}, '%')
+                )
+            </if>
+            
+            <if test="startdate != null">
+                AND GCM_REGDATE &gt;= #{startdate}
+            </if>
+            
+            <if test="endExclusive != null">
+                AND GCM_REGDATE &lt; #{endExclusive}
+            </if>
+            
+            ORDER BY GCM_IDX DESC
+            LIMIT ${nowPage},10
+            </script>
+            """)
+        List<CustomerDTO> searchByDatePaging(
+                @Param("keyword") String keyword,
+                @Param("startdate") LocalDate startdate,
+                @Param("endExclusive") LocalDate endExclusive,
+                @Param("nowPage") Integer nowPage
+        );
 
 
     //  신규 등록

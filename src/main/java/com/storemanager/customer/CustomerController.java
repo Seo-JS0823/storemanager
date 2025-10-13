@@ -2,6 +2,7 @@ package com.storemanager.customer;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.storemanager.test.Paging;
+
 @Controller
 @RequestMapping("/customer")
 public class CustomerController {
@@ -29,7 +32,7 @@ public class CustomerController {
     public ModelAndView customerList(ModelAndView mv) {
         List<CustomerDTO> customerList = customerMapper.findAll();
         mv.addObject("customerList", customerList);
-        mv.setViewName("customer/customer");
+        mv.setViewName("customer/customer-temp");
         return mv;
     }
 
@@ -54,6 +57,7 @@ public class CustomerController {
             return ResponseEntity.ok(dto);
         }
 
+        /*
         //  검색 (키워드 + 날짜 범위)
         @GetMapping("/search")
         public ResponseEntity<List<CustomerDTO>> search(
@@ -67,6 +71,31 @@ public class CustomerController {
             LocalDate endExclusive = (enddate != null) ? enddate.plusDays(1) : null;
             List<CustomerDTO> list = customerMapper.searchByDate(keyword, startdate, endExclusive);
             return ResponseEntity.ok(list);
+        }
+        */
+        
+    //  검색 (키워드 + 날짜 범위) Paging
+        @GetMapping("/search")
+        public ResponseEntity<Map<String, Object>> searchPaging(
+                @RequestParam(required = false) String keyword,
+                @RequestParam(required = false)
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startdate,
+                @RequestParam(required = false)
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate enddate,
+                @RequestParam(required = false) Integer nowPage
+        ) {
+            // enddate 포함 검색을 위해 하루 더함
+            LocalDate endExclusive = (enddate != null) ? enddate.plusDays(1) : null;
+            List<CustomerDTO> list = customerMapper.searchByDate(keyword, startdate, endExclusive);
+            
+            int size = list.size();
+            Paging<CustomerDTO> pg = new Paging<>(size);
+    		int offset = pg.getLimit(nowPage);
+    		List<CustomerDTO> pglist = customerMapper.searchByDatePaging(keyword, startdate, endExclusive, offset);
+    		pg.setResponseList(pglist);
+    		Map<String, Object> response = pg.getResponseData();
+            
+            return ResponseEntity.ok(response);
         }
 
         //  등록
