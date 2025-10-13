@@ -2,7 +2,6 @@ package com.storemanager.out;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +25,7 @@ public class OutController {
 	
 	@GetMapping("/list")
 	public ModelAndView getList() {
-		ArrayList<HashMap<String,Object>> outList = outsvc.getOutList();
+		ArrayList<HashMap<String,Object>> outList = outsvc.getOutList(); // 출고아이템 리스트를 가져온다		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("outList", outList);
 		mv.setViewName("out/out");
@@ -55,7 +53,7 @@ public class OutController {
 
 		try{
 			json = new JSONObject(rBody);
-		}catch(Exception e){
+		} catch(Exception e){
 			response.setStatus(401);
 			return result.toString();
 		}
@@ -65,16 +63,6 @@ public class OutController {
 		else response.setStatus(401);
 		return result.toString();
 	}
+
 	
-	@PatchMapping("/list/{idx}")
-	@ResponseBody
-	public String updateOut(@PathVariable Integer idx, @RequestBody OutDTO outdto) {
-		log.info("{}", outdto);
-		
-		JSONObject json = null;
-		HashMap<String, Object> target = outsvc.updateOutItem(idx, outdto);
-		
-		json = new JSONObject(target);
-		return json.toString();
-	}
 }

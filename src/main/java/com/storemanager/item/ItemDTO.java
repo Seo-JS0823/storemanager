@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemDTO {
+    private String giCode;  
+    private String giName;    
+    private String gcmCode;   
+    private String giDelFlag;
+    private String gcmName;
     
-    private int giCode;         
-    private String giName;      
-    private String gcmCode;     
-    private String gcmName;     
-    private int gisTotQty;     
-
+    private String giImg;   
+    private String remark;   
 }
+ 

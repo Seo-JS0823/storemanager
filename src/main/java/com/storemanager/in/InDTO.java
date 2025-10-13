@@ -11,6 +11,9 @@ public class InDTO {
 	// 거래처 테이블 인덱스
 	private Integer gcm_idx;
 	
+	// 아이템 히스토리 인덱스
+	private Integer gih_idx;
+	
 	// 거래처 코드
 	private String  gcm_code;
 	
@@ -26,9 +29,6 @@ public class InDTO {
 	// 거래처 
 	private String  gi_del_flag;
 	
-	// 아이템 히스토리 인덱스
-	private Integer gih_idx;
-	
 	// 아이템 히스토리 입/출고
 	private String  gih_inout;
 	
@@ -37,6 +37,9 @@ public class InDTO {
 	
 	// 아이템 히스토리 단가
 	private Integer gih_price;
+	
+	// 아이템 히스토리 총가
+	private Integer tot_price;
 	
 	// 아이템 히스토리 비고
 	private String  gih_remark;

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.storemanager.dashboard.DashMapper">
+	<!-- 당월 입고가 총계 -->
+	<select id="nowInPrice" resultType="int">
+		select SUM(T.TOTALS) from(
+		select
+			SUM(GIH_QTY) * AVG(GIH_PRICE) AS TOTALS
+		from
+			GE_ITEMS_HIST
+		where
+			GIH_INOUT = 'IN' AND
+			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
+			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+		group by GI_NAME) AS T
+	</select>
+	
+	<!-- 당월 출고가 총계 -->
+	<select id="nowOutPrice" resultType="int">
+		select SUM(T.TOTALS) from(
+		select
+			SUM(ABS(GIH_QTY)) * AVG(GIH_PRICE) AS TOTALS
+		from
+			GE_ITEMS_HIST
+		where
+			GIH_INOUT = 'OUT' AND
+			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
+			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+		group by GI_NAME) AS T
+	</select>
+	
+	<!-- 당월 총 입고 TOP 5 -->
+	<select id="stickTotalNowIn" resultType="com.storemanager.dashboard.DashDTO">
+		select
+			GI_NAME,
+			SUM(GIH_QTY) as GIH_QTY,
+			AVG(GIH_PRICE) as GIH_PRICE,
+			SUM(GIH_QTY) * AVG(GIH_PRICE) as ORDERS
+		from
+			GE_ITEMS_HIST
+		WHERE
+			GIH_INOUT = 'IN' AND
+			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
+			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+		group by
+			GI_NAME
+		order by ORDERS DESC
+		limit 5
+	</select>
+	
+	<!-- 당월 총 출고 TOP 5 -->
+	<select id="stickTotalNowOut" resultType="com.storemanager.dashboard.DashDTO">
+		select
+			GI_NAME,
+			SUM(GIH_QTY) as GIH_QTY,
+			AVG(GIH_PRICE) as GIH_PRICE,
+			SUM(ABS(GIH_QTY)) * AVG(GIH_PRICE) as ORDERS
+		from
+			GE_ITEMS_HIST
+		WHERE
+			GIH_INOUT = 'OUT' AND
+			GIH_REGDATE <![CDATA[>=]]> STR_TO_DATE(#{startDate}, '%Y-%m-%d 00:00:00') AND
+			GIH_REGDATE <![CDATA[<]]> STR_TO_DATE(#{endDate}, '%Y-%m-%d 00:00:00')
+		group by
+			GI_NAME
+		order by ORDERS DESC		
+		limit 5
+	</select>
+	
+	<!-- 최신 입고 내역 TOP 5 -->
+	<select id="inTopFive" resultType="com.storemanager.dashboard.DashDTO">
+		SELECT 
+		   DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE, 
+		   GCM.GCM_NAME, 
+		   GIH.GI_NAME, 
+		   FORMAT(GIH.GIH_QTY,0) STR_GIH_QTY, 
+		   FORMAT(GIH.GIH_PRICE,0) STR_GIH_PRICE, 
+		   FORMAT((GIH.GIH_QTY*GIH.GIH_PRICE),0) STR_AMOUNT 
+		FROM 
+		   GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
+		WHERE
+		   GIH.GIH_INOUT='IN' and GIH.GCM_CODE = GCM.GCM_CODE
+		ORDER BY GIH.GIH_REGDATE DESC
+		LIMIT 0,5
+	</select>
+	
+	<!-- 최신 출고 내역 TOP 5 -->
+	<select id="outTopFive" resultType="com.storemanager.dashboard.DashDTO">
+		SELECT
+		   DATE_FORMAT(GIH.GIH_REGDATE,'%Y-%m-%d') GIH_REGDATE,
+		   GCM.GCM_NAME, 
+		   GIH.GI_NAME, 
+		   FORMAT((GIH.GIH_QTY*-1),0) STR_GIH_QTY,
+		   FORMAT(GIH.GIH_PRICE,0) STR_GIH_PRICE,
+		   FORMAT(((GIH.GIH_QTY*GIH.GIH_PRICE)*-1),0) STR_AMOUNT 
+		FROM
+			GE_ITEMS_HIST GIH, GE_COM_MEMBER GCM
+		WHERE
+			GIH.GIH_INOUT='OUT' and GIH.GCM_CODE = GCM.GCM_CODE
+		ORDER BY GIH.GIH_REGDATE DESC
+		limit 0,5
+	</select>
+	
+	<!-- 명세서 가져오기 -->
+	<select id="billTopFiveMeta" resultType="com.storemanager.dashboard.DashDTO">
+		SELECT
+		   DATE_FORMAT(GBC_REGDATE,'%Y-%m-%d %H시 %i분') as GBC_REGDATE,
+		   GBC_GIS_LIST,
+		   GBC_NUMBER,
+		   GBC_GCM_NAME,
+		   GBC_GI_NAME,
+		   IF(GBC_INOUT='IN','입고','출고') as GBC_INOUT
+		FROM
+			GE_BILL_CHK
+		ORDER BY GBC_REGDATE DESC
+		LIMIT 5
+	</select>
+	
+	<!-- 명세서 총 금액 가져오기 -->
+	<select id="billTopFiveAmount" resultType="String">
+		SELECT
+		   FORMAT(SUM(IF((GIH_QTY*GIH_PRICE) <![CDATA[<]]> 0,(GIH_QTY*GIH_PRICE)*-1,(GIH_QTY*GIH_PRICE))) ,0) GBC_AMOUNT
+		FROM 
+		   GE_ITEMS_HIST
+		WHERE
+		   GIH_IDX IN (${param1})
+	</select>
+	
+</mapper>
