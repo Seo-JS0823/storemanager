@@ -480,18 +480,21 @@
 	// 출고확인서 라디오 버튼 이벤트 리스너
 	//let searchOutBillEl = document.getElementById('searchOutBill');
 	searchOutBillEl.addEventListener('click',(e)=>{
+		billCreateEl.style.display = 'flex';
 		searchOutBill();
 	});
 	// 출고확인서 라디오 버튼 이벤트 리스너 끝.
 	// ============================================
 	// 입고확인서 라디오 버튼 이벤트 리스너
 	searchInBillEl.addEventListener('click',(e)=>{
+		billCreateEl.style.display = 'flex';
 		searchInBill();
 	});
 	// 입고확인서 라디오 버튼 이벤트 리스너 끝.
 	// ============================================
 	// 명세서 라디오 버튼 이벤트 리스너
 	searchAllBillEl.addEventListener('click',(e)=>{
+		billCreateEl.style.display = 'none';
 		searchAllBill();
 	});
 	// 명세서 라디오 버튼 이벤트 리스너 끝.
