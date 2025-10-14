@@ -288,9 +288,9 @@
 						<div class="m-search-line">
 							<div class="m-search-date">
 								<!-- 날짜 구간 -->
-								<input type="date" name="startdate">
+								<input type="date" id="startdate">
 								<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-								<input type="date" name="enddate">
+								<input type="date" id="enddate">
 							</div>
 							<div class="m-search-option">
 								<div>
@@ -299,7 +299,7 @@
 								</div>
 								<div>
 									<input type="radio" id="searchEvent2" name="searchoption">
-									<p>매입처명</p>
+									<p>거래처명</p>
 								</div>
 								<div>
 									<input type="radio" id="searchEvent3" name="searchoption">
@@ -308,8 +308,8 @@
 							</div>
 							<div class="m-search-text">
 								<!-- TEXT 검색 구간 -->
-								<input type="text" name="search" placeholder="검색어를 입력하세요.">
-								<div>검색</div>
+								<input id="search-text" type="text" name="search" placeholder="검색어를 입력하세요.">
+								<div id="search-btn">검색</div>
 							</div>
 						</div>
 					</div>
@@ -319,7 +319,7 @@
 				<div class="m-search-sort">
 					<div></div>
 					<div>상품명</div>
-					<div>매입처명</div>
+					<div>거래처명</div>
 					<div>매입단가</div>
 					<div>수량</div>
 					<div>총합</div>
@@ -327,27 +327,28 @@
 					<div></div>
 				</div>
 				
-				<div class="m-items"> <!-- 입고 리스트 -->
+				<div class="m-items" id="item-history-list"> <!-- 입고 리스트 -->
+				<!-- 
 				<c:forEach var="list" items="${list}" varStatus="status">
 					<div>
 						<div>${status.index + 1}</div>
-						<div>${list.gi_name}</div>
-						<div>동서식품</div>
-						<div>${list.gih_price}원</div>
+						<div class="list-item_name">${list.gi_name}</div>
+						<div class="list-company_name">${list.gcm_name}</div>
+						<div class="list-price">${list.gih_price}원</div>
 						<div>${list.gih_qty} EA</div> 
 						<div>총 ${list.tot_price}원</div>
-						<div>${list.gih_regdate}</div>
+						<div class="list-regdate">${list.gih_regdate}</div>
 						<div class="btns-box">
-							<!-- Ball -->
+							
 							<div class="items-btn orange"></div>
 							<div class="items-btn green"></div>
-							<!-- <div class="items-btn red"></div> -->
+							
 						</div>
 				  </div>
-				</c:forEach> 
-					<div></div>
+				</c:forEach>
+				-->
 				</div>
-				<div class="paging">
+				<div class="paging" id="paging">
 	                <div>◀◀</div>
 	                <div>◀</div>
 	                <!-- c:forEach start -->
@@ -366,20 +367,21 @@
 	</div>
 </div>
 <!-- </form> -->
+<script src="/js/render.js"></script>
+<script src="/js/member.js"></script>
+<script src="/js/paging.js"></script>
 <script>
+const inCreateEl = document.querySelector('#in-create');  // 입고 버튼
 
-const inCreateEl = document.querySelector('#in-create');
-
-inCreateEl.addEventListener('click', (e) => {
+inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 	
+	const overlay         = document.createElement('div');  // 클릭할때 나온는 회색배경
+	const SelectModalEl   = document.createElement('div');  // 입고생성 처음 뜨는 모달창
 	
-	const overlay         = document.createElement('div');   // 클릭할때 나온는 회색배경
-	const SelectModalEl   = document.createElement('div');   // 입고생성 처음 뜨는 모달창
-	
-	const itemsMessage    = document.createElement('h2');   
+	const itemsMessage    = document.createElement('h2');   // 입고할 물품 선택 :
 	const itemsSelect 	  = document.querySelector('#items-select').content.cloneNode(true); // 위에 template 갖고올때 쓰는문법
 	
-	const companysMessage = document.createElement('h2');
+	const companysMessage = document.createElement('h2');   // 거래처 선택 :
 	const companysSelect  = document.querySelector('#companys-select').content.cloneNode(true);
 	
 	const selectBtn       = document.createElement('button'); // 물품,거래처 확인 버튼
@@ -408,8 +410,8 @@ inCreateEl.addEventListener('click', (e) => {
 			overlay.remove();
 	})
 	
-	const itemsNameEl     = document.querySelector('#item-name')       // 선택칸에 최종 입력된 상품명
-	const companysNameEl     = document.querySelector('#company-name') // 선택칸에 최종 입력된 거래처명
+	const itemsNameEl     = document.querySelector('#item-name')    // 선택칸에 최종 입력된 상품명
+	const companysNameEl  = document.querySelector('#company-name') // 선택칸에 최종 입력된 거래처명
 
 	itemsNameEl.addEventListener('change', () => { // 거래처 선택은 물품 선택한거에 따라 보여주는 리스트가 달라져서 JS로 처리
 		const companyListEl = document.querySelector('#companys-list') // 거래처명 선택 리스트들
@@ -432,7 +434,7 @@ inCreateEl.addEventListener('click', (e) => {
 			} )
 	}) // change End
 	
-	selectBtn.addEventListener('click', (e) => {
+	selectBtn.addEventListener('click', (e) => { // 물품,거래처 확인 클릭 이벤트
 		e.stopPropagation();
 		overlay.remove();
 		
@@ -458,12 +460,11 @@ inCreateEl.addEventListener('click', (e) => {
 			}
 		})
 		
-		const inBtnEl       = document.querySelector('#save');
-		const rightQtyEl    = document.querySelector('#right-qty');
-		const rightPriceEl  = document.querySelector('#right-price');
-		const rightRemarkEl = document.querySelector('#right-remark');
-		inBtnEl.addEventListener('click',() => {
-			alert('ㅇㅇ')
+		const inBtnEl       = document.querySelector('#save');         // 오른쪽 모달 저장 버튼
+		const rightQtyEl    = document.querySelector('#right-qty');    // 오른쪽 모달 수량
+		const rightPriceEl  = document.querySelector('#right-price');  // 오른쪽 모달 단가
+		const rightRemarkEl = document.querySelector('#right-remark'); // 오른쪽 모달 비고
+		inBtnEl.addEventListener('click',() => { // 저장 클릭 이벤트
 			let inHistory = {
 					gcm_code   : document.querySelector('#right-gcm_code').value,
 					gi_code    : document.querySelector('#right-gi_code').value,
@@ -482,15 +483,163 @@ inCreateEl.addEventListener('click', (e) => {
 			fetch(url,params)
 				.then(response => response.json())
 			
-		}) // 저장 누른후 끝
+		}) // 저장 클릭 이벤트 끝
 		
-	}) // 확인 누른후 끝
+	}) // 확인 클릭 이벤트 끝
 	
-}) // 입고 누른후 끝
+}) // 입고 클릭 이벤트 끝
 
+const itemHistoryListEL = document.querySelector('#item-history-list');   // 입고 물품 리스트 컨테이너
+const searchEvent1El 		= document.querySelector('#searchEvent1'); 				// 상품명   radio
+const searchEvent2El	  = document.querySelector('#searchEvent2'); 				// 거래처명 radio
+const searchEvent3El	  = document.querySelector('#searchEvent3'); 				// 거래단가 radio
+const searchTextEl 	 		= document.querySelector('#search-text'); 		   	// 검색내용칸
+const searchBtn 		 		= document.querySelector('#search-btn');  			  // 검색 버튼
+
+const	listItemName 		=	document.querySelector('.list-item_name');       // 상품명
+const	listCompanyName =	document.querySelector('.list-company_name');    // 거래처명
+const	listPrice			  =	document.querySelector('.list-price');           // 단가
+const	listRegdate 		=	document.querySelector('.list-regdate') ;        // 입고일
+
+const startDateEl = document.querySelector('#startdate'); // 검색 시작일칸
+const endDateEl = document.querySelector('#enddate'); 		// 검색 마지막일칸
+
+
+
+	searchBtn.addEventListener('click', () => {
+		ipgoRender(1);
+	}) // 검색 클릭 이벤트 끝
+	
+	// 페이징
+	// item-history-list parent ID
+	
+	const paging = new PagingManager();
+	
+	ipgoRender(1);
+	
+	function ipgoRender(page) {
+		paging.nowPage = page;
+		const searchEvent1Ell = document.querySelector('#searchEvent1'); 	// 상품명   radio
+		const searchEvent2Ell = document.querySelector('#searchEvent2'); 	// 거래처명 radio
+		const searchEvent3Ell = document.querySelector('#searchEvent3');  // 거래단가 radio
+		let keyword = searchTextEl.value.trim(); // 검색 내용물값
+		let startDate = startDateEl.value; // 검색 시작일
+		let endDate = endDateEl.value; // 검색 마지막일
+		
+		let urlll = '/in/list?nowPage=' + paging.nowPage;
+		
+		if(startDate && endDate) {
+			urlll = `/In/list?start=\${startDate}&end=\${endDate}&nowPage=\${paging.nowPage}`;
+		}
+		
+		if(searchEvent1Ell.checked) {
+			urlll = 'in/searchItem/' + keyword + `?nowPage=\${paging.nowPage}`;
+			if(startDate && endDate) {
+				urlll = 'in/searchItem/' + keyword + `?start=\${startDate}&end=\${endDate}&nowPage=\${paging.nowPage}`;
+			}
+		} else if (searchEvent2Ell.checked) {
+			urlll = 'in/searchCompany/' + keyword + `?nowPage=\${paging.nowPage}`;
+			if(startDate && endDate) {
+				urlll = 'in/searchCompany/' + keyword + `?start=\${startDate}&end=\${endDate}&nowPage=\${paging.nowPage}`;
+			}
+		} else if (searchEvent3Ell.checked) {
+			urlll = 'in/searchPrice/' + keyword + `?nowPage=\${paging.nowPage}`;
+			if(startDate && endDate) {
+				urlll = 'in/searchPrice/' + keyword + `?start=\${startDate}&end=\${endDate}&nowPage=\${paging.nowPage}`;
+			}			
+		}
+		
+		console.log(urlll)
+		
+		const itemHistoryArea = document.querySelector('#item-history-list');
+		itemHistoryArea.innerHTML = '';
+		
+		Render.callJSON(
+		urlll,
+		{},
+		'item-history-list',
+		(json) => {
+			json.list.forEach((item, index) => {
+				const div = document.createElement('div');
+				div.innerHTML = `
+			 	<div>\${index + 1}</div>
+				<div id="list-item_name">\${item.gi_name}</div>
+				<div id="list-company_name">\${item.gcm_name}</div>
+				<div id="list-price">\${item.gih_price}원</div>
+				<div>\${item.gih_qty} EA</div> 
+				<div>총 \${item.tot_price}원</div>
+				<div id="list-regdate">\${item.gih_regdate}</div>
+				<div class="btns-box">
+					<div class="items-btn orange"></div>
+					<div class="items-btn green"></div>
+				</div>
+				`;
+				itemHistoryArea.appendChild(div);
+				
+				const totalPage = json.pg.totalPage;
+				paging.renderer({
+					start  : 'in-start',
+					middle : 'in-middle',
+					end    : 'in-end'
+				},
+				'paging',
+				totalPage,
+				5)
+			})
+		});
+	}
+	
+	// 페이징 렌더링 컴포넌트
+	paging.setComponent('in-start', (data) => {
+		const div = document.createElement('div');
+		div.textContent = '◀';
+		
+		const backPage = data.start - data.pageSize;
+		
+		if (data.start <= 1) {
+			div.style.opacity = '0.3';
+			div.style.cursor = 'default';
+			return div;
+		}
+		
+		div.addEventListener('click', () => {
+			ipgoRender(backPage);
+		});
+	});
+	paging.setComponent('in-middle', (data) => {
+		const div = document.createElement('div');
+		div.textContent = `\${data.currentPage}`;
+		
+		if (data.currentPage === data.activePage) {
+			div.style.fontWeight = 'bold';
+			div.style.color = '#00AA00';
+			div.style.fontSize = '1.5rem';
+	    }
+
+	    div.addEventListener('click', () => {
+	    	ipgoRender(data.currentPage);
+	    });
+		return div;
+	});
+	paging.setComponent('in-end', (data) => {
+		const div = document.createElement('div');
+		div.textContent = '▶';
+		
+		const nextPage = data.end + 1;
+		
+		if(nextPage > data.totalPage) {
+			div.style.opacity = '0.3';
+			div.style.cursor = 'default';
+			return div;
+		}
+		
+		div.addEventListener('click', () => {
+			ipgoRender(nextPage);
+		});
+		
+		return div;
+	});
+	
 </script>
-
-<script src="/js/member.js"></script>
-
 </body>
 </html>

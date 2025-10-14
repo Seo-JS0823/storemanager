@@ -54,7 +54,7 @@ public class MemberController {
 		session.setAttribute("gm_level", target.getGm_level());
 		session.setAttribute("login", true);
 		
-		return "member/NewFile";
+		return "dashboard/dash";
 		//return "dashboard/dash";
 	}
 	

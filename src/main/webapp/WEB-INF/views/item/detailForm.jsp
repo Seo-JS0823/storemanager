@@ -16,7 +16,7 @@
         align-items: center;
         padding-bottom: 1rem;
         margin-bottom: 1rem;
-        border-bottom: 0.2rem solid #666;
+        /*border-bottom: 0.2rem solid #666;*/
     }
     .form-header .state-circle {
         width: 3rem;
@@ -32,6 +32,16 @@
     }
 
     /* 이미지 영역 스타일 */
+    
+    .image-area img {
+        max-width: 15rem; 
+        height: auto;
+        border: 2px dashed #ccc;
+        border-radius: 0.5rem;
+        display: block;
+        margin: 0 auto;
+    } 
+    
     .image-area {
         margin-bottom: 1.5rem;
         text-align: center;
@@ -135,15 +145,14 @@
     <div class="form-header">
         <div class="state-circle" style="background-color: #FFA500;"></div>
         <h2>상세 정보</h2>
-        <button type="button" class="btn-cancel modal-close-btn" style="margin-left: auto; background: none; color: #333; font-size: 2rem; width: auto; height: auto;">&times;</button>
     </div>
 
 	<div>
 		<div class="image-area">
             <c:choose>
-                <c:when test="${not empty item.giImg}">
-                    <img src="/item-images/${item.giImg}" alt="품목 이미지" style="cursor: default;">
-                </c:when>
+				<c:when test="${not empty item.giImg}">
+				    <img src="/items/image/${item.giImg}" alt="품목 이미지" style="cursor: default;">
+				</c:when>
                 <c:otherwise>
                     <div class="image-preview" style="cursor: default;"><span>이미지 없음</span></div>
                 </c:otherwise>
@@ -167,10 +176,10 @@
 
 		<div class="remark-area">
 			<label for="remark">REMARK</label>
-			<textarea id="remark" readonly>${item.remark}</textarea>
+			<textarea id="remark" readonly>${item.giRemark}</textarea>
 		</div>
 
-		<div class="form-actions"> >
+		<div class="form-actions">
             <button type="button" class="btn-cancel modal-close-btn">닫 기</button>
 		</div>
 	</div>

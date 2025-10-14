@@ -1,32 +1,79 @@
 package com.storemanager.item;
 
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.storemanager.test.Paging;
+
 @Controller
 @RequestMapping("/items")
-@RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
     private final SupplierService supplierService;
+    private final ObjectMapper objectMapper;
+    
+    @Autowired
+    public ItemController(ItemService itemService, SupplierService supplierService, ObjectMapper objectMapper) {
+        this.itemService = itemService;
+        this.supplierService = supplierService;
+        this.objectMapper = objectMapper;
+    }
 
     //품목 목록 페이지 조회
     @GetMapping("")
     public String itemList(Model model,
-            @RequestParam(name = "includeDeleted", required = false, defaultValue = "false") boolean includeDeleted,
-            @RequestParam(name = "search", required = false) String search) {	
-        List<ItemDTO> itemList = itemService.findItems(includeDeleted, search);
-        model.addAttribute("items", itemList);
+        @RequestParam(name = "includeDeleted", required = false, defaultValue = "false") boolean includeDeleted,
+        @RequestParam(name = "search", required = false) String search,
+        @RequestParam(name = "searchoption", required = false) String searchOption,
+        @RequestParam(name = "nowPage", required = false) Integer nowPage) {
+        List<ItemDTO> itemList = itemService.findItems(includeDeleted, search, searchOption);
+        if(nowPage == null) {
+        	nowPage = 1;
+        }
+        
+        int size = itemList.size();
+		Paging<ItemDTO> pg = new Paging<>(size);
+		int offset = pg.getLimit(nowPage);
+		
+		List<ItemDTO> list = itemService.findItemsPaging(includeDeleted, search, searchOption, offset);
+		
+		int totalPage = pg.getTotalPage();
+		
+		int start = ((nowPage - 1) / 5) * 5 + 1;
+		int end = Math.min(start + 5 - 1, totalPage);
+		
+		System.out.println("start : " + start + "/ totalPage : " + totalPage);
+		
+		List<Integer> paging = new ArrayList<>();
+		for(int i = start; i <= end; i++) {
+			paging.add(i);
+		}
+		
+		model.addAttribute("start", start);
+		model.addAttribute("end", end);
+        model.addAttribute("items", list);
+        model.addAttribute("blocks", paging);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("nowPage", nowPage);
         return "item/item";
     }
      
@@ -39,9 +86,14 @@ public class ItemController {
     //품목 등록 기능 (데이터 처리)
     @PostMapping("/register")
     @ResponseBody
-    public ResponseEntity<?> registerItem(ItemDTO itemDTO) {
+    public ResponseEntity<?> registerItem(
+    		@RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart("itemData") String itemData) { // JSON 문자열 받기
         try {
-            itemService.insertItem(itemDTO);
+            ItemDTO itemDTO = objectMapper.readValue(itemData, ItemDTO.class);
+            
+            itemService.insertItem(itemDTO, file);
+            
             Map<String, String> response = new HashMap<>();
             response.put("message", "품목이 성공적으로 등록되었습니다.");
             return ResponseEntity.ok(response);
@@ -50,6 +102,18 @@ public class ItemController {
             Map<String, String> response = new HashMap<>();
             response.put("message", "품목 등록 중 오류가 발생했습니다: " + e.getMessage());
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+ // --- 거래처 목록 API (JSON) ---
+    @GetMapping("/api/com-members")
+    @ResponseBody
+    public ResponseEntity<?> getAllSuppliers() {
+        try {
+            List<SupplierDTO> suppliers = supplierService.findAll();
+            return ResponseEntity.ok(suppliers);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("거래처 목록 조회 중 오류 발생");
         }
     }
     
@@ -86,9 +150,15 @@ public class ItemController {
     //품목 업데이트 기능
     @PostMapping("/update")
     @ResponseBody
-    public ResponseEntity<?> updateItem(ItemDTO itemDTO) {
+    public ResponseEntity<?> updateItem(
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart("itemData") String itemData, // JSON 문자열 받기
+            @RequestParam(name = "imageDeleted", required = false, defaultValue = "false") boolean imageDeleted) {
         try {
-            itemService.updateItem(itemDTO);
+            ItemDTO itemDTO = objectMapper.readValue(itemData, ItemDTO.class);
+
+            itemService.updateItem(itemDTO, file, imageDeleted);
+
             Map<String, String> response = new HashMap<>();
             response.put("message", "품목이 성공적으로 수정되었습니다.");
             return ResponseEntity.ok(response);
@@ -131,5 +201,13 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+    
+    //이미지
+    @GetMapping("/image/{filename}")
+    @ResponseBody
+    public ResponseEntity<byte[]> displayImage(@PathVariable("filename") String filename) {
+        return itemService.getImage(filename);
+    }
+
 
 } 

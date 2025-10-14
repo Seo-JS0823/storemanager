@@ -15,7 +15,7 @@
         align-items: center;
         padding-bottom: 1rem;
         margin-bottom: 1rem;
-        border-bottom: 0.2rem solid #666;
+        /*border-bottom: 0.2rem solid #666;*/
     }
     .form-header .state-circle {
         width: 3rem;
@@ -34,22 +34,26 @@
     .image-area {
         margin-bottom: 1.5rem;
         text-align: center;
+        position: relative;
     }
+    
     .image-preview {
-        width: 15rem;
-        height: 15rem;
-        border: 2px dashed #ccc;
-        border-radius: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #aaa;
-        font-size: 1rem;
-        margin: 0 auto 1rem;
-        background-color: white;
-        cursor: pointer;
-        overflow: hidden; 
+	    width: 15rem;
+	    height: 15rem;
+	    border: 2px dashed #ccc;
+	    border-radius: 0.5rem;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    color: #aaa;
+	    font-size: 1rem;
+	    margin: 0 auto 1rem;
+	    background-color: white;
+	    cursor: pointer;
+	    overflow: hidden; 
+	    position: relative;
     }
+
     .image-preview img {
         width: 100%;
         height: 100%;
@@ -57,6 +61,39 @@
     }
     #itemImageFile {
         display: none; 
+    }
+    
+    .btn-change-image {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #007bff;
+        color: white;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        border: none;
+        font-size: 1rem;
+    }
+    
+    #deleteImageBtn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background-color: rgba(220, 53, 69, 0.8);
+        color: white;
+        border: none;
+        border-radius: 50%; 
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+        font-weight: bold;
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10; 
+        padding: 0; 
+        line-height: 1;
     }
     
     /* 입력 필드 그리드 */
@@ -138,12 +175,13 @@
 
 	<form id="item-register-form" action="/items/register" method="post" enctype="multipart/form-data">
 		<div class="image-area">
-			<label for="itemImageFile" class="image-preview" id="imagePreview">
+			<div class="image-preview" id="imagePreview">
 				<img id="previewImageElement" src="" alt="Image preview" style="display: none;"> 
 				<span id="initialTextSpan">이미지 추가</span>
-			</label> 
-			<input type="file" id="itemImageFile" name="file" accept="image/*">
-			<button type="button" id="deleteImageBtn" style="display: none;">X</button>
+                <button type="button" id="deleteImageBtn" style="display: none;">X</button> 
+			</div> 
+            <label for="itemImageFile" class="btn-change-image">이미지 변경</label>
+			<input type="file" id="itemImageFile" name="file" accept="image/*"">
 		</div>
 		
 		<div class="input-grid">
@@ -158,31 +196,9 @@
 		</div>
 
 		<div class="remark-area">
-			<label for="remark">REMARK</label>
-			<textarea id="remark" name="remark" placeholder="Memo"></textarea>
+			<label for="giRemark">REMARK</label>
+			<textarea id="giRemark" name="giRemark" placeholder="Memo"></textarea>
 		</div>
-		<form id="item-register-form" action="/items/register" method="post" enctype="multipart/form-data">
-		    <div class="image-area">
-		        <label for="itemImageFile" class="image-preview" id="imagePreview">
-		            <img id="previewImageElement" src="" alt="Image preview" style="display: none;"> 
-		            <span id="initialTextSpan">이미지 추가</span>
-		        </label> 
-		        <input type="file" id="itemImageFile" name="file" accept="image/*">
-		        
-		        <button type="button" id="deleteImageBtn" style="display: none;" onclick="deleteImage();">X</button>
-		    </div>
-		</form>
-		
-		<div class="input-grid">
-            <div class="form-group">
-                <label for="gcmCode">거래처 선택</label>
-                <select id="gcmCode" name="gcmCode" required></select>
-            </div>
-            <div class="form-group">
-                <label for="giName">품목명</label>
-                <input type="text" id="giName" name="giName" required>
-            </div>
-        </div>
 
 		<div class="form-actions">
 			<button type="submit" class="btn-save">저 장</button>

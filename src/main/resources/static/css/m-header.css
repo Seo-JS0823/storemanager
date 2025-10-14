@@ -165,10 +165,11 @@
 /* 아이템 리스트 뿌려주기 */
 .m-items {
 	width: 100%;
-	height: 100%;
+	height: 60%;
 	display: flex;
 	flex-direction: column;
 	margin: 0 auto;
+	/*border: 1px solid black;*/
 }
 .m-items > div {
 	height: 5rem;
@@ -204,7 +205,8 @@
 }
 .paging {
     width: auto;
-    margin-top: auto;
+    /*margin-top: auto;*/
+    margin-top: 10px;
     height: 5rem;
     display: flex;
     justify-content: center;
