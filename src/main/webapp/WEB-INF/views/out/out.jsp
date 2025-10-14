@@ -13,7 +13,7 @@
 	<style>
 	    /*===== 사이드바 =====*/
 	    .side-bar{
-            position:absolute;
+            position:fixed;
             height:100%;
             width:48rem;
             right:-48rem;
@@ -372,7 +372,6 @@
                 <div>
                     <div>
                         <div class="m-state orange"></div><span>상세보기</span>
-                        <div class="m-state red"></div><span>출고확인증 보기</span>
                     </div>
                     <div class="green" id="btnOut">- 출고</div>
                 </div>
@@ -407,41 +406,9 @@
                 <div>출고일</div>
                 <div></div>
             </div>
-            <div class="m-items">
-               <!--  출고목록 리스트 -->
-               <c:forEach var="out" items="${ outList }">
-		       <div>
-                    <div>${ out.gih_idx }</div>
-                    <div>${ out.gi_name }</div>
-                    <div>${ out.gcm_name }</div>
-                    <div>${ out.gih_price }원</div>
-                    <div>${ out.gih_qty }EA</div>
-                    <div>${ out.total }원</div>
-                    <div>${ out.gih_regdate }</div>
-                    <div class="btns-box"> <!-- Ball -->
-                        <input id="idx" name="gih_idx" type="hidden" value="${ out.gih_idx }">
-                        <div class="items-btn orange"></div>
-                        <div class="items-btn red"></div>
-                    </div>
-                </div>
-                </c:forEach>
-                <!--  출고목록 리스트 -->
-            </div>
+            <div class="m-items" id="m-items-chul"></div>
             <!--  페이징 처리 -->
-            <div class="paging">
-                <div>◀◀</div>
-                <div>◀</div>
-                <!-- c:forEach start -->
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-                <div>4</div>
-                <div>5</div>
-                <!-- c:forEach End -->
-                <div>▶</div>
-                <div>▶▶</div>
-            </div>
-            <!-- 페이징 처리 -->
+            <div class="paging" id="paging"></div>
         </div>
     </div>
 </div>
@@ -457,7 +424,11 @@ let btnSearch = document.getElementById('btnSearch');                       // �
 
 // 검색
 btnSearch.onclick = e => {
-	let x, data = {}, el = {}; 
+	searchRender(1);
+}
+
+function searchRender(page) {
+	let x, data = {}, el = {};
 	
 	el.sdate = document.getElementById("startdate");
 	el.edate = document.getElementById('enddate');
@@ -476,32 +447,106 @@ btnSearch.onclick = e => {
 	} else if(el.check.children[2].children[0].checked) { // 라디오버튼 - 출고단가 체크
 		data.check = 2
 		data.keyword = document.getElementsByClassName('m-search-text')[0].children[0].value.replaceAll(" ","")*1
-	} 
-	/* 유효성체크, 검색어 빈값 체크 넣어야 함 */
+	}
 	
 	
-	
-	console.log(data);
-	
-	fetch("/out/search", {
+	fetch('/out/list?nowPage=' + page, {
         method:"POST",
         headers:{
 	        "Content-Type":"application/json",
 			"Access-Control-Origin": "*"
 		},
         body:JSON.stringify(data)
-        })
-        .catch( error => console.dir(error))
-	    .then( response => response.json())
-	    .then( data => {
-	        if(data.result == "ok"){
-	            alert("검색이 완료되었습니다.");
-	            location.reload();
-	        } else  alert("검색결과가 없습니다.");
-	    })
+    })
+	.catch( error => console.dir(error))
+	.then( response => response.json())
+	.then( data => {
+		let parent = document.getElementById('m-items-chul');
+		parent.innerHTML = '';
+		data.list.forEach(json => {
+			const frag = document.createElement('div');
+			const idx = document.createElement('div');
+			idx.textContent = json.gcm_code;
+			
+			const giName = document.createElement('div');
+			giName.textContent = json.gi_name;
+			
+			const gcmName = document.createElement('div');
+			gcmName.textContent = json.gcm_name;
+			
+			const price = document.createElement('div');
+			price.textContent = json.gih_price + ' 원';
+			
+			const qty = document.createElement('div');
+			qty.textContent = json.gih_qty + ' EA';
+			
+			const total = document.createElement('div');
+			total.textContent = json.total + ' 원'
+			
+			const regDate = document.createElement('div');
+			regDate.textContent = json.gih_regdate;
+			
+			const btnsbox = document.createElement('div');
+			btnsbox.classList.add('btns-box');
+			
+			const input = document.createElement('input');
+			input.id = 'idx';
+			input.name = 'gih_idx';
+			input.type = 'hidden';
+			input.value = json.gih_idx;
+			
+			const btn1 = document.createElement('div');
+			btn1.classList.add('items-btn');
+			btn1.classList.add('orange');
+			btn1.onclick = (e) => {
+				const idx = json.gih_idx;
+				fetch('/out/list/'+idx)
+			    .catch(error => console.dir(error))
+			    .then(response => response.json())
+			    .then(data => {
+			    	console.log(data)
+			        // 데이터를 가져오고 모달창의 항목에 값을 넣어준다.
+			        //console.log(data);
+			        document.getElementsByName('gih_idx')[0].value = data.gih_idx;
+			        document.getElementsByName('gi_name')[0].value = data.gi_name;
+			        document.getElementsByName('gi_code')[0].value = data.gi_code;
+			        document.getElementsByName('gcm_name')[0].value = data.gcm_name;
+			        document.getElementsByName('gih_price')[0].value = data.gih_price;
+			        document.getElementsByName('gih_qty')[0].value = data.gih_qty;
+			        document.getElementsByName('gih_remark')[0].value = data.gih_remark;
+				    showSidebar(true);// 모달창을 띄운다
+			    });
+			}
+			// 함수 할당
+			
+			// 함수 할당
+			
+			btnsbox.appendChild(input);
+			btnsbox.appendChild(btn1);
+			
+			frag.appendChild(idx);
+			frag.appendChild(giName);
+			frag.appendChild(gcmName);
+			frag.appendChild(price);
+			frag.appendChild(qty);
+			frag.appendChild(total);
+			frag.appendChild(regDate);
+			frag.appendChild(btnsbox);
+			
+			parent.appendChild(frag);
+			
+		});
+		const totalPage = data.pg.totalPage;
+		paging.renderer({
+			start   : 'start-search',
+			middle  : 'middle-search',
+			end     : 'end-search'
+		},
+		'paging',
+		totalPage,
+		5);
+	});
 }
-
-
 
 // 자동완성 :: 초기화
 autoComplete.clear = () => {
@@ -893,5 +938,220 @@ btnCancel.onclick = e => showSidebar(false);
 </script>
 <script src="/js/render.js"></script>
 <script src="/js/member.js"></script>
+<script src="/js/paging.js"></script>
+<script>
+/*
+let btnOut = document.getElementById('btnOut');                             // 출고버튼
+let bgEl = document.getElementsByClassName('back-ground')[0];               // side-bar 나올때 백그라운드
+let modalEl = document.getElementsByClassName("md-bg")[0];                  // 팝업 modal
+let btnUpdate = document.getElementById('btnUpdate');                       // 버튼-수정(내역보기)
+let btnCancel = document.getElementById('btnCancle');                       // 버튼-수정(내역보기)
+let btnItems = document.getElementsByClassName('items-btn orange');         // 버튼-상세보기
+let autoComplete = {container:null,target:null,keyUpHandler:null};          // 자동완성 기능에서 사용할 데이터를 담아둘 객체
+let btnSearch = document.getElementById('btnSearch');                       // 검색버튼
+*/
+
+const paging = new PagingManager();
+
+chulRender(1);
+
+function chulRender(page) {
+	paging.nowPage = page;
+	
+	let url = '/out/list';
+	
+	const parent = document.getElementsByClassName('m-items')[0];
+	parent.innerHTML = '';
+	
+	Render.callJSON(
+	url,
+	{
+		nowPage:paging.nowPage
+	},
+	'm-items-chul',
+	(items) => {
+		items.list.forEach(json => {
+			const frag = document.createElement('div');
+			const idx = document.createElement('div');
+			idx.textContent = json.gcm_code;
+			
+			const giName = document.createElement('div');
+			giName.textContent = json.gi_name;
+			
+			const gcmName = document.createElement('div');
+			gcmName.textContent = json.gcm_name;
+			
+			const price = document.createElement('div');
+			price.textContent = json.gih_price + ' 원';
+			
+			const qty = document.createElement('div');
+			qty.textContent = json.gih_qty + ' EA';
+			
+			const total = document.createElement('div');
+			total.textContent = json.total + ' 원'
+			
+			const regDate = document.createElement('div');
+			regDate.textContent = json.gih_regdate;
+			
+			const btnsbox = document.createElement('div');
+			btnsbox.classList.add('btns-box');
+			
+			const input = document.createElement('input');
+			input.id = 'idx';
+			input.name = 'gih-idx';
+			input.type = 'hidden';
+			input.value = json.gih_idx;
+			
+			const btn1 = document.createElement('div');
+			btn1.classList.add('items-btn');
+			btn1.classList.add('orange');
+			btn1.onclick = (e) => {
+				const idx = e.target.previousElementSibling.value;
+				fetch('/out/list/'+idx)
+			    .catch(error => console.dir(error))
+			    .then(response => response.json())
+			    .then(data => {
+			        // 데이터를 가져오고 모달창의 항목에 값을 넣어준다.
+			        //console.log(data);
+			        document.getElementsByName('gih_idx')[0].value = data.gih_idx;
+			        document.getElementsByName('gi_name')[0].value = data.gi_name;
+			        document.getElementsByName('gi_code')[0].value = data.gi_code;
+			        document.getElementsByName('gcm_name')[0].value = data.gcm_name;
+			        document.getElementsByName('gih_price')[0].value = data.gih_price;
+			        document.getElementsByName('gih_qty')[0].value = data.gih_qty;
+			        document.getElementsByName('gih_remark')[0].value = data.gih_remark;
+				    showSidebar(true);// 모달창을 띄운다
+			    });
+			}
+			// 함수 할당
+			
+			// 함수 할당
+			
+			btnsbox.appendChild(input);
+			btnsbox.appendChild(btn1);
+			
+			frag.appendChild(idx);
+			frag.appendChild(giName);
+			frag.appendChild(gcmName);
+			frag.appendChild(price);
+			frag.appendChild(qty);
+			frag.appendChild(total);
+			frag.appendChild(regDate);
+			frag.appendChild(btnsbox);
+			
+			parent.appendChild(frag);
+			
+			const totalPage = items.pg.totalPage;
+			paging.renderer({
+				start   : 'start',
+				middle  : 'middle',
+				end     : 'end'
+			},
+			'paging',
+			totalPage,
+			5);
+		});
+	});
+}
+
+paging.setComponent('start', (data) => {
+	const div = document.createElement('div');
+	div.textContent = '◀';
+	
+	const backPage = data.start - data.pageSize;
+	
+	if (data.start <= 1) {
+		div.style.opacity = '0.3';
+		div.style.cursor = 'default';
+		return div;
+	}
+	
+	div.addEventListener('click', () => {
+		chulRender(backPage);
+	});
+});
+paging.setComponent('middle', (data) => {
+	const div = document.createElement('div');
+	div.textContent = `\${data.currentPage}`;
+	
+	if (data.currentPage === data.activePage) {
+		div.style.fontWeight = 'bold';
+		div.style.color = '#00AA00';
+		div.style.fontSize = '1.5rem';
+    }
+
+    div.addEventListener('click', () => {
+    	chulRender(data.currentPage);
+    });
+	return div;
+});
+paging.setComponent('end', (data) => {
+	const div = document.createElement('div');
+	div.textContent = '▶';
+	
+	const nextPage = data.end + 1;
+	
+	if(nextPage > data.totalPage) {
+		div.style.opacity = '0.3';
+		div.style.cursor = 'default';
+		return div;
+	}
+	
+	div.addEventListener('click', () => {
+		chulRender(nextPage);
+	});
+	
+	return div;
+});
+paging.setComponent('start-search', (data) => {
+	const div = document.createElement('div');
+	div.textContent = '◀';
+	
+	const backPage = data.start - data.pageSize;
+	
+	if (data.start <= 1) {
+		div.style.opacity = '0.3';
+		div.style.cursor = 'default';
+		return div;
+	}
+	
+	div.addEventListener('click', () => {
+		searchRender(backPage);
+	});
+});
+paging.setComponent('middle-search', (data) => {
+	const div = document.createElement('div');
+	div.textContent = `\${data.currentPage}`;
+	
+	if (data.currentPage === data.activePage) {
+		div.style.fontWeight = 'bold';
+		div.style.color = '#00AA00';
+		div.style.fontSize = '1.5rem';
+    }
+
+    div.addEventListener('click', () => {
+    	searchRender(data.currentPage);
+    });
+	return div;
+});
+paging.setComponent('end-search', (data) => {
+	const div = document.createElement('div');
+	div.textContent = '▶';
+	
+	const nextPage = data.end + 1;
+	
+	if(nextPage > data.totalPage) {
+		div.style.opacity = '0.3';
+		div.style.cursor = 'default';
+		return div;
+	}
+	
+	div.addEventListener('click', () => {
+		searchRender(nextPage);
+	});
+	
+	return div;
+});
+</script>
 </body>
 </html>
