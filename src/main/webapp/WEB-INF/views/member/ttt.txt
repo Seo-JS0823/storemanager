@@ -1,0 +1,12 @@
+<div>${ out.gih_idx }</div>
+<div>${ out.gi_name }</div>
+<div>${ out.gcm_name }</div>
+<div>${ out.gih_price }원</div>
+<div>${ out.gih_qty }EA</div>
+<div>${ out.total }원</div>
+<div>${ out.gih_regdate }</div>
+<div class="btns-box"> <!-- Ball -->
+    <input id="idx" name="gih_idx" type="hidden" value="${ out.gih_idx }">
+    <div class="items-btn orange"></div>
+    <div class="items-btn red"></div>
+</div>

@@ -2,6 +2,7 @@ package com.storemanager.out;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,8 +15,13 @@ public class OutService {
 	  @Autowired private OutMapper outmapper;
 	  
 	  // 출고리스트 가져오기
-	  public ArrayList<HashMap<String, Object>> getOutList() {
+	  public List<OutDTO> getOutList() {
 		    return outmapper.getOutList();
+	  } // End of getOutList()
+	  
+	  // 출고리스트 가져오기 페이징
+	  public List<OutDTO> getOutListPaging(Integer offset) {
+		  return outmapper.getOutListPaging(offset);
 	  } // End of getOutList()
 	  
 	  // 출고 한건 가져오기
@@ -77,9 +83,10 @@ public class OutService {
 		  return x > 0;
 	  } // End of insertOutItem()
 
-	public boolean getSearch(JSONObject json) {
-		int x = 0, flag;
+	public List<OutDTO> getSearch(JSONObject json) {
+		int flag, price;
 		String sdate, edate, keyword, condition;
+		List<OutDTO> list = null;
 		
 		flag = json.getInt("check");
 		sdate = json.getString("sdate");
@@ -87,17 +94,50 @@ public class OutService {
 		keyword = json.getString("keyword");
 		condition = "";
 		
+		//System.out.println("json값:" + json);
+		
 		if(flag == 0) {
-			condition = "AND gi_name LIKE '%#{"+keyword+"}%'";
+			condition = " gi_name LIKE '%"+keyword+"%'";
+			//System.out.println("조건문1: " + condition);
 		} else if (flag == 1) {
-			condition = "AND gcm_name LIKE '%#{"+keyword+"}%'";
-			
+			condition = " gcm_name LIKE '%"+keyword+"%'";
+			//System.out.println("조건문2: " + condition);
 		} else if (flag == 2) {
-			condition = "AND gih_price = #{"+keyword+"}";
+			price = Integer.parseInt(keyword);
+			condition = " gih_price = "+price;
+			//System.out.println("조건문3: " + condition);
 		}
 		
-		x = outmapper.getSearchList(sdate, edate, condition);
+		list = outmapper.getSearchList(sdate, edate, condition);
+		return list;
+	} // End of getSearch()
+	
+	public List<OutDTO> getSearchPaging(JSONObject json, Integer offset) {
+		int flag, price;
+		String sdate, edate, keyword, condition;
+		List<OutDTO> list = null;
 		
-	    return x > 0;
+		flag = json.getInt("check");
+		sdate = json.getString("sdate");
+		edate = json.getString("edate");
+		keyword = json.getString("keyword");
+		condition = "";
+		
+		//System.out.println("json값:" + json);
+		
+		if(flag == 0) {
+			condition = " gi_name LIKE '%"+keyword+"%'";
+			//System.out.println("조건문1: " + condition);
+		} else if (flag == 1) {
+			condition = " gcm_name LIKE '%"+keyword+"%'";
+			//System.out.println("조건문2: " + condition);
+		} else if (flag == 2) {
+			price = Integer.parseInt(keyword);
+			condition = " gih_price = "+price;
+			//System.out.println("조건문3: " + condition);
+		}
+		
+		list = outmapper.getSearchListPaging(sdate, edate, condition, offset);
+		return list;
 	} // End of getSearch()
 }
