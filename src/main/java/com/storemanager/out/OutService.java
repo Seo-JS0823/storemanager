@@ -76,4 +76,28 @@ public class OutService {
 		
 		  return x > 0;
 	  } // End of insertOutItem()
+
+	public boolean getSearch(JSONObject json) {
+		int x = 0, flag;
+		String sdate, edate, keyword, condition;
+		
+		flag = json.getInt("check");
+		sdate = json.getString("sdate");
+		edate = json.getString("edate");
+		keyword = json.getString("keyword");
+		condition = "";
+		
+		if(flag == 0) {
+			condition = "AND gi_name LIKE '%#{"+keyword+"}%'";
+		} else if (flag == 1) {
+			condition = "AND gcm_name LIKE '%#{"+keyword+"}%'";
+			
+		} else if (flag == 2) {
+			condition = "AND gih_price = #{"+keyword+"}";
+		}
+		
+		x = outmapper.getSearchList(sdate, edate, condition);
+		
+	    return x > 0;
+	} // End of getSearch()
 }

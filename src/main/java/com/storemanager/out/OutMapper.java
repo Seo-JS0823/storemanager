@@ -48,4 +48,13 @@ public interface OutMapper {
 	@Insert("INSERT INTO GE_ITEMS_HIST(gcm_code,gi_code,gi_name,gih_inout,gih_qty,gih_price,gih_remark,gih_regdate,gih_confirm) " +
 			"VALUES(#{itemCode}, #{item}, #{itemName}, 'OUT', #{qty}, #{price}, #{remark}, now(),'N')")
 	public int addOut(@Param("itemCode") String itemCode, @Param("item") int item, @Param("itemName") String itemName, @Param("qty") int qty, @Param("price") int price, @Param("remark") String remark);
+
+	// 검색 조회 리스트 가져오기
+	@Select("SELECT gi_name, m.gcm_code, gcm_name, 0-gih_qty gih_qty, gih_price, (0-gih_qty * gih_price) as total, to_char(gih_regdate,'yyyy-mm-dd') gih_regdate\r\n"
+			+ " FROM  GE_ITEMS_HIST as h"
+			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
+			+ " WHERE gih_inout='OUT'"
+			+ " AND gih_regdate BETWEEN '#{sdate}' AND '#{edate}'"
+			+ " #{condition} ")
+	public int getSearchList(String sdate, String edate, String condition);
 }

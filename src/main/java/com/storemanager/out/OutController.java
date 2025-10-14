@@ -51,8 +51,8 @@ public class OutController {
 		return json.toString();
 	}
 
-	@PostMapping("/list/{idx:\\d+}")
 	@ResponseBody
+	@PostMapping("/list/{idx:\\d+}")
 	public String updateOut(HttpServletResponse response, @PathVariable int idx, @RequestBody String rBody) {
 		JSONObject json = null, result = new JSONObject("{\"result\":\"error\"}");
 		boolean b = false;
@@ -103,4 +103,23 @@ public class OutController {
 	}
 	
 	
+	@PostMapping("/search")
+	public String getSearchList(HttpServletResponse response, @RequestBody String rBody) {
+		JSONObject json = null, result = new JSONObject("{\"result\":\"error\"}");
+		boolean b = false;
+
+		try{
+			json = new JSONObject(rBody);
+		} catch(Exception e){
+			response.setStatus(401);
+			return result.toString();
+		}
+		
+		b = outsvc.getSearch(json);
+		if(b) result = new JSONObject("{\"result\":\"ok\"}");
+		else response.setStatus(401);
+		System.out.println("조회결과:" + result);
+		
+		return result.toString();
+	}
 }

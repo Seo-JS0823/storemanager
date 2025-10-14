@@ -387,12 +387,12 @@
                             <input type="date" name="enddate" id="enddate">
                         </div>
                         <div class="m-search-option">
-                            <div><input type="radio" id="searchEvent1" name="searchoption"><p>상품명</p></div>
+                            <div><input type="radio" id="searchEvent1" name="searchoption" checked><p>상품명</p></div>
                             <div><input type="radio" id="searchEvent2" name="searchoption"><p>거래처명</p></div>
                             <div><input type="radio" id="searchEvent3" name="searchoption"><p>출고단가</p></div>
                         </div>
                         <div class="m-search-text"> <!-- TEXT 검색 구간 -->
-                            <input type="text" name="search" placeholder="검색어를 입력하세요."><div>검색</div>
+                            <input type="text" name="search" placeholder="검색어를 입력하세요."><div id="btnSearch">검색</div>
                         </div>
                     </div>
                </div>
@@ -417,7 +417,7 @@
                     <div>${ out.gih_price }원</div>
                     <div>${ out.gih_qty }EA</div>
                     <div>${ out.total }원</div>
-                    <div>${out.gih_regdate}</div>
+                    <div>${ out.gih_regdate }</div>
                     <div class="btns-box"> <!-- Ball -->
                         <input id="idx" name="gih_idx" type="hidden" value="${ out.gih_idx }">
                         <div class="items-btn orange"></div>
@@ -451,9 +451,59 @@ let bgEl = document.getElementsByClassName('back-ground')[0];               // s
 let modalEl = document.getElementsByClassName("md-bg")[0];                  // 팝업 modal
 let btnUpdate = document.getElementById('btnUpdate');                       // 버튼-수정(내역보기)
 let btnCancel = document.getElementById('btnCancle');                       // 버튼-수정(내역보기)
-let btnItems = document.getElementsByClassName('items-btn orange');      // 버튼-상세보기
-let autoComplete = {container:null,target:null,keyUpHandler:null}; //  자동완성 기능에서 사용할 데이터를 담아둘 객체
+let btnItems = document.getElementsByClassName('items-btn orange');         // 버튼-상세보기
+let autoComplete = {container:null,target:null,keyUpHandler:null};          // 자동완성 기능에서 사용할 데이터를 담아둘 객체
+let btnSearch = document.getElementById('btnSearch');                       // 검색버튼
 
+// 검색
+btnSearch.onclick = e => {
+	let x, data = {}, el = {}; 
+	
+	el.sdate = document.getElementById("startdate");
+	el.edate = document.getElementById('enddate');
+	el.keyword  = document.getElementsByClassName('m-search-text')[0].children[0]
+	el.check = document.getElementsByClassName('m-search-option')[0]
+	
+	data.sdate = document.getElementById("startdate").value;
+	data.edate = document.getElementById('enddate').value;
+	
+	if(el.check.children[0].children[0].checked) { // 라디오버튼 - 상품명 체크
+		data.check = 0
+		data.keyword  = document.getElementsByClassName('m-search-text')[0].children[0].value.replaceAll(" ","");
+	} else if(el.check.children[1].children[0].checked) { // 라디오버튼 - 거래처명 체크
+		data.check = 1
+		data.keyword  = document.getElementsByClassName('m-search-text')[0].children[0].value.replaceAll(" ","");
+	} else if(el.check.children[2].children[0].checked) { // 라디오버튼 - 출고단가 체크
+		data.check = 2
+		data.keyword = document.getElementsByClassName('m-search-text')[0].children[0].value.replaceAll(" ","")*1
+	} 
+	/* 유효성체크, 검색어 빈값 체크 넣어야 함 */
+	
+	
+	
+	console.log(data);
+	
+	fetch("/out/search", {
+        method:"POST",
+        headers:{
+	        "Content-Type":"application/json",
+			"Access-Control-Origin": "*"
+		},
+        body:JSON.stringify(data)
+        })
+        .catch( error => console.dir(error))
+	    .then( response => response.json())
+	    .then( data => {
+	        if(data.result == "ok"){
+	            alert("검색이 완료되었습니다.");
+	            location.reload();
+	        } else  alert("검색결과가 없습니다.");
+	    })
+}
+
+
+
+// 자동완성 :: 초기화
 autoComplete.clear = () => {
     autoComplete.container.style.display = "none";
     autoComplete.container.innerHTML = "";
