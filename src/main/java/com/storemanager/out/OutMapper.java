@@ -23,7 +23,7 @@ public interface OutMapper {
 	@Select("SELECT gih_idx, gi_name, m.gcm_code, gcm_name, 0-gih_qty gih_qty, gih_price, (0-gih_qty * gih_price) as total, to_char(gih_regdate,'yyyy-mm-dd') gih_regdate "
 			+ " FROM  GE_ITEMS_HIST as h"
 			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
-			+ " WHERE gih_inout='OUT' LIMIT ${offset},10")
+			+ " WHERE gih_inout='OUT' ORDER BY gih_regdate DESC LIMIT ${offset},10")
 	public List<OutDTO> getOutListPaging(Integer offset);
 	
 	// 출고 한건 정보 가져오기

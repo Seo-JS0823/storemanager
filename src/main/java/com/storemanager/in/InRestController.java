@@ -69,6 +69,8 @@ public class InRestController {
 			) {
 		List<InDTO> inDTO = inMapper.searchByRegdate(start, end);
 		
+		System.out.println(end);
+		
 		int size = inDTO.size();
 		Paging<InDTO> pg = new Paging<>(size);
 		int offset = pg.getLimit(nowPage);

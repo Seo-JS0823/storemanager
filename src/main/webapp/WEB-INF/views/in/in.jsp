@@ -741,6 +741,7 @@ const endDateEl = document.querySelector('#enddate'); 		// 검색 마지막일�
 		div.addEventListener('click', () => {
 			ipgoRender(backPage);
 		});
+		return div;
 	});
 	paging.setComponent('in-middle', (data) => {
 		const div = document.createElement('div');

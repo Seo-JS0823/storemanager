@@ -867,6 +867,7 @@
 		div.addEventListener('click', () => {
 			ipgoRender(backPage);
 		});
+		return div;
 	});
 	paging.setComponent('bill-ipgo-middle', (data) => {
 		const div = document.createElement('div');
@@ -918,6 +919,7 @@
 		div.addEventListener('click', () => {
 			chulgoRender(backPage);
 		});
+		return div;
 	});
 	paging.setComponent('bill-chul-middle', (data) => {
 		const div = document.createElement('div');
@@ -969,6 +971,7 @@
 		div.addEventListener('click', () => {
 			myeongseRender(backPage);
 		});
+		return div;
 	});
 	paging.setComponent('bill-bill-middle', (data) => {
 		const div = document.createElement('div');

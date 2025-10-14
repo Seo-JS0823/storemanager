@@ -1069,6 +1069,7 @@ paging.setComponent('start', (data) => {
 	div.addEventListener('click', () => {
 		chulRender(backPage);
 	});
+	return div;
 });
 paging.setComponent('middle', (data) => {
 	const div = document.createElement('div');
@@ -1118,6 +1119,7 @@ paging.setComponent('start-search', (data) => {
 	div.addEventListener('click', () => {
 		searchRender(backPage);
 	});
+	return div;
 });
 paging.setComponent('middle-search', (data) => {
 	const div = document.createElement('div');
