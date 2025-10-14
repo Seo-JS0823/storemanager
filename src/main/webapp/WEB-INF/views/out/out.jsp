@@ -455,7 +455,7 @@ let btnItems = document.getElementsByClassName('items-btn orange');         // �
 let autoComplete = {container:null,target:null,keyUpHandler:null};          // 자동완성 기능에서 사용할 데이터를 담아둘 객체
 let btnSearch = document.getElementById('btnSearch');                       // 검색버튼
 
-// 검색
+// 검색조회 리스트
 btnSearch.onclick = e => {
 	let x, data = {}, el = {}; 
 	
@@ -483,7 +483,7 @@ btnSearch.onclick = e => {
 	
 	console.log(data);
 	
-	fetch("/out/search", {
+	fetch("/out/list", {
         method:"POST",
         headers:{
 	        "Content-Type":"application/json",
@@ -495,6 +495,7 @@ btnSearch.onclick = e => {
 	    .then( response => response.json())
 	    .then( data => {
 	        if(data.result == "ok"){
+	        	console.log(data);
 	            alert("검색이 완료되었습니다.");
 	            location.reload();
 	        } else  alert("검색결과가 없습니다.");

@@ -103,10 +103,11 @@ public class OutController {
 	}
 	
 	
-	@PostMapping("/search")
+	@ResponseBody
+	@PostMapping("/list")
 	public String getSearchList(HttpServletResponse response, @RequestBody String rBody) {
 		JSONObject json = null, result = new JSONObject("{\"result\":\"error\"}");
-		boolean b = false;
+		JSONArray jarr = null;
 
 		try{
 			json = new JSONObject(rBody);
@@ -115,10 +116,12 @@ public class OutController {
 			return result.toString();
 		}
 		
-		b = outsvc.getSearch(json);
-		if(b) result = new JSONObject("{\"result\":\"ok\"}");
-		else response.setStatus(401);
-		System.out.println("조회결과:" + result);
+		jarr = outsvc.getSearch(json);
+		if(jarr != null) {
+			result = new JSONObject();
+			result.put("result", "ok");
+			result.put("data", jarr);
+		}else response.setStatus(401);
 		
 		return result.toString();
 	}

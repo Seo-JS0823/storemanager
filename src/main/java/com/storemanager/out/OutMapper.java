@@ -50,11 +50,11 @@ public interface OutMapper {
 	public int addOut(@Param("itemCode") String itemCode, @Param("item") int item, @Param("itemName") String itemName, @Param("qty") int qty, @Param("price") int price, @Param("remark") String remark);
 
 	// 검색 조회 리스트 가져오기
-	@Select("SELECT gi_name, m.gcm_code, gcm_name, 0-gih_qty gih_qty, gih_price, (0-gih_qty * gih_price) as total, to_char(gih_regdate,'yyyy-mm-dd') gih_regdate\r\n"
+	@Select("SELECT gi_name, m.gcm_code, gcm_name, 0-gih_qty gih_qty, gih_price, (0-gih_qty * gih_price) as total, to_char(gih_regdate,'yyyy-mm-dd') gih_regdate"
 			+ " FROM  GE_ITEMS_HIST as h"
 			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
 			+ " WHERE gih_inout='OUT'"
-			+ " AND gih_regdate BETWEEN '#{sdate}' AND '#{edate}'"
-			+ " #{condition} ")
-	public int getSearchList(String sdate, String edate, String condition);
+			+ " AND gih_regdate BETWEEN '#{ sdate }' AND '#{ edate }'"
+			+ " #{ condition } ")
+	public ArrayList<HashMap<String, Object>> getSearchList(String sdate, String edate, String condition);
 }

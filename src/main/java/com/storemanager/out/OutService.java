@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
+
 @Service
 public class OutService {
 		
@@ -77,9 +79,11 @@ public class OutService {
 		  return x > 0;
 	  } // End of insertOutItem()
 
-	public boolean getSearch(JSONObject json) {
-		int x = 0, flag;
+	public JSONArray getSearch(JSONObject json) {
+		int flag;
 		String sdate, edate, keyword, condition;
+		ArrayList<HashMap<String, Object>> list = null;
+		JSONArray jarr = null;
 		
 		flag = json.getInt("check");
 		sdate = json.getString("sdate");
@@ -87,17 +91,23 @@ public class OutService {
 		keyword = json.getString("keyword");
 		condition = "";
 		
+		//System.out.println("json값:" + json);
+		
 		if(flag == 0) {
-			condition = "AND gi_name LIKE '%#{"+keyword+"}%'";
+			condition = "AND gi_name LIKE '%${"+keyword+"}%'";
+			//System.out.println("조건문1: " + condition);
 		} else if (flag == 1) {
-			condition = "AND gcm_name LIKE '%#{"+keyword+"}%'";
+			condition = "AND gcm_name LIKE '%${"+keyword+"}%'";
+			//System.out.println("조건문2: " + condition);
 			
 		} else if (flag == 2) {
 			condition = "AND gih_price = #{"+keyword+"}";
+			//System.out.println("조건문3: " + condition);
 		}
 		
-		x = outmapper.getSearchList(sdate, edate, condition);
+		list = outmapper.getSearchList(sdate, edate, condition);
+		if(list != null) jarr = new JSONArray(list);
 		
-	    return x > 0;
+	    return jarr;
 	} // End of getSearch()
 }
