@@ -20,7 +20,7 @@
 	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 
-		AND a.gih_regdate BETWEEN #{dateStart} AND #{dateEnd}
+		AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{dateStart} AND #{dateEnd}
 		ORDER BY a.gih_regdate DESC
 	</select>
 	
@@ -42,7 +42,7 @@
 	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 
-		AND a.gih_regdate BETWEEN #{dateStart} AND #{dateEnd}
+		AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{dateStart} AND #{dateEnd}
 		ORDER BY a.gih_regdate DESC
 		LIMIT ${nowPage},10
 	</select>
@@ -134,7 +134,7 @@
 	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 
-		AND gih_regdate BETWEEN #{start} AND #{end}
+		AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{start} AND #{end}
 		ORDER BY a.gih_regdate DESC
 	</select>
 	
@@ -156,7 +156,7 @@
 	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 
-		AND gih_regdate BETWEEN #{start} AND #{end}
+		AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{start} AND #{end}
 		ORDER BY a.gih_regdate DESC
 		LIMIT ${nowPage},10
 	</select>
@@ -180,7 +180,7 @@
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 AND a.gi_name = #{gi_name}
 		<if test="start != null and end!= null">
-		  AND gih_regdate BETWEEN #{start} AND #{end}
+		  AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{start} AND #{end}
 		</if>
 		ORDER BY b.gcm_name, a.gih_price 
 	</select>
@@ -204,7 +204,7 @@
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 AND a.gi_name = #{gi_name}
 		<if test="start != null and end!= null">
-		  AND gih_regdate BETWEEN #{start} AND #{end}
+		  AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{start} AND #{end}
 		</if>
 		ORDER BY b.gcm_name, a.gih_price
 		LIMIT ${nowPage},10 
@@ -229,7 +229,7 @@
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 AND b.gcm_name = #{gcm_name}
 		<if test="start != null and end != null">
-			AND gih_regdate BETWEEN #{start} AND #{end}
+			AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{start} AND #{end}
 		</if>
 		ORDER BY a.gi_name , a.gih_price
 	</select>
@@ -253,7 +253,7 @@
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 AND b.gcm_name = #{gcm_name}
 		<if test="start != null and end != null">
-			AND gih_regdate BETWEEN #{start} AND #{end}
+			AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{start} AND #{end}
 		</if>
 		ORDER BY a.gi_name , a.gih_price
 		LIMIT ${nowPage},10
@@ -278,7 +278,7 @@
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 AND a.gih_price = #{gih_price}
 		<if test="start != null and end != null">
-			AND gih_regdate BETWEEN #{start} AND #{end}
+			AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{start} AND #{end}
 		</if>
 		ORDER BY a.gi_name
 	</select>
@@ -302,7 +302,7 @@
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 AND a.gih_price = #{gih_price}
 		<if test="start != null and end != null">
-			AND gih_regdate BETWEEN #{start} AND #{end}
+			AND DATE_FORMAT(a.gih_regdate,'%Y-%m-%d') BETWEEN #{start} AND #{end}
 		</if>
 		ORDER BY a.gi_name
 		LIMIT ${nowPage}, 10
