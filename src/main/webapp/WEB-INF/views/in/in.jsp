@@ -530,13 +530,16 @@ inCreateEl.addEventListener('click', (e) => { // 메인 화면 입고 버튼 클
 		inBtnEl.addEventListener('click',(e) => { // 오른쪽 모달창 저장 클릭 이벤트
 			const nodeArray3 = [rightQtyEl, rightPriceEl, rightRemarkEl];
 			const nodeArray2 = [rightQtyEl, rightPriceEl];
+			console.log('click!')
 
 		 if( nodeArray2.some( nodes => isNaN(nodes.value) ) ) {
 				alert('매입단가나 수량은 숫자형태 여야 합니다')
 				e.preventDefault();
 				e.stopPropagation();
 				return;
-			} else if(nodeArray3.some( nodes => nodes.value.trim() === '' ) ) {
+			} 
+		 
+		 if(nodeArray3.some( nodes => nodes.value.trim() === '' ) ) {
 					alert('빈칸이 있으면 안됩니다');
 					e.preventDefault();
 					e.stopPropagation();
@@ -559,19 +562,14 @@ inCreateEl.addEventListener('click', (e) => { // 메인 화면 입고 버튼 클
 					body    : JSON.stringify(inHistory)
 			}
 			fetch(url,params)
-				.then(response => response.json())
 			
+			alert('성공적으로 입고 되었습니다')
+			modalContainerEl.style.transform = 'translateX(100%)';
 		}) // 오른쪽 모달창 저장 클릭 이벤트 끝
 		
 	}) // 첫 모달창 확인 클릭 이벤트 끝
 	
 }) // 메인 화면 입고 버튼 클릭 이벤트 끝
-/*
-const itemDetailEls = document.querySelectorAll('.item-detail');
-itemDetailEls.forEach( details => details.addEventListener('click', (e) => {
-	modalContainerEl.style.transform = 'translateX(0%)';
-}) )
-*/
 
 const itemHistoryListEL = document.querySelector('#item-history-list');   // 입고 물품 리스트 컨테이너
 const searchEvent1El 		= document.querySelector('#searchEvent1'); 				// 상품명   radio
