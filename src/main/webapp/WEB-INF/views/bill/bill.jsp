@@ -220,12 +220,12 @@
 		<div class="modal-header"></div><!-- header -->
 		<div class="modal-middle"><!-- middle -->
 			<div><p>품목코드</p>    <input type="text" id="giCode" style="border:none" readonly></input></div>
-			<div><p>품목명</p>      <input type="text" id="giName" readonly></input></div>
-			<div><p>거래처코드</p>  <input type="text" id="gcmCode" readonly></input></div>
-			<div><p>거래처명</p>    <input type="text" id="gcmName" readonly></input></div>
+			<div><p>품목명</p>      <input type="text" id="giName" style="border:none" readonly></input></div>
+			<div><p>거래처코드</p>  <input type="text" id="gcmCode" style="border:none" readonly></input></div>
+			<div><p>거래처명</p>    <input type="text" id="gcmName" style="border:none" readonly></input></div>
 
-			<div><p>거래단가</p>    <input type="text" id="gihPrice" name="gihPrice" readonly></div>
-			<div><p>수량</p>        <input type="text" id="gihQty" name="gihQty" readonly></div>
+			<div><p>거래단가</p>    <input type="text" id="gihPrice" name="gihPrice" style="border:none" readonly></div>
+			<div><p>수량</p>        <input type="text" id="gihQty" name="gihQty" style="border:none" readonly></div>
 		</div>
 		<div class="modal-bottom"><!-- bottom -->
 			거래금액 :&nbsp;&nbsp;
