@@ -26,14 +26,19 @@ public class InRestController {
 	public List<InDTO> getItem() {
 		// 물품 선택(입고 클릭시 뜨는 첫모달창에 넘겨줄 값)  
 		List<InDTO> itemsName = inMapper.getItemsName();
-		System.out.println("어째서 이름이 중복돼지??? : "+ itemsName.size());
 		return itemsName;
 	}
 	
 	// 오른쪽 모달창에서 gi_code 가져오기()
 	@GetMapping("/in/getItemCode")
-	public Integer getItemCode() {
-		return null;
+	public Integer getItemCode(
+			String gi_name,
+			String gcm_code
+			) {
+		
+		Integer gi_code = inMapper.getItemCode(gi_name,gcm_code);
+		
+		return gi_code;
 	}
 	
 	// 해당 물품을 갖고있는 거래처 가져오기

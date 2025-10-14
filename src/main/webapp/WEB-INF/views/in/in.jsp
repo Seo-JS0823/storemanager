@@ -33,6 +33,7 @@
 	  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 	  display: flex;
 	  flex-direction: column;
+	  flex-wrap : wrap;
 	  gap: 14px;
 	  text-align: left;
 	  animation: fadeIn 0.25s ease-in-out;
@@ -55,7 +56,7 @@
 	
 	.select-modal button {
 	  margin-top: 50px;
-	  align-self: center;
+	  width : 90px;
 	  padding: 8px 16px;
 	  background: #0078ff;
 	  color: white;
@@ -65,6 +66,14 @@
 	  border-radius: 6px;
 	  cursor: pointer;
 	  transition: background 0.2s;
+	}
+	
+	.select-modal button:nth-of-type(1) {
+		margin-left : 35rem;
+	}
+	
+	.select-modal button:nth-of-type(2) {
+		margin-top : 276px;
 	}
 	
 	.select-modal button:hover {
@@ -213,7 +222,7 @@
   <div class="in-modal">
     <div class="in-modal-header">
       <div class="circle green"></div>
-      <h1>입고생성</h1>
+      <h1 id="right-title">입고생성</h1>
     </div>
 
     <hr>
@@ -247,8 +256,8 @@
 
     <!-- 버튼 영역 -->
     <div class="btn-box">
-      <button id="save" class="btn green" type="button">저장</button>
-      <button class="btn red">취소</button>
+      <button id="right-save" class="btn green" type="button">저장</button>
+      <button id="right-cancel" class="btn red" onclick="molse()">취소</button>
     </div>
   </div>	
 </div>
@@ -271,7 +280,7 @@
 					<div>
 						<div>
 							<div class="m-state orange"></div>
-							<span>상세보기</span>
+							<span class="item-detail">상세보기</span>
 					<!-- 		<div class="m-state red"></div>
 							<span>출고생성</span> -->
 						</div>
@@ -368,8 +377,8 @@
 <script src="/js/paging.js"></script>
 <script>
 const inCreateEl = document.querySelector('#in-create');  // 입고 버튼
-
-inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
+const modalContainerEl = document.querySelector('#modal-container'); // 오른쪽 모달창
+inCreateEl.addEventListener('click', (e) => { // 메인 화면 입고 버튼 클릭 이벤트
 	
 	const overlay         = document.createElement('div');  // 클릭할때 나온는 회색배경
 	const SelectModalEl   = document.createElement('div');  // 입고생성 처음 뜨는 모달창
@@ -381,6 +390,7 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 	const companysSelect  = document.querySelector('#companys-select').content.cloneNode(true);
 	
 	const selectBtn       = document.createElement('button'); // 물품,거래처 확인 버튼
+	const cancelBtn       = document.createElement('button'); // 물품,거래처 확인 버튼
 	
 	overlay.className = "overlay"; 
 	SelectModalEl.className = "select-modal";
@@ -392,6 +402,7 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 	companysMessage.innerHTML = "거래처 선택 : ";
 	
 	selectBtn.innerHTML = '확인';
+	cancelBtn.innerHTML = '취소';
 	
 	document.body.appendChild(overlay);
 	overlay.appendChild(SelectModalEl);
@@ -400,12 +411,11 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 	SelectModalEl.appendChild(companysMessage);
 	SelectModalEl.appendChild(companysSelect);
 	SelectModalEl.appendChild(selectBtn);
+	SelectModalEl.appendChild(cancelBtn);
 	
-	overlay.addEventListener('click', (e) => { // 다른데 클릭시 모달창 사라짐
-		if(e.target === overlay)  
+	cancelBtn.addEventListener('click', (e) => { // 취소 클릭시 모달창 사라짐
 			overlay.remove();
 	})
-	
 	
 	const itemsNameEl     = document.querySelector('#item-name')    // 선택칸에 최종 입력된 상품명 테그
 	const companysNameEl  = document.querySelector('#company-name') // 선택칸에 최종 입력된 거래처명 테그
@@ -414,7 +424,6 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
  	fetch('/in/getItemsName')
 		.then( response => response.json() )
 		.then( data => {
-			console.log('제발?? :',data)
 			data.forEach( items => {
 			    let option = document.createElement("option"); 
 			    option.className = 'item-options';
@@ -428,7 +437,8 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 	itemsNameEl.addEventListener('change', () => { // 거래처 선택은 물품 선택한거에 따라 보여주는 리스트가 달라져서 JS로 처리
 		const companyListEl = document.querySelector('#companys-list') // 거래처명 선택 리스트들
 					
-		let itemsName = itemsNameEl.value
+		let itemsName    = itemsNameEl.value; 	 // 선택칸에 최종 입력된 상품명
+		
 		fetch('/in/items/' + itemsName) // 거래처명 갖고오기
 			.then( response => response.json() )
 			.then( data => {
@@ -446,35 +456,93 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 			} )
 	}) // change End
 	
-	selectBtn.addEventListener('click', (e) => { // 물품,거래처 확인 클릭 이벤트
+	selectBtn.addEventListener('click', (e) => { // 첫 모달창 확인 클릭 이벤트
+		const rightItemNameEl = document.querySelector('#right-item-name');       // 오른쪽 모달 품목명 테그
+		const rightCompanyNameEl = document.querySelector('#right-company-name'); // 오른쪽 모달 거래처명 테그
+		const rightItemCodeEl = document.querySelector('#right-gi_code')          // 오른쪽 모달 아이템 코드 태그
+		const rightCompanyCodeEl = document.querySelector('#right-gcm_code')			// 오른쪽 모달 거래처 코드 태그
+		const rightQtyEl    = document.querySelector('#right-qty');    						// 오른쪽 모달 수량 태그
+		const rightPriceEl  = document.querySelector('#right-price');  						// 오른쪽 모달 단가 태그
+		const rightRemarkEl = document.querySelector('#right-remark'); 						// 오른쪽 모달 비고 태그
+		const inBtnEl       = document.querySelector('#right-save');  						// 오른쪽 모달 저장 버튼
+		const cancelBtnEl   = document.querySelector('#right-cancel') 						// 오른쪽 모달 취소 버튼
+		const itemOptions = [...overlay.querySelectorAll('.item-options')];       // 물품 option 태그 배열
+		const companyOptions = [...overlay.querySelectorAll('.company-options')]; // 거래처 option 태그 배열
+		
+		const btSave = document.querySelector('#right-save');
+		btSave.style.display = 'block';
+		
+		// 최종선택란에 있는 이름과 일치하는걸 option에서 찾기
+		const ItemOptionEl = itemOptions.find(opt => opt.value === itemsNameEl.value);
+		const CompanyOptionEl = companyOptions.find(opt => opt.value === companysNameEl.value); 
+ 
+		// 입력한 물품이 DB에 없으면 .some() 이 boolean 느낌
+		if(itemOptions.some(opt => itemsNameEl.value === opt.value) === false) { 
+			alert('빈칸이 있거나 입력하신 물품은 거래처에 등록되지 않은 상품입니다');
+			e.preventDefault();
+			return;
+		}
+		
+		// 입력한 거래처가 DB 에 없으면 .some() 이 boolean 느낌
+		if(companyOptions.some(opt => companysNameEl.value === opt.value) === false) {
+			alert('빈칸이 있거나 입력하신 거래처는 현재 등록되지 않은 상태입니다');
+			e.preventDefault();
+			return;
+		}
+		
 		e.stopPropagation();
-		overlay.remove();
+		overlay.remove(); // 위에조건 다 만족하면 회색배경 제거
 		
-		const rightItemNameEl = document.querySelector('#right-item-name');       // 오른쪽 모달 상품명
-		const rightCompanyNameEl = document.querySelector('#right-company-name'); // 오른쪽 모달 거래처명
+		// 밑에 렌더링 함수때문에 단가,수량,비고 초기화 한거
+		rightQtyEl.value = '';
+		rightPriceEl.value = '';
+		rightRemarkEl.value = '';
 		
-		const CompanyOptionEl = [...overlay.querySelectorAll('.company-options')]
-		 													.find(opt => opt.value === companysNameEl.value); // 최종선택란에 있는 이름과 일치하는걸 option에서 찾기
+	  modalContainerEl.style.transform = 'translateX(0%)'; // 오른쪽 모달창 등장	
 		
-		document.querySelector('#right-gi_code').value  =     // 오른쪽 모달 상품 코드
-		document.querySelector('#right-gcm_code').value = CompanyOptionEl?.dataset.gcm_code // 오른쪽 모달 거래처 코드
+		// 오른쪽 모달창에 출력할 물품코드 가져오기
+ 		fetch('in/getItemCode' + `?gi_name=\${itemsNameEl.value}&gcm_code=\${CompanyOptionEl?.dataset.gcm_code}`)
+		 	.then( response => response.json() )
+		 	.then( data => {
+		 		// 오른쪽 모달 아이템 코드
+		 		rightItemCodeEl.value = data
+		 	}) 
+		 	
+		// 오른쪽 모달 거래처 코드
+		rightCompanyCodeEl.value = CompanyOptionEl?.dataset.gcm_code 
+				
 		rightItemNameEl.value													  = itemsNameEl.value;
 		rightCompanyNameEl.value 												= companysNameEl.value;
 	
-		const modalContainerEl = document.querySelector('#modal-container'); // 오른쪽 모달창
-	  modalContainerEl.style.transform = 'translateX(0%)';	
 	  
-		document.addEventListener('click', (e) => {
+		// 오른쪽 모달창 외의 화면 클릭시 다시 화면밖으로 감
+		document.addEventListener('click', (e) => { 
 			if (!modalContainerEl.contains(e.target) && e.target !== inCreateEl) {
 				modalContainerEl.style.transform = 'translateX(100%)';
 			}
 		})
 		
-		const inBtnEl       = document.querySelector('#save');         // 오른쪽 모달 저장 버튼
-		const rightQtyEl    = document.querySelector('#right-qty');    // 오른쪽 모달 수량
-		const rightPriceEl  = document.querySelector('#right-price');  // 오른쪽 모달 단가
-		const rightRemarkEl = document.querySelector('#right-remark'); // 오른쪽 모달 비고
-		inBtnEl.addEventListener('click',() => { // 저장 클릭 이벤트
+		// 오른쪽 모달창 취소 클릭시 다시 화면밖으로 감
+		cancelBtnEl.addEventListener('click', () => {
+			modalContainerEl.style.transform = 'translateX(100%)';
+		})
+		
+		inBtnEl.addEventListener('click',(e) => { // 오른쪽 모달창 저장 클릭 이벤트
+			const nodeArray3 = [rightQtyEl, rightPriceEl, rightRemarkEl];
+			const nodeArray2 = [rightQtyEl, rightPriceEl];
+
+		 if( nodeArray2.some( nodes => isNaN(nodes.value) ) ) {
+				alert('매입단가나 수량은 숫자형태 여야 합니다')
+				e.preventDefault();
+				e.stopPropagation();
+				return;
+			} else if(nodeArray3.some( nodes => nodes.value.trim() === '' ) ) {
+					alert('빈칸이 있으면 안됩니다');
+					e.preventDefault();
+					e.stopPropagation();
+					return;
+			}
+			
 			let inHistory = {
 					gcm_code   : document.querySelector('#right-gcm_code').value,
 					gi_code    : document.querySelector('#right-gi_code').value,
@@ -493,11 +561,17 @@ inCreateEl.addEventListener('click', (e) => { // 입고 버튼 클릭 이벤트
 			fetch(url,params)
 				.then(response => response.json())
 			
-		}) // 저장 클릭 이벤트 끝
+		}) // 오른쪽 모달창 저장 클릭 이벤트 끝
 		
-	}) // 확인 클릭 이벤트 끝
+	}) // 첫 모달창 확인 클릭 이벤트 끝
 	
-}) // 입고 클릭 이벤트 끝
+}) // 메인 화면 입고 버튼 클릭 이벤트 끝
+/*
+const itemDetailEls = document.querySelectorAll('.item-detail');
+itemDetailEls.forEach( details => details.addEventListener('click', (e) => {
+	modalContainerEl.style.transform = 'translateX(0%)';
+}) )
+*/
 
 const itemHistoryListEL = document.querySelector('#item-history-list');   // 입고 물품 리스트 컨테이너
 const searchEvent1El 		= document.querySelector('#searchEvent1'); 				// 상품명   radio
@@ -536,7 +610,28 @@ const endDateEl = document.querySelector('#enddate'); 		// 검색 마지막일�
 		let startDate = startDateEl.value; // 검색 시작일
 		let endDate = endDateEl.value; // 검색 마지막일
 		
-		let urlll = '/in/list?nowPage=' + paging.nowPage;
+		// 검색바 달력 현재 날짜-7 ~ 현재날짜
+		   let dateStart = document.getElementById("startdate");
+		   let dateEnd = document.getElementById("enddate");
+		   
+		   if (!dateStart.value && !dateEnd.value) {
+			   let now = new Date();
+			   let toyear = now.getFullYear();
+			   let tomonth = ('0' + (now.getMonth() + 1)).slice(-2);
+			   let today = ('0' + now.getDate()).slice(-2);
+			   
+			   let beforenow = new Date(now.setDate(now.getDate() - 7));
+			   let beforeyear = beforenow.getFullYear();
+			   let beforemonth = ('0' + (beforenow.getMonth() + 1)).slice(-2);
+			   let beforeday = ('0' + beforenow.getDate()).slice(-2);
+	
+			   let endDateValue = toyear + '-' + tomonth  + '-' + today;
+			   let startDateValue = beforeyear + '-' + beforemonth  + '-' + beforeday;
+			   
+			   dateStart.value = startDateValue;
+			   dateEnd.value = endDateValue;
+		   }
+			let urlll = '/in/list?nowPage=' + paging.nowPage + `&dateStart=\${dateStart.value}&dateEnd=\${dateEnd.value}`;
 		
 		if(startDate && endDate) {
 			urlll = `/In/list?start=\${startDate}&end=\${endDate}&nowPage=\${paging.nowPage}`;
@@ -571,6 +666,7 @@ const endDateEl = document.querySelector('#enddate'); 		// 검색 마지막일�
 		(json) => {
 			json.list.forEach((item, index) => {
 				const div = document.createElement('div');
+				const iii = item;
 				div.innerHTML = `
 			 	<div>\${index + 1}</div>
 				<div id="list-item_name">\${item.gi_name}</div>
@@ -580,9 +676,10 @@ const endDateEl = document.querySelector('#enddate'); 		// 검색 마지막일�
 				<div>총 \${item.tot_price}원</div>
 				<div id="list-regdate">\${item.gih_regdate}</div>
 				<div class="btns-box">
-					<div class="items-btn orange"></div>
+					<div class="items-btn orange" onclick='mopen(\${JSON.stringify(item)})'></div>
 				</div>
 				`;
+				
 				itemHistoryArea.appendChild(div);
 				
 				const totalPage = json.pg.totalPage;
@@ -595,7 +692,37 @@ const endDateEl = document.querySelector('#enddate'); 		// 검색 마지막일�
 				totalPage,
 				5)
 			})
+			const btnsB = document.querySelector('#right-save');
+			btnsB.style.display = 'none';
+			const rightTitle = document.querySelector('#right-title')
+			rightTitle.innerHTML = '물품 상세정보'
 		});
+	}
+	
+	function mopen(json) {
+		const modal = document.querySelector('#modal-container');
+		
+		const fumco = document.getElementById('right-gi_code');
+		fumco.value = json.gi_code
+		const fumme = document.getElementById('right-item-name');
+		fumme.value = json.gi_name
+		const gico  = document.getElementById('right-gcm_code');
+		gico.value  = json.gcm_code
+		const conem = document.getElementById('right-company-name');
+		conem.value = json.gcm_name
+		const pri   = document.getElementById('right-price');
+		pri.value   = json.gih_price
+		const qtqt  = document.getElementById('right-qty');
+		qtqt.value  = json.gih_qty
+	  const mark  = document.getElementById('right-remark');
+		mark.value  = json.gih_remark
+		
+		modal.style.transform = 'translateX(0%)';
+	}
+	
+	function molse() {
+		const modal = document.querySelector('#modal-container');
+		modal.style.transform = 'translateX(100%)';		
 	}
 	
 	// 페이징 렌더링 컴포넌트

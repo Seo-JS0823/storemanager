@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.storemanager.in.InMapper">
 	<!-- WHERE 에  gi_code 필요 -->
+	<!-- 입고 기록리스트 가져오기 -->
 	<select id="getInList" resultType="com.storemanager.in.InDTO">
 		SELECT 
 			b.gcm_name,
@@ -19,6 +20,7 @@
 	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 
+		AND a.gih_regdate BETWEEN #{dateStart} AND #{dateEnd}
 		ORDER BY a.gih_regdate DESC
 	</select>
 	
@@ -40,10 +42,12 @@
 	  FROM GE_ITEMS_HIST a JOIN GE_COM_MEMBER b
 	  ON a.gcm_code = b.gcm_code
 		WHERE a.gih_qty > 0 
+		AND a.gih_regdate BETWEEN #{dateStart} AND #{dateEnd}
 		ORDER BY a.gih_regdate DESC
 		LIMIT ${nowPage},10
 	</select>
 	
+	<!-- 첫 모달창에 선택 가능한 물품명 리스트 가져오기 -->
 	<select id="getItemsName" resultType="com.storemanager.in.InDTO">
 		SELECT
 			DISTINCT(gi_name) gi_name
@@ -61,6 +65,7 @@
 		LIMIT ${nowPage},10
 	</select>
 	
+	<!-- 첫 모달창에 선택 가능한 거래처명 리스트 가져오기-->
 	<select id="getCompanysName" resultType="com.storemanager.in.InDTO">
 		SELECT
 			DISTINCT(a.gcm_name),
@@ -81,6 +86,15 @@
 		LIMIT ${nowPage},10		
 	</select>
 	
+	<!-- 오른쪽 모달창에 출력할 물품코드 가져오기 -->
+	<select id="getItemCode" resultType="int">
+		SELECT
+			gi_code
+		FROM GE_ITEMS
+		WHERE gi_name = #{gi_name} AND gcm_code = #{gcm_code}
+	</select>
+	
+	<!-- 입고 완료 -->
 	<insert id="insertIn" >
 		INSERT INTO GE_ITEMS_HIST(
 			gcm_code,
@@ -102,6 +116,7 @@
 		)
 	</insert>
 	
+	<!-- 날짜기간 검색으로 리스트 뽑아오기 -->
 	<select id="searchByRegdate" resultType="com.storemanager.in.InDTO">
 		SELECT 
 			b.gcm_name,
@@ -146,6 +161,7 @@
 		LIMIT ${nowPage},10
 	</select>
 	
+	<!-- 물품 검색으로 리스트 뽑아오기 -->
 	<select id="searchByGi_name" resultType="com.storemanager.in.InDTO">
 		SELECT 
 			b.gcm_name,
@@ -194,6 +210,7 @@
 		LIMIT ${nowPage},10 
 	</select>
 	
+	<!-- 거래처명 검색으로 리스트 뽑아오기 -->
 	<select id="searchByGcm_name" resultType="com.storemanager.in.InDTO">
 		SELECT 
 			b.gcm_name,
@@ -242,6 +259,7 @@
 		LIMIT ${nowPage},10
 	</select>
 	
+	<!-- 가격 검색으로 리스트 뽑아오기 -->
 	<select id="searchByGih_price" resultType="com.storemanager.in.InDTO">
 		SELECT 
 			b.gcm_name,
