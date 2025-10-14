@@ -5,18 +5,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&"/>
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&"/>
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/css/wrap.css">
   <link rel="stylesheet" href="/css/m-header.css">
   <title>거래처관리</title>
-  <style>
+</head>
+<style>
+  	
+  	
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     body {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
       background-color: #f8fafc;
       color: #222;
     }
+    .m-search-sort > div:nth-of-type(5) { width: 30rem; }
+    .m-search-sort > div:nth-of-type(8) { width: 12rem; }
+    .m-items > div > div:nth-of-type(5) { width: 30rem; }
     /* 모달 전체 */
     #modal-container {
       position: fixed; top: 0; right: 0;
@@ -81,13 +87,196 @@
       background: linear-gradient(135deg,#2563eb,#1d4ed8);
       box-shadow:0 5px 12px rgba(37,99,235,0.35);
     }
-  </style>
-</head>
-<body>
+    
+    /* 주소 모달창 CSS */
+    #address-modal {
+    position: fixed;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(33, 33, 33, 0.5);
+  }
+  #address-modal > div:nth-of-type(1) {
+    position: absolute;
+    width: 50rem;
+    height: 70rem;
+    background-color: #FFFAFA;
+    box-shadow: 0 0 3px #FFF;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  #address-modal > div:nth-of-type(1) > div:nth-of-type(1),
+  #address-modal > div:nth-of-type(1) > div:nth-of-type(2) {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  #addr-search {
+    width: calc(100% - 15rem);
+    height: 4rem;
+    outline: none;
+    border: none;
+    padding-left: 0.5rem;
+    font-size: 1.5rem;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border: 1px solid rgba(33, 33, 33, 0.2);
+  }
+  #addr-search-label {
+    display: inline-block;
+    text-align: center;
+    width: 15rem;
+    height: 4rem;
+    line-height: 4rem;
+    font-size: 1.7rem;
+    background-color: #00AA00;
+    color: white;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    cursor: pointer;
+  }
+  #address-modal > div:nth-of-type(1) > div:nth-of-type(2) {
+    flex-direction: column;
+    height: calc(100% - 18rem);
+    gap: 0.5rem;
+  }
+  #addr-list {
+    width: 100%;
+    height: 6rem;
+    border: 1px solid rgba(33, 33, 33, 0.2);
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    cursor: pointer;
+    gap: 0.5rem;
+  }
+  #addr-list:hover {
+    border: 1px solid rgba(0, 170, 0, 0.3);
+    box-shadow:
+      0 0 3px rgba(33, 33, 33, 0.2),
+      0 0 6px rgba(0, 170, 0, 0.5);
+  }
+  #addr-list .addr-road {
+    font-size: 1.5rem;
+  }
+  #addr-list .addr-jibun::before {
+    content: '지번';
+    color: #00AA00;
+    display: inline-block;
+    width: 3.5rem;
+    height: 1.7rem;
+    line-height: 1.7rem;
+    text-align: center;
+    padding: 0.1rem 0.5rem;
+    border: 1px solid rgba(33, 33, 33, 0.2);
+    border-radius: 0.5rem;
+    margin-right: 0.5rem;
+    justify-content: center;
+  }
+  #addr-list .addr-jibun {
+    font-size: 1.2rem;
+    line-height: 1.7rem;
+  }
+  #addr-paging {
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  #addr-paging > div:not(#paging-addr-btn) {
+    width: 3rem;
+    text-align: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  #addr-paging > div:not(#paging-addr-btn):hover {
+    transform: scale(1.1);
+  }
+  #addr-paging > div:not(#paging-addr-btn):active {
+    transform: scale(1);
+  }
+  #address-modal > div:nth-of-type(1) > div:nth-of-type(4) {
+    display: flex;
+    justify-content: end;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  #address-close-btn {
+    width: 10rem;
+    height: 3rem;
+    background-color: #DC3545;
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+  #address-close-btn:hover {
+    transform: scale(1.1);
+  }
+  #address-close-btn:active {
+    transform: scale(1);
+  }
+  #paging-addr-btn {
+    display: flex;
+    align-items: center;
+    gap:2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .btns-box {
+  display: flex; gap: 8px; align-items: center; justify-content: center;
+}
+.items-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 2px 6px rgba(0,0,0,.25);
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  transition: transform .15s ease, box-shadow .2s ease, opacity .2s ease;
+}
 
-<!-- ===== 모달 ===== -->
-<div id="modal-overlay"></div>
-<div id="modal-container">
+.items-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,.35); }
+.items-btn:active { transform: translateY(0); }
+
+
+
+
+
+  
+  </style>
+<body>
+<!-- 주소 모달 -->
+<div id="address-modal" style="display:none;">
+  <div>
+    <div>
+      <input id="addr-search" type="text" placeholder="도로명 주소를 검색하세요.">
+      <label id="addr-search-label" for="addr-search">주소 검색</label>
+    </div>
+    <div id="addr-list-box"></div>
+    <div id="addr-paging"><div id="beforeAddr">◀</div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div id="afterAddr">▶</div></div>
+    <div><button id="address-close-btn">Close</button></div>
+  </div>
+</div>
+
+<!-- 우측 슬라이드 모달 -->
+<div id="modal-overlay" style="display:none;"></div>
+<div id="modal-container" style="transform:translateX(100%);">
   <div class="modal-header">
     <div>거래처 상세보기</div>
     <span class="close-btn" id="modal-close">&times;</span>
@@ -106,189 +295,274 @@
   </div>
 </div>
 
-<!-- ===== 메인 영역 ===== -->
+<!-- 메인 -->
 <div class="wrap">
   <%@ include file="../layout/left-menu.jsp"%>
   <div class="right-wrap">
     <%@ include file="../layout/header.jsp"%>
 
     <div class="m-box">
-      <div class="m-header">
-        <span class="material-symbols-outlined">apps</span>
-        <span>거래처관리</span>
-      </div>
+      <div class="m-header"><span class="material-symbols-outlined">apps</span><span>거래처관리</span></div>
       <div></div>
       <div>
-        <div>
-          <div class="m-state red"></div><span>거래중지</span>
-        </div>
-        <!-- ✅ id 중복 제거 -->
+        <div><div class="m-state red"></div><span>거래중지</span></div>
         <div class="green" id="btn-create">거래처등록</div>
       </div>
-    <!-- ===== 검색 ===== -->
-    <div class="m-search">
-      <div class="m-search-line">
-        <div class="m-search-date">
-          <input type="date" name="startdate">
-          <p>&nbsp;~&nbsp;</p>
-          <input type="date" name="enddate">
-        </div>
-        <div class="m-search-option">
-        </div>
-        <div class="m-search-text">
-          <input type="text" name="search" placeholder="검색어를 입력하세요."><div>검색</div>
+
+      <!-- 검색 -->
+      <div class="m-search">
+        <div class="m-search-line">
+          <div class="m-search-date"><input type="date" name="startdate"><p>&nbsp;~&nbsp;</p><input type="date" name="enddate"></div>
+          <div class="m-search-option"></div>
+          <div class="m-search-text"><input type="text" name="search" placeholder="검색어를 입력하세요."><div>검색</div></div>
         </div>
       </div>
-    </div>
 
-    <!-- ===== 테이블 ===== -->
-    <div class="m-search-sort">
-      <div>거래처 코드</div>
-      <div>거래처명</div>
-      <div>이메일</div>
-      <div>전화번호</div>
-      <div>주소</div>
-      <div>등록일</div>
-    </div>
+      <!-- 헤더 -->
+      <div class="m-search-sort">
+        <div>거래처 코드</div><div>거래처명</div><div>이메일</div><div>전화번호</div><div>주소</div><div>등록일</div>
+      </div>
 
-    <div class="m-items">
-      <c:forEach var="c" items="${customerList}">
-        <div>
-          <div><c:out value="${c.gcm_Code}"/></div>
-          <div><c:out value="${c.gcm_Name}"/></div>
-          <div><c:out value="${c.gcm_Email}"/></div>
-          <div><c:out value="${c.gcm_Tel}"/></div>
-          <div><c:out value="${c.gcm_Addr}"/></div>
-          <div><c:out value="${c.gcm_Regdate}"/></div>
-          <div></div>
-          <div class="btns-box">
-            <div class="items-btn red" onclick="softDelete(${c.gcm_Idx})"></div>
+      <!-- 초기 리스트(서버 사이드 렌더) -->
+      <div class="m-items" id="m-items-cus">
+        <c:forEach var="c" items="${customerList}">
+          <div>
+            <div><c:out value="${c.gcm_Code}"/></div>
+            <div><c:out value="${c.gcm_Name}"/></div>
+            <div><c:out value="${c.gcm_Email}"/></div>
+            <div><c:out value="${c.gcm_Tel}"/></div>
+            <div><c:out value="${c.gcm_Addr}"/></div>
+            <div><c:out value="${c.gcm_Regdate}"/></div>
+            <div></div>
+            <div class="btns-box">
+              <div class="items-btn red"  onclick="softDelete(${c.gcm_Idx})"></div>
+              <div class="items-btn blue" onclick="openEdit(${c.gcm_Idx})"></div>
+            </div>
           </div>
-        </div>
-      </c:forEach>
-    </div>
-    </div>
+        </c:forEach>
+      </div>
 
+      <div class="paging" id="paging"></div>
+    </div>
   </div>
 </div>
 
-<!-- ===== JS ===== -->
+<!-- JS -->
+<script src="/js/render.js"></script>
+<script src="/js/member.js"></script>
+<script src="/js/paging.js"></script>
 <script>
-// === 모달 제어 ===
-const modal = document.getElementById('modal-container');
+/* ===== 공통 ===== */
+const modal   = document.getElementById('modal-container');
 const overlay = document.getElementById('modal-overlay');
-const closeBtn = document.getElementById('modal-close');
-const cancelBtn = document.getElementById('modal-cancel');
 const saveBtn = document.getElementById('modal-save');
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-cancel').addEventListener('click', closeModal);
+overlay.addEventListener('click', closeModal);
 
 function openModal(){ modal.style.transform='translateX(0%)'; overlay.style.display='block'; }
 function closeModal(){ modal.style.transform='translateX(100%)'; overlay.style.display='none'; }
 
-closeBtn.addEventListener('click', closeModal);
-cancelBtn.addEventListener('click', closeModal);
-overlay.addEventListener('click', closeModal);
+const API_BASE = '<c:url value="/customer/api/customer"/>';
 
-// === 거래처등록 버튼 ===
-document.getElementById('btn-create').addEventListener('click', ()=>{
-  setCreateMode();
-  openModal();
-});
+/* ===== 등록 모드 ===== */
+document.getElementById('btn-create').addEventListener('click', ()=>{ setCreateMode(); openModal(); });
 
 function setCreateMode(){
   modal.querySelector('.modal-header div').textContent='거래처 등록';
   saveBtn.textContent='저장';
   saveBtn.onclick=handleCreateSave;
   ['giCode','giName','giEmail','giTel','giAddr','giRegDate'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(!el)return;
-    el.readOnly=false;
-    el.value='';
+    const el=document.getElementById(id); if(!el) return;
+    el.readOnly=false; el.value='';
   });
 }
-
-// === 등록 저장 ===
 async function handleCreateSave(){
-  const payload={
-    gcm_Code:giCode.value.trim(),
-    gcm_Name:giName.value.trim(),
-    gcm_Email:giEmail.value.trim(),
-    gcm_Tel:giTel.value.trim(),
-    gcm_Addr:giAddr.value.trim()
-  };
+  const payload={ gcm_Code:giCode.value.trim(), gcm_Name:giName.value.trim(), gcm_Email:giEmail.value.trim(), gcm_Tel:giTel.value.trim(), gcm_Addr:giAddr.value.trim() };
   try{
-    const res=await fetch('/api/customer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if(!res.ok) throw new Error('등록 실패');
-    alert('등록 완료');
-    closeModal();
-    location.reload();
-  }catch(e){alert('등록 중 오류');console.error(e);}
+    const res=await fetch(API_BASE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const msg = await res.text();
+    if(!res.ok) throw new Error(msg||'등록 실패');
+    alert('등록 완료'); closeModal(); location.reload();
+  }catch(e){ console.error(e); alert(e.message||'등록 중 오류'); }
 }
 
-// === 검색 & 날짜 ===
+/* ===== 검색/페이징 ===== */
 const searchInput=document.querySelector('.m-search-text input[name="search"]');
 const searchBtn=document.querySelector('.m-search-text div');
 const startEl=document.querySelector('input[name="startdate"]');
 const endEl=document.querySelector('input[name="enddate"]');
-const listWrap=document.querySelector('.m-items');
-
-searchBtn.addEventListener('click',doSearch);
-searchInput.addEventListener('keydown',(e)=>{if(e.key==='Enter')doSearch();});
-startEl.addEventListener('change',doSearch);
-endEl.addEventListener('change',doSearch);
-
-async function doSearch(){
-  const keyword=searchInput.value.trim();
-  const start=startEl.value.trim();
-  const end=endEl.value.trim();
-
-  const params=new URLSearchParams();
-  if(keyword)params.append('keyword',keyword);
-  if(start)params.append('startdate',start);
-  if(end)params.append('enddate',end);
-
-  try{
-    const res=await fetch('/api/customer/search?'+params.toString());
-    if(!res.ok)throw new Error('검색 실패');
-    const list=await res.json();
-    if(!Array.isArray(list)||list.length===0){
-      listWrap.innerHTML='<div style="padding:20px;text-align:center;color:#999;">검색 결과가 없습니다.</div>';
-      return;
-    }
-    listWrap.innerHTML=list.map(c=>`
-      <div>
-        <div>\${escapeHtml(c.gcm_Code||'')}</div>
-        <div>\${escapeHtml(c.gcm_Name||'')}</div>
-        <div>\${escapeHtml(c.gcm_Email||'')}</div>
-        <div>\${escapeHtml(c.gcm_Tel||'')}</div>
-        <div>\${escapeHtml(c.gcm_Addr||'')}</div>
-        <div>\${c.gcm_Regdate?c.gcm_Regdate.replace('T',' '):''}</div>
-        <div></div>
-        <div class="btns-box">
-          <div class="items-btn red" onclick="softDelete(\${c.gcm_Idx})"></div>
-        </div>
-      </div>`).join('');
-  }catch(e){console.error(e);alert('검색 오류');}
-}
 
 function escapeHtml(s){
-  return String(s).replace(/[&<>"'`=\/]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'}[c]));
+  return String(s).replace(/[&<>"'`=\/]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'}[c];});
 }
 
-function softDelete(idx) {
-	if(confirm('해당 거래처를 삭제하시겠습니까?')) {
-		fetch('/api/customer/' + idx, {
-			method: 'delete'
-		})
-		.catch(error => console.log(error))
-		.then(response => response.text())
-		.then(text => {
-			alert(text);
-			doSearch();
-		})
-	} else {
-		return;
-	}
+const paging = new PagingManager();
+cusRender(1);
+
+function cusRender(page){
+  paging.nowPage = (typeof page==='object')?1:page;
+
+  const params=new URLSearchParams();
+  const k=searchInput.value.trim(), s=startEl.value.trim(), e=endEl.value.trim();
+  if(k) params.append('keyword',k);
+  if(s) params.append('startdate',s);
+  if(e) params.append('enddate',e);
+  if(paging.nowPage) params.append('nowPage', paging.nowPage);
+
+  const listArea=document.querySelector('.m-items'); listArea.innerHTML='';
+
+  Render.callJSON(API_BASE + '/search?' + params.toString(), {}, 'm-items-cus', function(json){
+    if(!json.list || json.list.length===0){
+      listArea.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">검색 결과가 없습니다.</div>';
+    }else{
+      json.list.forEach(function(item){
+        const div=document.createElement('div');
+        div.innerHTML =
+          '<div>'+escapeHtml(item.gcm_Code||'')+'</div>'+
+          '<div>'+escapeHtml(item.gcm_Name||'')+'</div>'+
+          '<div>'+escapeHtml(item.gcm_Email||'')+'</div>'+
+          '<div>'+escapeHtml(item.gcm_Tel||'')+'</div>'+
+          '<div>'+escapeHtml(item.gcm_Addr||'')+'</div>'+
+          '<div>'+(item.gcm_Regdate?String(item.gcm_Regdate).replace("T"," "):"")+'</div>'+
+          '<div></div>'+
+          '<div class="btns-box">'+
+            '<div class="items-btn red" onclick="softDelete('+item.gcm_Idx+')"></div>'+
+            '<div class="items-btn blue" onclick="openEdit('+item.gcm_Idx+')"></div>'+
+          '</div>';
+        listArea.appendChild(div);
+      });
+    }
+
+    const totalPage = json.pg.totalPage;
+    paging.renderer({start:'start',middle:'middle',end:'end'}, 'paging', totalPage, 5);
+  });
 }
+
+paging.setComponent('start', function(d){
+  const div=document.createElement('div'); div.textContent='◀';
+  const backPage=d.start - d.pageSize;
+  if(d.start<=1){ div.style.opacity='.3'; div.style.cursor='default'; return div; }
+  div.addEventListener('click', function(){ cusRender(backPage); }); return div;
+});
+paging.setComponent('middle', function(d){
+  const div=document.createElement('div'); div.textContent=''+d.currentPage;
+  if(d.currentPage===d.activePage){ div.style.fontWeight='bold'; div.style.color='#00AA00'; div.style.fontSize='1.5rem'; }
+  div.addEventListener('click', function(){ cusRender(d.currentPage); }); return div;
+});
+paging.setComponent('end', function(d){
+  const div=document.createElement('div'); div.textContent='▶';
+  const nextPage=d.end+1;
+  if(nextPage>d.totalPage){ div.style.opacity='.3'; div.style.cursor='default'; return div; }
+  div.addEventListener('click', function(){ cusRender(nextPage); }); return div;
+});
+
+searchBtn.addEventListener('click', function(){ cusRender(1); });
+searchInput.addEventListener('keydown', function(e){ if(e.key==='Enter') cusRender(1); });
+startEl.addEventListener('change', function(){ cusRender(1); });
+endEl.addEventListener('change', function(){ cusRender(1); });
+
+/* ===== 주소 검색 ===== */
+const AddressPagingManager = new PagingManager();
+const ADDR_API_URL='https://business.juso.go.kr/addrlink/addrLinkApi.do';
+const CONF_KEY='devU01TX0FVVEgyMDI1MTAxMTE4MTk0MjExNjMxNDI=';
+const COUNT_PER_PAGE=8, PAGING_BLOCK_SIZE=5;
+
+function Postcode(){
+  document.getElementById('addr-search').value='';
+  document.getElementById('addr-list-box').innerHTML='';
+  document.getElementById('addr-paging').innerHTML='';
+  const m=document.getElementById('address-modal'); m.style.display='flex'; m.style.zIndex='1000';
+}
+document.getElementById('address-close-btn').addEventListener('click', function(){
+  document.getElementById('address-modal').style.display='none';
+});
+
+function searchAddress(page, keyword){
+  if(!keyword){ alert('주소를 입력하세요.'); return; }
+  AddressPagingManager.nowPage=page;
+  Render.callJSON(ADDR_API_URL,
+    {confmKey:CONF_KEY, resultType:'json', currentPage:AddressPagingManager.nowPage, countPerPage:COUNT_PER_PAGE, keyword:keyword},
+    'addr-list-box',
+    function(json){
+      const box=document.getElementById('addr-list-box'); box.innerHTML='';
+      const juso=(json&&json.results&&json.results.juso)||[];
+      juso.forEach(function(data){ box.appendChild(Render.getComponent('SJS-address-list', data)); });
+
+      const totalCount=parseInt((json&&json.results&&json.results.common&&json.results.common.totalCount)||'0',10);
+      const totalPage=Math.ceil(totalCount/COUNT_PER_PAGE);
+      AddressPagingManager.renderer({start:'SJS-address-start',middle:'SJS-address-middle',end:'SJS-address-end'}, 'addr-paging', totalPage, PAGING_BLOCK_SIZE);
+    });
+}
+AddressPagingManager.setComponent('SJS-address-middle', function(d){
+  const div=document.createElement('div'); div.textContent=''+d.currentPage;
+  if(d.currentPage===d.activePage){ div.style.fontWeight='bold'; div.style.color='#00AA00'; div.style.fontSize='1.5rem'; }
+  div.addEventListener('click', function(){ searchAddress(d.currentPage, document.getElementById('addr-search').value); }); return div;
+});
+AddressPagingManager.setComponent('SJS-address-start', function(d){
+  const div=document.createElement('div'); div.textContent='◀';
+  const back=d.start - d.pageSize;
+  if(d.start<=1){ div.style.opacity='.3'; div.style.cursor='default'; return div; }
+  div.addEventListener('click', function(){ searchAddress(back, document.getElementById('addr-search').value); }); return div;
+});
+AddressPagingManager.setComponent('SJS-address-end', function(d){
+  const div=document.createElement('div'); div.textContent='▶';
+  const next=d.end+1;
+  if(next>d.totalPage){ div.style.opacity='.3'; div.style.cursor='default'; return div; }
+  div.addEventListener('click', function(){ searchAddress(next, document.getElementById('addr-search').value); }); return div;
+});
+Render.setComponent('SJS-address-list', function(data){
+  const tag=document.createElement('div'); tag.id='addr-list';
+  tag.innerHTML =
+    '<div class="addr-road">'+(data.roadAddrPart1||'')+' '+(data.bdNm||'')+'</div>'+
+    '<div class="addr-jibun">'+(data.jibunAddr||'')+'</div>';
+  tag.addEventListener('click', function(){
+    document.getElementById('giAddr').value = (data.roadAddrPart1||'')+' '+(data.bdNm||'');
+    document.getElementById('address-modal').style.display='none';
+  });
+  return tag;
+});
+document.getElementById('addr-search-label').addEventListener('click', function(){ searchAddress(1, document.getElementById('addr-search').value); });
+document.getElementById('addr-search').addEventListener('keypress', function(e){ if(e.key==='Enter') searchAddress(1, e.target.value); });
+
+/* ===== 상세/수정/삭제 ===== */
+async function openEdit(idx){
+  try{
+    const res=await fetch(API_BASE+'/'+idx);
+    if(!res.ok) throw new Error('조회 실패');
+    const c=await res.json();
+
+    modal.querySelector('.modal-header div').textContent='거래처 수정';
+    saveBtn.textContent='수정 저장';
+
+    const map={giCode:'gcm_Code',giName:'gcm_Name',giEmail:'gcm_Email',giTel:'gcm_Tel',giAddr:'gcm_Addr',giRegDate:'gcm_Regdate'};
+    Object.keys(map).forEach(function(elId){
+      const el=document.getElementById(elId);
+      if(el){ el.readOnly=false; el.value = c[map[elId]] || ''; }
+    });
+
+    saveBtn.onclick = async function(){
+      const payload={ gcm_Code:giCode.value.trim(), gcm_Name:giName.value.trim(), gcm_Email:giEmail.value.trim(), gcm_Tel:giTel.value.trim(), gcm_Addr:giAddr.value.trim() };
+      const up=await fetch(API_BASE+'/'+idx,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const msg=await up.text();
+      if(!up.ok) throw new Error(msg||'수정 실패');
+      alert('수정 완료'); closeModal(); cusRender(paging && paging.nowPage ? paging.nowPage : 1);
+    };
+    openModal();
+  }catch(e){ console.error(e); alert(e.message||'상세 조회 오류'); }
+}
+function softDelete(idx){
+  if(!confirm('해당 거래처를 삭제하시겠습니까?')) return;
+  fetch(API_BASE+'/'+encodeURIComponent(idx), {method:'DELETE'})
+    .then(function(r){return r.text().then(function(t){return {ok:r.ok,text:t};});})
+    .then(function(res){ if(!res.ok) throw new Error(res.text||'삭제 실패'); alert(res.text||'삭제 완료'); cusRender(paging && paging.nowPage ? paging.nowPage : 1); })
+    .catch(function(err){ console.error(err); alert(err.message||'삭제 오류'); });
+}
+
+/* inline onclick 접근을 위해 전역 노출 */
+window.Postcode   = Postcode;
+window.openEdit   = openEdit;
+window.softDelete = softDelete;
 </script>
 </body>
 </html>
