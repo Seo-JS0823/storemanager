@@ -3,6 +3,7 @@ package com.storemanager.out;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,49 +12,68 @@ import org.springframework.stereotype.Service;
 public class OutService {
 		
 	  @Autowired private OutMapper outmapper;
-	
-	  // 검색 - 거래처 리스트 조회
-	  public ArrayList<HashMap<String, Object>> getCustomerList() {
-		    return outmapper.getCustomerList();
-	  }
-	  
-	  // 검색 - 품목 리스트 조회
-	  public ArrayList<HashMap<String, Object>> getItemList() {
-		    return outmapper.getItemList();
-	  }
 	  
 	  // 출고리스트 가져오기
 	  public ArrayList<HashMap<String, Object>> getOutList() {
 		    return outmapper.getOutList();
-	  }
+	  } // End of getOutList()
 	  
 	  // 출고 한건 가져오기
-	  public HashMap<String, Object> getItem(Integer idx) {
+	  public HashMap<String, Object> getOutItem(Integer idx) {
 		  return outmapper.getItem(idx);
-	  }
+	  } // End of getOutItem()
 
 	  // 출고 내용 수정(수량,단가,리마크만 수정)
 	  public boolean updateOutItem(int idx, JSONObject json) {
-		boolean result = false;
-		int x = 0;
+		  int x = 0;
+		  int gih_idx = idx;
+		  int qty, price;
+		  String remark = "";
 		
-		/* =========================================
-		 각 테이블에 값을 기록하는 코드 추가할 것
-		 {"gih_idx":"2","gih_price":"","gih_qty":"","gih_remark":""}
-		 gih_idx:2
-		 gih_price:""
-		 gih_qty:""
-		 gih_remark:""
-		 ========================================= */
+		  qty = 0-json.getInt("gih_qty");
+		  price = json.getInt("gih_price");
+		  remark = json.getString("gih_remark");
+		  x = outmapper.getUpdate(gih_idx, qty, price, remark);
 		
-		json.get("gih_idx");
-		json.get("gih_price");
-		json.get("gih_qty");
-		json.get("gih_remark");
-		
-		//x = outmapper.updateOutItem();
-		
-		return result;
-	}
+		  return x > 0;
+	  } // End of updateOutItem()
+	  
+	  // 업체검색시 자동완성을 지원하는 서비스
+	  public JSONArray getAutoCompleteCustomer(String keyword) {
+		JSONArray jarr = null;
+		jarr = new JSONArray(outmapper.getAutoCompleteCustomer(keyword));
+		return jarr;
+	  } // End of getAutoCompleteCustomer()
 
+	  // 아이템 검색시 자동완성을 지원하는 서비스
+	  public JSONArray getAutoCompleteItem(int customer, String keyword) {
+		JSONArray jarr = null;
+		jarr = new JSONArray(outmapper.getAutoCompleteItem(customer, keyword));
+		return jarr;
+	  } // End of getAutoCompleteItem()
+
+
+	  // 신규 출고 등록 메서드
+	  public boolean addOutItem(JSONObject json) {
+		  int x = 0, qty = 0, price = 0, item = 0;
+		  String itemCode = "", itemName = null, remark = "";
+		  HashMap<String,String> map = null;
+		
+		  // 아이템코드를 가져온다
+		  item = json.getInt("item");
+		  map = outmapper.getItemCode(item);
+		  itemCode = map.get("code");
+		  itemName = map.get("name");
+		  
+		  if(itemCode == null) return false;
+		  
+		  qty = 0-json.getInt("qty");
+		  price = json.getInt("unitPrice");
+		  remark = json.getString("remark");
+		  
+		  // DB에 저장
+		  x = outmapper.addOut(itemCode, item, itemName, qty, price, remark);
+		
+		  return x > 0;
+	  } // End of insertOutItem()
 }
