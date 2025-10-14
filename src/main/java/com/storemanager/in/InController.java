@@ -30,19 +30,19 @@ public class InController {
 	
 	@GetMapping("/in/list")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> InList(@RequestParam("nowPage") Integer nowPage
+	public ResponseEntity<Map<String, Object>> InList(
+			@RequestParam("nowPage") Integer nowPage,
+			@RequestParam("dateStart") String dateStart,
+			@RequestParam("dateEnd") String dateEnd
 			) {
 		
 		// 히스토리 데이터 갖고오기
-		List<InDTO> inList = inMapper.getInList();
-		
-		// 물품 선택(입고 클릭시 뜨는 첫모달창에 넘겨줄 값)  
-		List<InDTO> itemsName = inMapper.getItemsName();
-		
+		List<InDTO> inList = inMapper.getInList(dateStart, dateEnd);
+		System.out.println(inList);
 		int size = inList.size();
 		Paging<InDTO> pg = new Paging<>(size);
 		int offset = pg.getLimit(nowPage);
-		List<InDTO> list = inMapper.getInListPaging(offset);
+		List<InDTO> list = inMapper.getInListPaging(dateStart, dateEnd, offset);
 		pg.setResponseList(list);
 		Map<String, Object> response = pg.getResponseData();
 		

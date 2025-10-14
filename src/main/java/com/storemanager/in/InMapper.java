@@ -7,9 +7,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface InMapper {
 
-	public List<InDTO> getInList(); 
+	public List<InDTO> getInList(String dateStart, String dateEnd); 
 	// 주성 추가
-	public List<InDTO> getInListPaging(Integer nowPage); 	
+	public List<InDTO> getInListPaging(String dateStart, String dateEnd, Integer nowPage); 	
 	
 	public List<InDTO> getItemsName();
 	// 주성 추가
@@ -36,6 +36,9 @@ public interface InMapper {
 	public List<InDTO> searchByRegdate(String start, String end);
 	// 주성 추가
 	public List<InDTO> searchByRegdatePaging(String start, String end, Integer nowPage);
+	
+	
+	public Integer getItemCode(String gi_name, String gcm_code);
 	
 }
 
