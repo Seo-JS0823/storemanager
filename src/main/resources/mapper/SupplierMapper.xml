@@ -8,7 +8,9 @@
             GCM_CODE AS gcmCode,
             GCM_NAME AS gcmName
         FROM
-            GE_COM_MEMBER 
+            GE_COM_MEMBER
+        WHERE
+        	GCM_DEL_FLAG = 'N' 
         ORDER BY
             GCM_NAME ASC
     </select>
