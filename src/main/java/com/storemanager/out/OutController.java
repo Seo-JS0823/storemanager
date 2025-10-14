@@ -1,24 +1,27 @@
 package com.storemanager.out;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties.Http;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.storemanager.test.Paging;
+
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Slf4j
@@ -28,10 +31,10 @@ public class OutController {
 
 	@Autowired private OutService outsvc;
 	
-	@GetMapping("/list")
+	@GetMapping("")
 	public ModelAndView getList() {
 		// 출고아이템 리스트를 가져온다
-		ArrayList<HashMap<String,Object>> outList = outsvc.getOutList(); 		
+		List<OutDTO> outList = outsvc.getOutList(); 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("outList", outList);
 		mv.setViewName("out/out");
@@ -39,10 +42,27 @@ public class OutController {
 		return mv;
 	}
 	
-	@GetMapping("/list/{idx:\\d+}")
+	@GetMapping("/list")
 	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getList(
+			@RequestParam("nowPage") Integer nowPage
+			) {
+		// 출고아이템 리스트를 가져온다
+		List<OutDTO> outList = outsvc.getOutList();
+		
+		int size = outList.size();
+		Paging<OutDTO> pg = new Paging<>(size);
+		int offset = pg.getLimit(nowPage);
+		List<OutDTO> list = outsvc.getOutListPaging(offset);
+		pg.setResponseList(list);
+		Map<String, Object> response = pg.getResponseData();
+		return ResponseEntity.ok(response);
+	}
+	
+	@ResponseBody
+	@GetMapping("/list/{idx:\\d+}")
 	public String getItem(@PathVariable Integer idx) {
-		//System.out.println("넘어온 번호"+idx);
+		System.out.println("넘어온 번호"+idx);
 		
 		JSONObject json = null;
 		HashMap<String, Object> target = outsvc.getOutItem(idx);
@@ -51,8 +71,8 @@ public class OutController {
 		return json.toString();
 	}
 
-	@PostMapping("/list/{idx:\\d+}")
 	@ResponseBody
+	@PostMapping("/list/{idx:\\d+}")
 	public String updateOut(HttpServletResponse response, @PathVariable int idx, @RequestBody String rBody) {
 		JSONObject json = null, result = new JSONObject("{\"result\":\"error\"}");
 		boolean b = false;
@@ -102,5 +122,21 @@ public class OutController {
 		return result.toString();
 	}
 	
-	
+	@ResponseBody
+	@PostMapping("/list")
+	public ResponseEntity<Map<String, Object>> getSearchList(HttpServletResponse response
+			, @RequestBody String rBody
+			, @RequestParam("nowPage") Integer nowPage) {
+		JSONObject json = null;
+		json = new JSONObject(rBody);
+		List<OutDTO> jarr = outsvc.getSearch(json);
+		
+		int size = jarr.size();
+		Paging<OutDTO> pg = new Paging<>(size);
+		int offset = pg.getLimit(nowPage);
+		List<OutDTO> list = outsvc.getSearchPaging(json, offset);
+		pg.setResponseList(list);
+		Map<String, Object> response2 = pg.getResponseData();
+		return ResponseEntity.ok(response2);
+	}
 }

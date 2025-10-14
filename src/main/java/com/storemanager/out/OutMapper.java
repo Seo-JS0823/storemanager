@@ -2,13 +2,13 @@ package com.storemanager.out;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.json.JSONObject;
 
 @Mapper
 public interface OutMapper {
@@ -18,7 +18,13 @@ public interface OutMapper {
 			+ " FROM  GE_ITEMS_HIST as h"
 			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
 			+ " WHERE gih_inout='OUT'") 
-	public ArrayList<HashMap<String,Object>> getOutList();
+	public List<OutDTO> getOutList();
+	
+	@Select("SELECT gih_idx, gi_name, m.gcm_code, gcm_name, 0-gih_qty gih_qty, gih_price, (0-gih_qty * gih_price) as total, to_char(gih_regdate,'yyyy-mm-dd') gih_regdate "
+			+ " FROM  GE_ITEMS_HIST as h"
+			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
+			+ " WHERE gih_inout='OUT' LIMIT ${offset},10")
+	public List<OutDTO> getOutListPaging(Integer offset);
 	
 	// 출고 한건 정보 가져오기
 	@Select("SELECT gih_idx, gcm_name, HIST.gcm_code, gi_code, gi_name, 0-gih_qty gih_qty, gih_price, gih_remark, gih_confirm"
@@ -48,4 +54,21 @@ public interface OutMapper {
 	@Insert("INSERT INTO GE_ITEMS_HIST(gcm_code,gi_code,gi_name,gih_inout,gih_qty,gih_price,gih_remark,gih_regdate,gih_confirm) " +
 			"VALUES(#{itemCode}, #{item}, #{itemName}, 'OUT', #{qty}, #{price}, #{remark}, now(),'N')")
 	public int addOut(@Param("itemCode") String itemCode, @Param("item") int item, @Param("itemName") String itemName, @Param("qty") int qty, @Param("price") int price, @Param("remark") String remark);
+
+	// 검색 조회 리스트 가져오기
+	@Select("SELECT h.gih_idx , gi_name, m.gcm_code, gcm_name, 0-gih_qty gih_qty, gih_price, (0-gih_qty * gih_price) as total, to_char(gih_regdate,'yyyy-mm-dd') gih_regdate"
+			+ " FROM  GE_ITEMS_HIST as h"
+			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
+			+ " WHERE gih_inout='OUT'"
+			+ " AND gih_regdate BETWEEN #{ sdate } AND #{ edate }"
+			+ " AND ${ condition } ")
+	public List<OutDTO> getSearchList(String sdate, String edate, String condition);
+	
+	@Select("SELECT h.gih_idx , gi_name, m.gcm_code, gcm_name, 0-gih_qty gih_qty, gih_price, (0-gih_qty * gih_price) as total, to_char(gih_regdate,'yyyy-mm-dd') gih_regdate"
+			+ " FROM  GE_ITEMS_HIST as h"
+			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
+			+ " WHERE gih_inout='OUT'"
+			+ " AND gih_regdate BETWEEN #{ sdate } AND #{ edate }"
+			+ " AND ${ condition } LIMIT ${nowPage}, 10")
+	public List<OutDTO> getSearchListPaging(String sdate, String edate, String condition, Integer nowPage);
 }

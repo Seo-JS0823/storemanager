@@ -3,55 +3,54 @@
 <%-- 이 페이지 전용 스타일 --%>
 <style>
     .form-container {
-        padding: 2rem;
+        padding: 16px;
         display: flex;
         flex-direction: column;
         height: 100%;
-        background-color: #F5F5F5;
+        background-color: #f8fafc; 
     }
 
     .form-header {
         display: flex;
         align-items: center;
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
-        /*border-bottom: 0.2rem solid #666;*/
+        margin-bottom: 16px;
     }
     .form-header .state-circle {
-        width: 3rem;
-        height: 3rem;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
-        background-color: #00AA00;
-        margin-right: 1rem;
+        background-color: #22c55e; 
+        margin-right: 12px;
     }
     .form-header h2 {
-        font-size: 2rem;
-        font-weight: 600;
+        font-size: 24px; 
+        font-weight: 700;
         margin: 0;
+        color: #1f2937;
     }
 
     /* 이미지 영역 스타일 */
     .image-area {
-        margin-bottom: 1.5rem;
+        margin-bottom: 16px;
         text-align: center;
-        position: relative;
     }
     
     .image-preview {
-	    width: 15rem;
-	    height: 15rem;
-	    border: 2px dashed #ccc;
-	    border-radius: 0.5rem;
+	    width: 160px;  
+	    height: 160px; 
+	    border: 2px dashed #d1d5db;
+	    border-radius: 12px;
 	    display: flex;
 	    align-items: center;
 	    justify-content: center;
-	    color: #aaa;
-	    font-size: 1rem;
-	    margin: 0 auto 1rem;
+	    color: #9ca3af;
+	    font-size: 16px; 
+	    margin: 0 auto 12px;
 	    background-color: white;
 	    cursor: pointer;
 	    overflow: hidden; 
 	    position: relative;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
     .image-preview img {
@@ -65,27 +64,31 @@
     
     .btn-change-image {
         display: inline-block;
-        padding: 0.5rem 1rem;
-        background-color: #007bff;
+        padding: 8px 16px; 
+        background-color: #3b82f6; 
         color: white;
-        border-radius: 0.5rem;
+        border-radius: 8px;
         cursor: pointer;
-        margin-top: 0.5rem;
         border: none;
-        font-size: 1rem;
+        font-size: 16px; 
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+    .btn-change-image:hover {
+        background-color: #2563eb;
     }
     
     #deleteImageBtn {
         position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        background-color: rgba(220, 53, 69, 0.8);
+        top: 4px; 
+        right: 4px; 
+        background-color: rgba(239, 68, 68, 0.8); 
         color: white;
         border: none;
         border-radius: 50%; 
-        width: 2rem;
-        height: 2rem;
-        font-size: 1rem;
+        width: 24px; 
+        height: 24px; 
+        font-size: 14px;
         font-weight: bold;
         display: flex; 
         align-items: center;
@@ -94,77 +97,87 @@
         z-index: 10; 
         padding: 0; 
         line-height: 1;
+        transition: background-color 0.2s;
+    }
+    #deleteImageBtn:hover {
+        background-color: #dc2626;
     }
     
     /* 입력 필드 그리드 */
     .input-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
+        grid-template-columns: 1fr;
+        gap: 12px; 
+        margin-bottom: 16px;
     }
     .input-grid .form-group {
         display: flex;
-        align-items: center;
-        height: 3rem;
+        flex-direction: column;
+        align-items: flex-start; 
     }
     .input-grid .form-group label {
-        width: 35%;
-        font-size: 1.1rem;
+        font-size: 16px; 
         font-weight: 600;
-        text-align: right;
-        margin-right: 0.5rem;
+        margin-bottom: 6px; 
+        color: #374151;
     }
-    .input-grid .form-group input, .input-grid .form-group select {
-        flex-grow: 1;
-        padding: 0.5rem;
-        border: 1px solid rgba(33, 33, 33, 0.3);
-        border-radius: 0.5rem;
-        font-size: 1rem;
+    .input-grid .form-group input, 
+    .input-grid .form-group select {
+        width: 100%;
+        padding: 8px 16px; 
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 16px;
         background-color: white;
-        height: 100%;
+        height: 40px;
+        box-sizing: border-box;
     }
 
     /* REMARK 영역 */
     .remark-area {
-        margin-bottom: 2rem;
+        margin-bottom: 20px;
     }
     .remark-area label {
         display: block;
-        font-size: 1.5rem;
+        font-size: 16px; 
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        margin-bottom: 6px;
+        color: #374151;
     }
     .remark-area textarea {
         width: 100%;
-        height: 6rem; 
-        resize: none;
+        height: 120px;
+        resize: vertical;
         outline: none;
-        padding: 0.5rem;
-        border: 1px solid rgba(33, 33, 33, 0.3);
-        border-radius: 0.5rem;
-        font-size: 1rem;
+        padding: 10px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 16px; 
+        box-sizing: border-box;
     }
 
     /* 하단 버튼 영역 */
     .form-actions {
         display: flex;
         justify-content: flex-end;
-        gap: 1rem;
+        gap: 16px; 
         margin-top: auto; 
     }
     .form-actions button {
-        width: 8rem;
-        height: 4rem;
-        font-size: 1.5rem;
+        padding: 12px 32px; 
+        font-size: 18px; 
         font-weight: 600;
         color: white;
         border: none;
-        border-radius: 0.5rem;
+        border-radius: 8px;
         cursor: pointer;
+        transition: opacity 0.2s;
     }
-    .btn-save { background-color: #00AA00; }
-    .btn-cancel { background-color: #DC3545; }
+    .form-actions button:hover {
+        opacity: 0.85;
+    }
+    .btn-save { background-color: #22c55e; }
+    .btn-cancel { background-color: #DC3545; } 
 </style>
 
 <div class="form-container">

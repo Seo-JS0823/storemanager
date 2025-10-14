@@ -54,7 +54,7 @@ public class MemberController {
 		session.setAttribute("gm_level", target.getGm_level());
 		session.setAttribute("login", true);
 		
-		return "dashboard/dash";
+		return "member/pg-out";
 		//return "dashboard/dash";
 	}
 	

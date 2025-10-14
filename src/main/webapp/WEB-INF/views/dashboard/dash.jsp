@@ -32,6 +32,12 @@
 		margin: 0 auto;
 		border-radius: 1rem;
 		overflow: hidden;
+		
+		& {
+			border-radius: 1rem;
+			border: 1px solid rgba(33, 33, 33, 0.2);
+			box-shadow: 0 0 5px rgba(33, 33, 33, 0.1);
+		}
 	}
 	#dash-container > div:nth-of-type(1) > div > div:first-child {
 		width: 100%;
@@ -67,7 +73,7 @@
 	
 	#dash-container > div:nth-of-type(2) {
 		width: 100%;
-		height: calc(100% - 13rem);
+		height: calc(92% - 13rem);
 		display: flex;
 		gap: 2rem;
 	}
@@ -83,7 +89,7 @@
 		height: 100%;
 		display: grid;
 		grid-template-rows: repeat(3, 1fr);
-		grid-gap: 2rem;
+		grid-gap: 1rem;
 	}
 	
 	/* ID:ds-donut-box */
@@ -346,7 +352,7 @@
 	#out-top5-box > div,
 	#bill-top5-box > div {
 		width: 100%;
-		height: 3rem;
+		height: 2.5rem;
 		border: 1px solid rgba(33, 33, 33, 0.2);
 		border-radius: 0.5rem;
 		
@@ -373,7 +379,7 @@
 	#out-top5-box > div > div,
 	#bill-top5-box > div > div {
 		text-align: center;
-		line-height: 3rem;
+		line-height: 2.5rem;
 		font-size: 1.3rem;
 	}
 </style>

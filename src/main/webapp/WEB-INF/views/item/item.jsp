@@ -13,6 +13,34 @@
 	<link rel="stylesheet" href="/css/modal.css">
 	<title>품목 관리</title>
 </head>
+	<style>	
+	  .deleted-item {
+	    opacity: 0.5;
+	    background-color: #f9f9f9;
+	  }
+	  .btns-box {
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    gap: 8px; 
+	  }
+	
+	  .items-btn {
+	    width: 18px;         
+	    height: 18px;        
+	    border-radius: 50%;   
+	    cursor: pointer;    
+	    transition: transform 0.2s ease; 
+	  }
+	  .items-btn:hover {
+	    transform: scale(1.15); 
+	  }
+	
+	  .orange { background-color: #f97316; }
+	  .green  { background-color: #22c55e; } 
+	  .red    { background-color: #ef4444; }
+	  .gray   { background-color: #9ca3af; } 
+	</style>
 <body>
 <div class="wrap">
 	<%@ include file="../layout/left-menu.jsp"%>
@@ -39,9 +67,9 @@
 		<form action="/items" method="get" id="searchFormEl"> 
 		    <div class="m-search-line"> 
 		        <div class="m-search-date"> 
-		            <input type="date" name="startdate" value="${param.startdate}">
+		            <input type="date" name="startdate" id="startdate" value="${param.startdate}">
 		            <p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-		            <input type ="date" name="enddate" value="${param.enddate}">
+		            <input type ="date" name="enddate" id="enddate"value="${param.enddate}">
 		        </div>
 				<div class="m-search-option">
 				    <input type="checkbox" id="includeDeleted" name="includeDeleted" value="true"
@@ -74,8 +102,7 @@
 						<div>품목</div>
 						<div>품목코드</div>
 						<div>거래처</div>
-						<div>거래처코드</div>
-						<div></div>
+						<div>거래처코드</div>					
 						<div>관리</div>
 				</div>
 				<div class="m-items">
@@ -86,16 +113,15 @@
 							<div>${item.giCode}</div>
 							<div>${item.gcmName}</div>
 							<div>${item.gcmCode}</div>
-							<div></div>
-							<div class="btns-box">
-								<c:if test="${item.giDelFlag == 'N'}">
-									<button class="detail-btn" data-gicode="${item.giCode}">상세</button>
-									<button class="update-btn" data-gicode="${item.giCode}">업데이트</button>
-									<button class="delete-btn" data-gicode="${item.giCode}">삭제</button>
-								</c:if>
-								<c:if test="${item.giDelFlag == 'Y'}">
-									<button class="restore-btn" data-gicode="${item.giCode}">복구</button>
-								</c:if>
+			            <div class="btns-box">
+			                <c:if test="${item.giDelFlag == 'N'}">
+			                    <div class="items-btn orange detail-btn" data-gicode="${item.giCode}"></div>
+			                    <div class="items-btn green update-btn" data-gicode="${item.giCode}"></div>
+			                    <div class="items-btn red delete-btn" data-gicode="${item.giCode}"></div>
+			                </c:if>
+			                <c:if test="${item.giDelFlag == 'Y'}">
+			                    <div class="items-btn gray restore-btn" data-gicode="${item.giCode}"></div>
+			                </c:if>
 							</div>
 						</div>
 					</c:forEach>
@@ -123,7 +149,28 @@
 		<div id="right-modal-container"></div>
 	</div>
 </div>
+
 <script>
+//검색바 달력 현재 날짜-7 ~ 현재날짜
+let dateStart = document.getElementById("startdate");
+let dateEnd = document.getElementById("enddate");
+
+let now = new Date();
+let toyear = now.getFullYear();
+let tomonth = ('0' + (now.getMonth() + 1)).slice(-2);
+let today = ('0' + now.getDate()).slice(-2);
+
+let beforenow = new Date(now.setDate(now.getDate() - 7));
+let beforeyear = beforenow.getFullYear();
+let beforemonth = ('0' + (beforenow.getMonth() + 1)).slice(-2);
+let beforeday = ('0' + beforenow.getDate()).slice(-2);
+
+let endDateValue = toyear + '-' + tomonth  + '-' + today;
+let startDateValue = beforeyear + '-' + beforemonth  + '-' + beforeday;
+
+dateStart.value = startDateValue;
+dateEnd.value = endDateValue;
+
 function render(page) {
 	let totalPage = document.getElementById('totalPage').value;
 	

@@ -12,4 +12,8 @@ public class OutDTO {
 	private String gih_inout;
 	private String gih_price;
 	private String gih_remark;
+	
+	private String total;
+	private String gih_regdate;
+	private String gcm_name;
 }

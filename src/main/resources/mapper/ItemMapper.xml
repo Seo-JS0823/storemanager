@@ -8,7 +8,8 @@
         i.GI_CODE    AS giCode,
         i.GI_NAME    AS giName,
         i.GCM_CODE   AS gcmCode,
-        c.GCM_NAME   AS gcmName
+        c.GCM_NAME   AS gcmName,
+        i.GI_REMARK   AS giRemark
     FROM
         GE_ITEMS i
     LEFT JOIN
@@ -68,7 +69,8 @@
 	        i.GI_NAME     AS giName,
 	        i.GCM_CODE    AS gcmCode,
 	        c.GCM_NAME    AS gcmName,
-	        i.GI_DEL_FLAG AS giDelFlag
+	        i.GI_DEL_FLAG AS giDelFlag,
+	        i.GI_REMARK   AS giRemark
 	    FROM
 	        GE_ITEMS i
 	    LEFT JOIN
@@ -103,7 +105,8 @@
 	        i.GI_NAME     AS giName,
 	        i.GCM_CODE    AS gcmCode,
 	        c.GCM_NAME    AS gcmName,
-	        i.GI_DEL_FLAG AS giDelFlag
+	        i.GI_DEL_FLAG AS giDelFlag,
+	        i.GI_REMARK   AS giRemark
 	    FROM
 	        GE_ITEMS i
 	    LEFT JOIN
