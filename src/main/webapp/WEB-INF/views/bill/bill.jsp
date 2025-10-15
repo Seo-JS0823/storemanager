@@ -336,6 +336,11 @@
 <script src="/js/member.js"></script>
 <script src="/js/paging.js"></script>
 <script>
+	function sleep(ms) {
+		  const start = Date.now();
+		  while (Date.now() - start < ms) {}
+	}
+
 	// 검색바 달력 현재 날짜-7 ~ 현재날짜
 	let dateStart = document.getElementById("startdate");
 	let dateEnd = document.getElementById("enddate");
@@ -737,7 +742,9 @@
 					
 				itemsDetailsDiv.addEventListener('click', (e) => {
 					e.stopPropagation();
+					
 					//alert(e.target.attributes.value.value)
+					
 					let aMountEl = document.getElementById('aMount-1');
 					let modalContainerEl = document.getElementById('modal-container-1');
 					modalContainerEl.style.transform='translateX(0%)';
@@ -754,13 +761,15 @@
 						.then( response => response.json() )
 						//.then( response => response.text() )
 						.then( data1     => {
-							console.log(data1)
+							//console.log("data1 : "+data1)
 							data1.forEach(item1 => {
 								result = `<div><p>\${item1.gbc_number}</p><p>\${item1.gbc_gcm_name}</p>`;
 							})
 							
 						})
 						.then(error => console.log(error) )
+						
+						sleep(100);
 						
 						let ParsegbcGisList = gbcGisList.split(',');
 
@@ -769,6 +778,7 @@
 						//.then( response => response.text() )
 						.then( data2     => {
 							//console.log(data2)
+							//sleep(1000);
 							data2.forEach(item2 => {
 								modalMiddleEl.innerHTML += result+`<p>\${item2.gi_name}</p><p>\${item2.gih_qty}</p><p>\${item2.gih_price}</p><p>\${item2.amount}</p></div>`;
 							})
@@ -776,12 +786,14 @@
 						})
 						.then(error => console.log(error) )
 						
+						sleep(100);
+						
 						for(let i=1; i<ParsegbcGisList.length; i++){
  							fetch('/bill/gcmchk1/'+ParsegbcGisList[i])
 							.then( response => response.json() )
 							//.then( response => response.text() )
 							.then( data3     => {
-								console.log(data3)
+								//console.log(data3)
 								data3.forEach(item3 => {
 									modalMiddleEl.innerHTML += `
 										<div><p></p><p></p><p>\${item3.gi_name}</p><p>\${item3.gih_qty}</p>
@@ -796,7 +808,7 @@
 						.then( response => response.json() )
 						//.then( response => response.text() )
 						.then( data3     => {
-							console.log(data3)
+							//console.log(data3)
 							data3.forEach(item3 => {
 								aMountEl.textContent = `\${item3.amount}`;
 							})
@@ -809,7 +821,7 @@
 						.then( response => response.json() )
 						//.then( response => response.text() )
 						.then( data1     => {
-							console.log(data1)
+							//console.log(data1)
 							data1.forEach(item1 => {
 								result =`<div><p>\${item1.gbc_number}</p><p>\${item1.gbc_gcm_name}</p>`;
 							})
@@ -818,7 +830,7 @@
 							.then( response => response.json() )
 							//.then( response => response.text() )
 							.then( data2     => {
-								console.log(data2)
+								//console.log(data2)
 								data2.forEach(item2 => {
 									modalMiddleEl.innerHTML += result+`<p>\${item2.gi_name}</p><p>\${item2.gih_qty}</p><p>\${item2.gih_price}</p><p>\${item2.amount}</p></div>`;
 									aMountEl.textContent = `\${item2.amount}`;
