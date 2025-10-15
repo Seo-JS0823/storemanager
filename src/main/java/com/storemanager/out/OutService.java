@@ -116,13 +116,13 @@ public class OutService {
 		int flag, price;
 		String sdate, edate, keyword, condition;
 		List<OutDTO> list = null;
-		
 		flag = json.getInt("check");
 		sdate = json.getString("sdate");
 		edate = json.getString("edate");
 		keyword = json.getString("keyword");
 		condition = "";
 		
+		System.out.println(sdate + " / " + edate);
 		//System.out.println("json값:" + json);
 		
 		if(flag == 0) {
