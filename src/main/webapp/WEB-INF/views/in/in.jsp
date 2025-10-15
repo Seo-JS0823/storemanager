@@ -565,6 +565,12 @@ inCreateEl.addEventListener('click', (e) => { // 메인 화면 입고 버튼 클
 			
 			alert('성공적으로 입고 되었습니다')
 			modalContainerEl.style.transform = 'translateX(100%)';
+			
+			setTimeout(() => {
+		        location.reload();
+		      }, 400); // 모달 transition 시간에 맞게 조정
+		    
+			
 		}) // 오른쪽 모달창 저장 클릭 이벤트 끝
 		
 	}) // 첫 모달창 확인 클릭 이벤트 끝
