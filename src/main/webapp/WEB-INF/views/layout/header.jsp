@@ -9,7 +9,7 @@
 	<div class="header">
 		<div>(주) 부성</div>
 		<div>
-			<div id="gm_name"></div>
+			<div id="gm_name"><%=name %> <%="(" + level + ")" %></div>
 			<input id="profile-id" type="hidden" value="<%=id %>"/>
 			<button id="infomation" class="material-symbols-outlined">settings</button>
 			<button id="logout" class="material-symbols-outlined">logout</button>

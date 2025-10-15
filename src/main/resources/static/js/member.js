@@ -55,6 +55,7 @@ Render.setComponent('Profile-Header', (text) => {
 	return parent;
 });
 Render.setComponent('Profile-Content', (json) => {
+	console.log(json)
 	const parent = document.createElement('div');
 	
 	const imageBox = document.createElement('div');
