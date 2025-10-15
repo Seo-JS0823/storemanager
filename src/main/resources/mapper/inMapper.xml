@@ -53,6 +53,7 @@
 			DISTINCT(gi_name) gi_name
 		FROM
 			GE_ITEMS
+		WHERE GI_DEL_FLAG = 'N'
 	</select>
 	
 	<!-- 주성 추가 -->
