@@ -73,7 +73,7 @@
 			a.gcm_code
 		FROM GE_COM_MEMBER a JOIN GE_ITEMS b
 		ON a.gcm_code = b.gcm_code
-		WHERE gi_name = #{gi_name} AND gmc_del_flag = 'N'		
+		WHERE gi_name = #{gi_name} AND gcm_del_flag = 'N'		
 	</select>
 	
 	<!-- 주성 추가 -->

@@ -391,7 +391,7 @@
                             <div><input type="radio" id="searchEvent3" name="searchoption"><p>출고단가</p></div>
                         </div>
                         <div class="m-search-text"> <!-- TEXT 검색 구간 -->
-                            <input type="text" name="search" placeholder="검색어를 입력하세요."><div id="btnSearch">검색</div>
+                            <input type="text" id="searchText" name="search" placeholder="검색어를 입력하세요."><div id="btnSearch">검색</div>
                         </div>
                     </div>
                </div>
@@ -424,6 +424,11 @@ let btnSearch = document.getElementById('btnSearch');                       // �
 
 // 검색
 btnSearch.onclick = e => {
+	const searchLine = document.getElementById('searchText');
+	if(searchLine.value === '') {
+		alert('검색어를 입력하세요.');
+		return;
+	}
 	searchRender(1);
 }
 
