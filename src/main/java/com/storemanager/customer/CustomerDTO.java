@@ -18,7 +18,7 @@ public class CustomerDTO {
 	private String gcm_Email; // 이메일
 	private String gcm_Addr;  // 주소
 	private String gcm_Tel;   // 전화/ 휴대폰
-	private LocalDateTime gcm_Regdate; //등록일
+	private String gcm_Regdate; //등록일
 	private String gcm_Del_Flag;  // 'N' /'Y'
 	
 	

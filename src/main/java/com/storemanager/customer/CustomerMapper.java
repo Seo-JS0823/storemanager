@@ -126,7 +126,7 @@ public interface CustomerMapper {
                 GCM_EMAIL       AS gcm_Email,
                 GCM_TEL         AS gcm_Tel,
                 GCM_ADDR        AS gcm_Addr,
-                GCM_REGDATE     AS gcm_Regdate,
+                DATE_FORMAT(GCM_REGDATE, '%Y-%m-%d')     AS gcm_Regdate,
                 GCM_DEL_FLAG    AS gcm_Del_Flag
             FROM GE_COM_MEMBER
             WHERE GCM_DEL_FLAG = 'N'

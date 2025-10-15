@@ -40,15 +40,15 @@ public interface OutMapper {
 	public int getUpdate(int idx, int qty, int price, String remark);
 
 	// 업체검색시 자동완성을 지원하는 매퍼
-	@Select("SELECT gcm_name name, gcm_idx idx FROM GE_COM_MEMBER WHERE gcm_name LIKE '%${keyword}%'")
+	@Select("SELECT gcm_name name, gcm_idx idx FROM GE_COM_MEMBER WHERE gcm_name LIKE '%${keyword}%' AND GCM_DEL_FLAG = 'N'")
 	public ArrayList<HashMap<String,Object>> getAutoCompleteCustomer(String keyword);
 
 	// 아이템 검색시 자동완성을 지원하는 매퍼
-	@Select("SELECT gi_code idx, gi_name name FROM GE_ITEMS WHERE gcm_code = (SELECT gcm_code FROM GE_COM_MEMBER WHERE gcm_idx = #{customer}) AND gi_name LIKE '%${keyword}%'")
+	@Select("SELECT gi_code idx, gi_name name FROM GE_ITEMS WHERE gcm_code = (SELECT gcm_code FROM GE_COM_MEMBER WHERE gcm_idx = #{customer}) AND gi_name LIKE '%${keyword}%' AND GI_DEL_FLAG = 'N'")
 	public ArrayList<HashMap<String,Object>> getAutoCompleteItem(@Param("customer") int customer, @Param("keyword") String keyword);
 
 	// 아이템 일련번호로 아이템 코드와 아이템 이름 가져오기
-	@Select("SELECT gcm_code code, gi_name name FROM GE_ITEMS WHERE gi_code = #{item}")
+	@Select("SELECT gcm_code code, gi_name name FROM GE_ITEMS WHERE gi_code = #{item} AND GI_DEL_FLAG = 'N'")
 	public HashMap<String, String> getItemCode(int item);
 
 	@Insert("INSERT INTO GE_ITEMS_HIST(gcm_code,gi_code,gi_name,gih_inout,gih_qty,gih_price,gih_remark,gih_regdate,gih_confirm) " +
@@ -61,7 +61,7 @@ public interface OutMapper {
 			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
 			+ " WHERE gih_inout='OUT'"
 			+ " AND DATE_FORMAT(gih_regdate, '%Y-%m-%d') BETWEEN #{ sdate } AND #{ edate }"
-			+ " AND ${ condition } ORDER BY gih_regdate DESC")
+			+ " AND ${ condition } AND h.gi_del_flag = 'N' AND m.gmc_del_flag = 'N' ORDER BY gih_regdate DESC")
 	public List<OutDTO> getSearchList(String sdate, String edate, String condition);
 	
 	@Select("SELECT h.gih_idx , gi_name, m.gcm_code, gcm_name, 0-gih_qty gih_qty, gih_price, (0-gih_qty * gih_price) as total, to_char(gih_regdate,'yyyy-mm-dd') gih_regdate"
@@ -69,6 +69,6 @@ public interface OutMapper {
 			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
 			+ " WHERE gih_inout='OUT'"
 			+ " AND gih_regdate BETWEEN #{ sdate } AND #{ edate }"
-			+ " AND ${ condition } ORDER BY gih_regdate DESC LIMIT ${nowPage}, 10")
+			+ " AND ${ condition } AND h.gi_del_flag = 'N' AND m.gmc_del_flag = 'N' ORDER BY gih_regdate DESC LIMIT ${nowPage}, 10")
 	public List<OutDTO> getSearchListPaging(String sdate, String edate, String condition, Integer nowPage);
 }
