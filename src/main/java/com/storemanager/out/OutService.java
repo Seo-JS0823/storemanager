@@ -95,7 +95,7 @@ public class OutService {
 		condition = "";
 		
 		//System.out.println("json값:" + json);
-		
+		System.out.println("키워드: " + keyword);
 		if(flag == 0) {
 			condition = " gi_name LIKE '%"+keyword+"%'";
 			//System.out.println("조건문1: " + condition);
