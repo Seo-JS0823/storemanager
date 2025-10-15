@@ -61,7 +61,7 @@ public interface OutMapper {
 			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
 			+ " WHERE gih_inout='OUT'"
 			+ " AND gih_regdate BETWEEN #{ sdate } AND #{ edate }"
-			+ " AND ${ condition } ")
+			+ " AND ${ condition } ORDER BY gih_regdate DESC")
 	public List<OutDTO> getSearchList(String sdate, String edate, String condition);
 	
 	@Select("SELECT h.gih_idx , gi_name, m.gcm_code, gcm_name, 0-gih_qty gih_qty, gih_price, (0-gih_qty * gih_price) as total, to_char(gih_regdate,'yyyy-mm-dd') gih_regdate"
@@ -69,6 +69,6 @@ public interface OutMapper {
 			+ " INNER JOIN  GE_COM_MEMBER as m on h.gcm_code = m.gcm_code"
 			+ " WHERE gih_inout='OUT'"
 			+ " AND gih_regdate BETWEEN #{ sdate } AND #{ edate }"
-			+ " AND ${ condition } LIMIT ${nowPage}, 10")
+			+ " AND ${ condition } ORDER BY gih_regdate DESC LIMIT ${nowPage}, 10")
 	public List<OutDTO> getSearchListPaging(String sdate, String edate, String condition, Integer nowPage);
 }
