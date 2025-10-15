@@ -79,6 +79,10 @@ public class MemberService {
 		if(target == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		} else {
+			if(target.getGm_path() == null) {
+				target.setGm_path("uploads/NoImage.jpg");
+			}
+			
 			target.setGm_regdate(target.getGm_regdateByParse());
 			
 			Map<String, Object> response = Map.of(
