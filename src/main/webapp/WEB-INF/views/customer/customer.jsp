@@ -54,6 +54,7 @@
     }
     .modal-middle p { font-weight:600; margin-bottom:6px; color:#374151; font-size:14px; }
     .modal-middle input {
+      width: 100%;
       border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px;
       font-size:14px; background-color:#f9fafb; transition: all 0.25s ease;
     }
@@ -62,10 +63,20 @@
       box-shadow:0 0 0 3px rgba(59,130,246,0.2); outline:none;
     }
     .modal-middle button {
+      width: 100%; margin: 0 auto;
       margin-top:6px; align-self:flex-start;
-      background:#f3f4f6; color:#333; border:none;
+      background: #1E90FF; color: white; border:none;
       border-radius:8px; padding:6px 12px; font-size:13px; cursor:pointer;
       transition: background 0.25s ease;
+      margin-bottom: 1rem;
+    }
+    .modal-middle > div:nth-of-type(5) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .modal-middle > div:nth-of-type(5) > p {
+      margin-right: auto;
     }
     .modal-middle button:hover { background:#e5e7eb; }
     .modal-bottom {
@@ -286,8 +297,7 @@
     <div><p>거래처 명</p><input type="text" id="giName" readonly></div>
     <div><p>이메일</p><input type="text" id="giEmail" readonly></div>
     <div><p>전화번호</p><input type="text" id="giTel" readonly></div>
-    <div><p>주소</p><input type="text" id="giAddr" readonly><button type="button" onclick="Postcode()">검색</button></div>
-    <div><p>등록일</p><input type="text" id="giRegDate" readonly></div>
+    <div><p>주소</p><button type="button" onclick="Postcode()">검색</button><input type="text" id="giAddr" readonly></div>
   </div>
   <div class="modal-bottom">
     <button class="cancel" id="modal-cancel">닫기</button>
