@@ -16,4 +16,6 @@ public class OutDTO {
 	private String total;
 	private String gih_regdate;
 	private String gcm_name;
+	
+	private String gi_img;
 }

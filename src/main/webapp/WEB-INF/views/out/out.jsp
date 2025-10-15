@@ -335,7 +335,7 @@
             <div>출고관리</div>
         </div>
         <div>
-            <div><span class="material-symbols-outlined">hide_image</span></div>
+            <div><img id="hide_image"></div>
         </div>
         <div>
             <div><p>출고번호</p><input type="text" name="gih_idx" readonly></div>
@@ -876,8 +876,10 @@ for(let x in btnItems) btnItems[x].onclick = e => {
     .catch(error => console.dir(error))
     .then(response => response.json())
     .then(data => {
+    	console.log(data)
         // 데이터를 가져오고 모달창의 항목에 값을 넣어준다.
         //console.log(data);
+        document.getElementById('hide_image').src = 'uploads/' + data.gi_img;
         document.getElementsByName('gih_idx')[0].value = data.gih_idx;
         document.getElementsByName('gi_name')[0].value = data.gi_name;
         document.getElementsByName('gi_code')[0].value = data.gi_code;
@@ -1017,7 +1019,8 @@ function chulRender(page) {
 			    .then(response => response.json())
 			    .then(data => {
 			        // 데이터를 가져오고 모달창의 항목에 값을 넣어준다.
-			        //console.log(data);
+			        console.log(data);
+			        document.getElementById('hide_image').src = 'uploads/' + data.gi_img;
 			        document.getElementsByName('gih_idx')[0].value = data.gih_idx;
 			        document.getElementsByName('gi_name')[0].value = data.gi_name;
 			        document.getElementsByName('gi_code')[0].value = data.gi_code;

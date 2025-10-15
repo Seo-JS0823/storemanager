@@ -68,6 +68,7 @@ public class OutController {
 		HashMap<String, Object> target = outsvc.getOutItem(idx);
 
 		json = new JSONObject(target);
+		System.out.println(json);
 		return json.toString();
 	}
 

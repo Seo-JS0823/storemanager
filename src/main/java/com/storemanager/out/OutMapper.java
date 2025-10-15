@@ -27,9 +27,14 @@ public interface OutMapper {
 	public List<OutDTO> getOutListPaging(Integer offset);
 	
 	// 출고 한건 정보 가져오기
-	@Select("SELECT gih_idx, gcm_name, HIST.gcm_code, gi_code, gi_name, 0-gih_qty gih_qty, gih_price, gih_remark, gih_confirm"
+//	@Select("SELECT gih_idx, gcm_name, HIST.gcm_code, gi_code, gi_name, 0-gih_qty gih_qty, gih_price, gih_remark, gih_confirm"
+//			+ " FROM GE_ITEMS_HIST AS HIST"
+//			+ " INNER JOIN GE_COM_MEMBER AS MEM ON  HIST.gcm_code = MEM.gcm_code"
+//			+ " WHERE gih_idx = #{ idx } " )
+	@Select("SELECT gih_idx, gcm_name, HIST.gcm_code, HIST.gi_code, HIST.gi_name, GI.gi_img, 0-gih_qty gih_qty, gih_price, gih_remark, gih_confirm"
 			+ " FROM GE_ITEMS_HIST AS HIST"
 			+ " INNER JOIN GE_COM_MEMBER AS MEM ON  HIST.gcm_code = MEM.gcm_code"
+			+ " inner join GE_ITEMS as GI on HIST.gi_code = GI.gi_code"
 			+ " WHERE gih_idx = #{ idx } " )
 	public HashMap<String,Object> getItem(int idx);
 
